@@ -1,6 +1,6 @@
 import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app.module';
-import {INestApplication} from "@nestjs/common";
+import {INestApplication, ValidationPipe} from "@nestjs/common";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 import {AuthGuard} from "./auth.guard";
 
@@ -22,6 +22,7 @@ async function bootstrap() {
   initSwagger(app)
   
   app.useGlobalGuards(new AuthGuard())
+  app.useGlobalPipes(new ValidationPipe());
   
   await app.listen(4000);
 }
