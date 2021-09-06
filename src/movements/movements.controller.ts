@@ -4,6 +4,7 @@ import {CreateMovementDto} from './dto/create-movement.dto';
 import {UpdateMovementDto} from './dto/update-movement.dto';
 import {ApiTags} from "@nestjs/swagger";
 import {Movement} from "./schemas/movement.schema";
+import {ReadMovementDto} from "./dto/read-movement.dto";
 
 @ApiTags("Movements")
 @Controller('movements')
@@ -35,23 +36,24 @@ export class MovementsController {
     return this.movementsService.create(createMovementDto);
   }
   
+  /**
+   * Fetch all existing movements for all users
+   */
   @Get()
   findAll(): Promise<Movement[]> {
     return this.movementsService.findAll();
   }
   
+  /**
+   * Fetch all movements for the given user
+   */
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.movementsService.findOne(+id);
-  }
-  
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMovementDto: UpdateMovementDto) {
-    return this.movementsService.update(+id, updateMovementDto);
+  findOne(@Param() params: ReadMovementDto) {
+    return this.movementsService.findOne(params.id);
   }
   
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.movementsService.remove(+id);
+  remove(@Param() params: ReadMovementDto) {
+    return this.movementsService.remove(params.id);
   }
 }
