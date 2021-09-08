@@ -1,10 +1,10 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete} from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, Req} from '@nestjs/common';
 import {MovementsService} from './movements.service';
 import {CreateMovementDto} from './dto/create-movement.dto';
-import {UpdateMovementDto} from './dto/update-movement.dto';
 import {ApiTags} from "@nestjs/swagger";
 import {Movement} from "./schemas/movement.schema";
 import {ReadMovementDto} from "./dto/read-movement.dto";
+import {Request} from "express";
 
 @ApiTags("Movements")
 @Controller('movements')
@@ -40,7 +40,7 @@ export class MovementsController {
    * Fetch all existing movements for all users
    */
   @Get()
-  findAll(): Promise<Movement[]> {
+  findAll(@Req() req: Request): Promise<Movement[]> {
     return this.movementsService.findAll();
   }
   

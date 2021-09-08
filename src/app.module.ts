@@ -9,7 +9,6 @@ import {UsersModule} from './users/users.module';
 import {CommunicationsModule} from './communications/communications.module';
 import {MovementsModule} from './movements/movements.module';
 import databaseConfig from './config/db.config';
-import {AuthMiddleware} from "./auth.middleware";
 
 @Module({
   imports: [
@@ -47,9 +46,4 @@ import {AuthMiddleware} from "./auth.middleware";
   providers: [AppService],
 })
 export class AppModule {
-  /*configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes('*');
-  }*/
 }

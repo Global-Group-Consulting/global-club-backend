@@ -3,6 +3,7 @@ import {AppModule} from './app.module';
 import {INestApplication, ValidationPipe} from "@nestjs/common";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 import {AuthGuard} from "./auth.guard";
+import {ConfigModule, ConfigService} from "@nestjs/config";
 
 function initSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
@@ -18,10 +19,11 @@ function initSwagger(app: INestApplication) {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
   
   initSwagger(app)
   
-  app.useGlobalGuards(new AuthGuard())
+  app.useGlobalGuards(new AuthGuard(configService))
   app.useGlobalPipes(new ValidationPipe());
   
   await app.listen(4000);
