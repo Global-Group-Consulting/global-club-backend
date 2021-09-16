@@ -8,14 +8,16 @@ import {ProductsModule} from './products/products.module';
 import {UsersModule} from './users/users.module';
 import {CommunicationsModule} from './communications/communications.module';
 import {MovementsModule} from './movements/movements.module';
+import { AxiosModule } from './axios/axios.module';
 import databaseConfig from './config/db.config';
+import httpConfig from './config/http.config';
 
 @Module({
   imports: [
     // Loads globally the config module
     ConfigModule.forRoot({
       envFilePath: `.env`, isGlobal: true,
-      load: [databaseConfig]
+      load: [databaseConfig, httpConfig]
     }),
     
     // using async to import db config
@@ -41,6 +43,7 @@ import databaseConfig from './config/db.config';
     MovementsModule,
     ProductsModule,
     UsersModule,
+    AxiosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
