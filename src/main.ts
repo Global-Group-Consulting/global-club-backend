@@ -10,6 +10,7 @@ function initSwagger(app: INestApplication) {
     .setTitle('Global Club')
     .setDescription('The Global Club API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   
   const document = SwaggerModule.createDocument(app, config);
@@ -24,7 +25,9 @@ async function bootstrap() {
   initSwagger(app)
   
   app.useGlobalGuards(new AuthGuard(configService))
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true
+  }));
   
   await app.listen(4000);
 }
