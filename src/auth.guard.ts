@@ -4,8 +4,6 @@ import {User} from "./users/entities/user.entity";
 import {ConfigService} from "@nestjs/config";
 
 interface InputReqData {
-  _client_secret: string;
-  _server_secret: string;
   _auth_user: User;
 }
 
@@ -69,6 +67,7 @@ export class AuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
     const reqData: InputReqData = request.body;
+    const reqHeaders: any = request.headers;
     let validationResult = true
     let auth = {
       user: {},
@@ -77,7 +76,7 @@ export class AuthGuard implements CanActivate {
     }
     
     if (this.configService.get<string>("NODE_ENV") !== "development") {
-      validationResult = this.validateRequest(reqData);
+      validationResult = this.validateRequest(reqData._auth_user, reqHeaders["client-secret"], reqHeaders["server-secret"]);
       
       auth.user = reqData._auth_user;
       auth.permissions = reqData._auth_user.permissions
@@ -90,16 +89,18 @@ export class AuthGuard implements CanActivate {
     
     request.auth = auth
     
+    delete request.body._auth_user
+    
     return validationResult
   }
   
-  validateRequest(inputData: InputReqData): boolean {
+  validateRequest(authUser: User, clientSecret: string, serverSecret): boolean {
     const clientRegExp = new RegExp("^clt-([A-Za-z0-9]{1,})-(main|club)$")
     const serverRegExp = new RegExp("^srv-([A-Za-z0-9]{1,})-(main|club)$")
     
-    const existenceTests = !!inputData._client_secret && !!inputData._server_secret && !!inputData._auth_user;
-    const clientValidity = !!inputData._client_secret.match(clientRegExp)
-    const serverValidity = !!inputData._server_secret.match(serverRegExp)
+    const existenceTests = !!clientSecret && !!serverSecret && !!authUser;
+    const clientValidity = !!clientSecret.match(clientRegExp)
+    const serverValidity = !!serverSecret.match(serverRegExp)
     
     /*
     I'm checking exist and are in the required format and if a user is provided.
