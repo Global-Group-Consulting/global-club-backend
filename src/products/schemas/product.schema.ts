@@ -32,10 +32,10 @@ export class Product extends BasicSchema {
   @Prop({required: true})
   category: string[];
   
-  @Prop({type: ProductImage, required: true})
+  @Prop({type: ProductImage})
   thumbnail: ProductImage;
   
-  @Prop({type: ProductImage, required: true})
+  @Prop({type: ProductImage})
   images: ProductImage[];
   
 }
