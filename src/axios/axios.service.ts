@@ -19,6 +19,7 @@ export class AxiosService {
     })
     
     this.instance.interceptors.request.use((v: AxiosRequestConfig) => this.reqInterceptor(v))
+    this.instance.interceptors.response.use(null, (er: any) => this.errInterceptor(er))
   }
   
   private reqInterceptor(axiosConfig: AxiosRequestConfig): AxiosRequestConfig {
@@ -30,6 +31,16 @@ export class AxiosService {
     }
     
     return axiosConfig
+  }
+  
+  /*private respInterceptor(axiosResp: AxiosResponse): AxiosResponse {
+    return axiosResp
+  }*/
+  
+  private errInterceptor(error) {
+    error.message = error.response?.data?.error?.message
+    
+    return Promise.reject(error);
   }
   
   request<T = any>(config: AxiosRequestConfig): Promise<AxiosResponse<T>> {
