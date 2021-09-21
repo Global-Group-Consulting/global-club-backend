@@ -2,6 +2,7 @@ import {CanActivate, ExecutionContext, Injectable} from '@nestjs/common';
 import {Observable} from 'rxjs';
 import {User} from "./users/entities/user.entity";
 import {ConfigService} from "@nestjs/config";
+import {AuthUser} from "./_basics/AuthRequest";
 
 interface InputReqData {
   _auth_user: User;
@@ -69,8 +70,8 @@ export class AuthGuard implements CanActivate {
     const reqData: InputReqData = request.body;
     const reqHeaders: any = request.headers;
     let validationResult = true
-    let auth = {
-      user: {},
+    let auth: AuthUser = {
+      user: null,
       permissions: [],
       roles: []
     }
@@ -82,7 +83,7 @@ export class AuthGuard implements CanActivate {
       auth.permissions = reqData._auth_user.permissions
       auth.roles = reqData._auth_user.roles
     } else {
-      auth.user = this.fakeUser;
+      auth.user = this.fakeUser as any;
       auth.permissions = this.fakeUser.permissions
       auth.roles = this.fakeUser.roles
     }

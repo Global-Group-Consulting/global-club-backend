@@ -56,5 +56,6 @@ export class User {
   verified_at: string;
   
   id: string
+  _id: string
   lastChangedBy: string
 }
