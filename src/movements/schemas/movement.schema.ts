@@ -1,6 +1,6 @@
 import {Document, Mongoose, Types} from "mongoose";
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
-import {MovementType} from "../enums/MovementType";
+import {MovementTypeEnum} from "../enums/movement.type.enum";
 
 export type MovementDocument = Movement & Document;
 
@@ -23,7 +23,7 @@ export class Movement {
   referenceSemester: number;
   
   @Prop()
-  movementType: MovementType;
+  movementType: MovementTypeEnum;
   
   @Prop()
   usableFrom: Date;

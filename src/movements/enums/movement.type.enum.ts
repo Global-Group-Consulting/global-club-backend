@@ -1,4 +1,4 @@
-export enum MovementType {
+export enum MovementTypeEnum {
   // Generated when recapitalization occurs
   INTEREST_RECAPITALIZED = "interest_recapitalized",
 

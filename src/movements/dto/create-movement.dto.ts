@@ -1,8 +1,8 @@
-import {MovementType} from "../enums/MovementType";
+import {MovementTypeEnum} from "../enums/movement.type.enum";
 
 export class CreateMovementDto {
   amountChange: number;
   notes: string;
   semesterId: string;
-  movementType: MovementType;
+  movementType: MovementTypeEnum;
 }
