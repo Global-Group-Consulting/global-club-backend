@@ -1,7 +1,6 @@
-import {Document, Mongoose, Types} from "mongoose";
+import {Document, Types} from "mongoose";
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
 import {BasicSchema} from "../../_basics/BasicSchema";
-import {IsNumber} from "class-validator";
 
 export type ProductDocument = Product & Document;
 
@@ -15,7 +14,7 @@ export class ProductImage {
 @Schema({
   timestamps: true,
 })
-export class Product extends BasicSchema {
+export class Product implements BasicSchema {
   
   @Prop({required: true})
   title: string;
@@ -38,6 +37,9 @@ export class Product extends BasicSchema {
   @Prop({type: ProductImage})
   images: ProductImage[];
   
+  _id: Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product)

@@ -1,16 +1,12 @@
 import {Model} from "mongoose";
-import {lastValueFrom} from "rxjs";
 import {Injectable} from '@nestjs/common';
-import {HttpService} from "@nestjs/axios";
 import {InjectModel} from "@nestjs/mongoose";
 import {ConfigService} from "@nestjs/config";
 import {CreateProductDto} from './dto/create-product.dto';
 import {UpdateProductDto} from './dto/update-product.dto';
-import {DeleteProductFilesDto} from "./dto/delete-product-files.dto";
 import {Product, ProductDocument, ProductImage} from "./schemas/product.schema";
 import {RemoveException} from "../_exceptions/remove.exception";
 import {AxiosService} from "../axios/axios.service";
-import {castToObjectId} from "../utilities/Formatters";
 import {UpdateException} from "../_exceptions/update.exception";
 
 @Injectable()

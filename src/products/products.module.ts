@@ -7,7 +7,12 @@ import {AxiosModule} from "../axios/axios.module";
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{name: Product.name, schema: ProductSchema}], "club"),
+    MongooseModule.forFeature([
+      {
+        name: Product.name,
+        schema: ProductSchema
+      }
+    ], "club"),
     AxiosModule
   ],
   controllers: [ProductsController],
