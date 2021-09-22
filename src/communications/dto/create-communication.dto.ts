@@ -2,6 +2,7 @@ import {IsArray, IsEnum, IsNotEmpty, IsOptional, ValidateNested} from "class-val
 import {CommunicationTypeEnum} from "../enums/communication.type.enum";
 import {UserBasic} from "../../users/entities/user.basic.entity";
 import {Type} from "class-transformer";
+import {Attachment} from "../../_basics/attachment.entity";
 
 export class CreateCommunicationDto {
   @IsNotEmpty()
@@ -10,6 +11,12 @@ export class CreateCommunicationDto {
   
   @IsNotEmpty()
   message: string
+  
+  @IsOptional()
+  @IsArray()
+  @Type(() => Attachment)
+  @ValidateNested({each: true})
+  attachments: Attachment[]
   
   @IsOptional()
   title: string

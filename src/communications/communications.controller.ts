@@ -2,11 +2,12 @@ import {Controller, Get, Post, Body, Patch, Param, Delete, Put} from '@nestjs/co
 import {CommunicationsService} from './communications.service';
 import {CreateCommunicationDto} from './dto/create-communication.dto';
 import {UpdateCommunicationDto} from './dto/update-communication.dto';
-import {ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {ReadProductDto} from "../products/dto/read-product.dto";
 import {Communication} from "./schemas/communications.schema";
 import {AddMessageCommunicationDto} from "./dto/add-message-communication.dto";
 
+@ApiBearerAuth()
 @ApiTags("Communications")
 @Controller('communications')
 export class CommunicationsController {

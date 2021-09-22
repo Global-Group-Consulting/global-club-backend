@@ -1,20 +1,22 @@
+import {Model} from "mongoose";
+import {REQUEST} from "@nestjs/core";
+import {InjectModel} from "@nestjs/mongoose";
 import {Inject, Injectable} from '@nestjs/common';
 import {CreateCommunicationDto} from './dto/create-communication.dto';
 import {UpdateCommunicationDto} from './dto/update-communication.dto';
 import {Communication, CommunicationDocument} from "./schemas/communications.schema";
-import {InjectModel} from "@nestjs/mongoose";
-import {Model} from "mongoose";
 import {Message} from "./schemas/messsage.schema";
-import {REQUEST} from "@nestjs/core";
-import {AuthRequest} from "../_basics/AuthRequest";
 import {User} from "../users/entities/user.entity";
+import {AuthRequest} from "../_basics/AuthRequest";
+import {FindException} from "../_exceptions/find.exception";
 import {AddMessageCommunicationDto} from "./dto/add-message-communication.dto";
-import {RemoveException} from "../_exceptions/remove.exception";
+import {FilesService} from "../files/files.service";
 
 @Injectable()
 export class CommunicationsService {
   constructor(@InjectModel(Communication.name) private communicationModel: Model<CommunicationDocument>,
-              @Inject(REQUEST) private request: AuthRequest) {
+              @Inject(REQUEST) private request: AuthRequest,
+              private filesService: FilesService) {
   }
   
   get authUser(): User {
@@ -22,7 +24,7 @@ export class CommunicationsService {
   }
   
   create(createCommunicationDto: CreateCommunicationDto) {
-    const message = new Message(createCommunicationDto.message, this.authUser);
+    const message = new Message(createCommunicationDto, this.authUser);
     delete createCommunicationDto.message;
     
     const newData: Partial<Communication> = {...createCommunicationDto, messages: [message]}
@@ -53,7 +55,7 @@ export class CommunicationsService {
       throw new UpdateCommunicationDto("Can't find the communication you are trying to edit")
     }
     
-    const message = new Message(addMessageCommunicationDto.message, this.authUser);
+    const message = new Message(addMessageCommunicationDto, this.authUser);
     
     const query = {
       "$push": {messages: message}
@@ -65,10 +67,33 @@ export class CommunicationsService {
   }
   
   async remove(id: string): Promise<void> {
-    const result = await this.communicationModel.findByIdAndDelete(id)
+    const toRemove: CommunicationDocument = await this.communicationModel.findById(id)
     
-    if(!result){
-      throw new RemoveException("No communication found with the provided id.")
+    if (!toRemove) {
+      throw new FindException()
     }
+    
+    const filesToDelete = toRemove.messages.reduce((acc, msg) => {
+      if (msg.attachments && msg.attachments.length > 0) {
+        // If there are attachments, adds each ones id to an array
+        const msgAttachments = msg.attachments.reduce((accAttach, attach) => {
+          accAttach.push(attach.id)
+          
+          return accAttach
+        }, [])
+        
+        acc.push(...msgAttachments)
+      }
+      
+      return acc
+    }, [])
+    
+    if (filesToDelete.length > 0) {
+      const deleteResult = await this.filesService.delete(filesToDelete)
+    }
+    
+    await toRemove.delete()
+    
+    return
   }
 }
