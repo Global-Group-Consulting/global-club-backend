@@ -1,11 +1,12 @@
 import {Controller, Get, Post, Body, Patch, Param, Delete, Req} from '@nestjs/common';
 import {MovementsService} from './movements.service';
 import {CreateMovementDto} from './dto/create-movement.dto';
-import {ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {Movement} from "./schemas/movement.schema";
 import {ReadMovementDto} from "./dto/read-movement.dto";
 import {Request} from "express";
 
+@ApiBearerAuth()
 @ApiTags("Movements")
 @Controller('movements')
 export class MovementsController {
