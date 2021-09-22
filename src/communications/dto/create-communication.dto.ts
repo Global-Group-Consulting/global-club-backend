@@ -14,9 +14,9 @@ export class CreateCommunicationDto {
   @IsOptional()
   title: string
   
-  // Required only when the type is NEWSLETTER | COMMUNICATION | CHAT
-  @IsOptional()
-  sender: UserBasic
+  // The sender will be automatically set by the auth user
+  /*@IsOptional()
+  sender: UserBasic*/
   
   // Required only when the type is NEWSLETTER | COMMUNICATION | CHAT
   @IsOptional()

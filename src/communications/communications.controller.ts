@@ -18,7 +18,6 @@ export class CommunicationsController {
     return this.communicationsService.create(createCommunicationDto);
   }
   
-  
   @Get()
   findAll(): Promise<Communication[]> {
     return this.communicationsService.findAll();
@@ -29,9 +28,11 @@ export class CommunicationsController {
     return this.communicationsService.findOne(params.id);
   }
   
-  @Patch(':id')
+  /*@Patch(':id')*/
   update(@Param() params: ReadProductDto, @Body() updateCommunicationDto: UpdateCommunicationDto): Promise<Communication> {
-    return this.communicationsService.update(params.id, updateCommunicationDto);
+    // for now i don't need to update a conversation
+    
+    return //this.communicationsService.update(params.id, updateCommunicationDto);
   }
   
   /*

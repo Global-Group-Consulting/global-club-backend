@@ -5,7 +5,7 @@ export class MessageUser extends UserBasic {
   constructor(user: Partial<User>) {
     super();
     
-    this._id = user._id;
+    this._id = user._id || user.id;
     this.clubPack = user.clubPack || "";
     this.gold = user.gold || false;
     this.email = user.email || "";
