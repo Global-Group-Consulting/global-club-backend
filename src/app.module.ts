@@ -10,6 +10,7 @@ import {CommunicationsModule} from './communications/communications.module';
 import {MovementsModule} from './movements/movements.module';
 import { AxiosModule } from './axios/axios.module';
 import { FilesModule } from './files/files.module';
+import { OrdersModule } from './orders/orders.module';
 import databaseConfig from './config/db.config';
 import httpConfig from './config/http.config';
 
@@ -46,6 +47,7 @@ import httpConfig from './config/http.config';
     UsersModule,
     AxiosModule,
     FilesModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
