@@ -3,7 +3,7 @@ import {MongooseModule} from "@nestjs/mongoose";
 import {ProductsService} from './products.service';
 import {ProductsController} from './products.controller';
 import {Product, ProductSchema} from "./schemas/product.schema";
-import {AxiosModule} from "../axios/axios.module";
+import {FilesModule} from "../files/files.module";
 
 @Module({
   imports: [
@@ -13,7 +13,7 @@ import {AxiosModule} from "../axios/axios.module";
         schema: ProductSchema
       }
     ], "club"),
-    AxiosModule
+    FilesModule
   ],
   controllers: [ProductsController],
   providers: [ProductsService]

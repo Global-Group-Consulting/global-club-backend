@@ -1,19 +1,17 @@
 import {Model} from "mongoose";
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from "@nestjs/mongoose";
-import {ConfigService} from "@nestjs/config";
 import {CreateProductDto} from './dto/create-product.dto';
 import {UpdateProductDto} from './dto/update-product.dto';
 import {Product, ProductDocument, ProductImage} from "./schemas/product.schema";
 import {RemoveException} from "../_exceptions/remove.exception";
-import {AxiosService} from "../axios/axios.service";
 import {UpdateException} from "../_exceptions/update.exception";
+import {FilesService} from "../files/files.service";
 
 @Injectable()
 export class ProductsService {
   constructor(@InjectModel(Product.name) private productModel: Model<ProductDocument>,
-              private httpService: AxiosService,
-              private configService: ConfigService) {
+              private filesService: FilesService) {
   }
   
   private getFilesToDelete(foundProduct: Partial<Product>): string[] {
@@ -133,11 +131,7 @@ export class ProductsService {
     
     try {
       // Wait for the files cancellation call
-      const deleteObserver = await this.httpService.delete(this.configService.get<string>("http.deletePath"), {
-        data: {
-          filesToDelete
-        }
-      })
+      const deleteObserver = await this.filesService.delete(filesToDelete)
       
       /*
       I must work on an external array otherwise th slice won't work while splicing the undesired image
