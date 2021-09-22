@@ -42,12 +42,12 @@ import httpConfig from './config/http.config';
     
     // Custom Modules
     CommunicationsModule,
-    MovementsModule,
+    OrdersModule,
     ProductsModule,
+    MovementsModule,
     UsersModule,
     AxiosModule,
     FilesModule,
-    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
