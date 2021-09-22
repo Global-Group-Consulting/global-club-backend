@@ -1,4 +1,4 @@
-import {Document, Mongoose, Types} from "mongoose";
+import {Document, Types} from "mongoose";
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
 import {CommunicationClientEnum} from "../enums/communication.client.enum";
 import {UserBasic} from "../../users/entities/user.basic.entity";
