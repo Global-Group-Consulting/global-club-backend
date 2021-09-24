@@ -3,14 +3,13 @@ import {REQUEST} from "@nestjs/core";
 import {InjectModel} from "@nestjs/mongoose";
 import {Inject, Injectable} from '@nestjs/common';
 import {CreateCommunicationDto} from './dto/create-communication.dto';
-import {UpdateCommunicationDto} from './dto/update-communication.dto';
 import {Communication, CommunicationDocument} from "./schemas/communications.schema";
-import {Message} from "./schemas/messsage.schema";
 import {User} from "../users/entities/user.entity";
 import {AuthRequest} from "../_basics/AuthRequest";
 import {FindException} from "../_exceptions/find.exception";
 import {AddMessageCommunicationDto} from "./dto/add-message-communication.dto";
 import {FilesService} from "../files/files.service";
+import {UpdateException} from "../_exceptions/update.exception";
 
 @Injectable()
 export class CommunicationsService {
@@ -23,17 +22,18 @@ export class CommunicationsService {
     return this.request.auth.user;
   }
   
-  create(createCommunicationDto: CreateCommunicationDto) {
-    const message = new Message(createCommunicationDto, this.authUser);
-    delete createCommunicationDto.message;
+  async create(createCommunicationDto: CreateCommunicationDto) {
+    const newCommunication = new this.communicationModel({
+      ...createCommunicationDto,
+      messages: [{
+        sender: this.authUser,
+        content: createCommunicationDto.message,
+        attachments: createCommunicationDto.attachments
+      }],
+      initiator: this.authUser
+    })
     
-    const newData: Partial<Communication> = {...createCommunicationDto, messages: [message]}
-    
-    // use the sender from the first message as the sender of the communication,
-    // for future simplicity
-    newData.sender = message.sender;
-    
-    return this.communicationModel.create(newData)
+    return newCommunication.save()
   }
   
   findAll(): Promise<Communication[]> {
@@ -52,13 +52,17 @@ export class CommunicationsService {
     const communication = await this.communicationModel.findById(id).exec();
     
     if (!communication) {
-      throw new UpdateCommunicationDto("Can't find the communication you are trying to edit")
+      throw new UpdateException("Can't find the communication you are trying to edit")
     }
     
-    const message = new Message(addMessageCommunicationDto, this.authUser);
-    
     const query = {
-      "$push": {messages: message}
+      "$push": {
+        messages: {
+          sender: this.authUser,
+          content: addMessageCommunicationDto.message,
+          attachments: addMessageCommunicationDto.attachments
+        }
+      }
     }
     
     await communication.update(query);
