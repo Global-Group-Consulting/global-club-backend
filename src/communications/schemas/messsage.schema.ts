@@ -1,24 +1,20 @@
-import {UserBasic} from "../../users/entities/user.basic.entity";
-import {BasicSchema} from "../../_basics/BasicSchema";
-import {Types} from "mongoose";
-import {User} from "../../users/entities/user.entity";
-import {MessageUser} from "./message.user.schema";
-import {AddMessageCommunicationDto} from "../dto/add-message-communication.dto";
-import {Attachment} from "../../_basics/attachment.entity";
+import {Attachment, AttachmentSchema} from "../../_schemas/attachment.schema";
+import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
+import {UserBasic, UserBasicSchema} from "../../users/schemas/user-basic.schema";
+import {Document} from "mongoose";
 
-export class Message implements BasicSchema {
-  sender: UserBasic = null
-  attachments: Attachment[] = null
-  content: string = null
+@Schema({
+  timestamps: true
+})
+export class Message extends Document {
+  @Prop({type: UserBasicSchema, required: true})
+  sender: UserBasic
   
-  readonly _id: Types.ObjectId = new Types.ObjectId();
-  readonly createdAt: Date = new Date();
-  readonly updatedAt: Date = new Date();
+  @Prop({type: [AttachmentSchema]})
+  attachments: Attachment[] = []
   
-  constructor(data: AddMessageCommunicationDto, sender: Partial<User>) {
-    this.content = data.message;
-    this.attachments = data.attachments;
-    this.sender = new MessageUser(sender);
-  }
+  @Prop({required: true})
+  content: string
 }
 
+export const MessageSchema = SchemaFactory.createForClass(Message)
