@@ -2,7 +2,7 @@ import { PartialType } from '@nestjs/mapped-types';
 import { CreateProductDto } from './create-product.dto';
 import {IsArray, IsNotEmpty, IsObject, IsOptional, ValidateNested} from "class-validator";
 import {Type} from "class-transformer";
-import {ProductImage} from "../schemas/product.schema";
+import {Attachment} from "../../_schemas/attachment.schema";
 
 export class UpdateProductDto extends PartialType(CreateProductDto) {
   @IsNotEmpty()
@@ -26,12 +26,12 @@ export class UpdateProductDto extends PartialType(CreateProductDto) {
   @IsNotEmpty()
   @IsObject()
   @ValidateNested({each: true})
-  @Type(() => ProductImage)
-  thumbnail: ProductImage;
+  @Type(() => Attachment)
+  thumbnail: Attachment;
   
   @IsNotEmpty()
   @IsArray()
   @ValidateNested({each: true})
-  @Type(() => ProductImage)
-  images: ProductImage[];
+  @Type(() => Attachment)
+  images: Attachment[];
 }

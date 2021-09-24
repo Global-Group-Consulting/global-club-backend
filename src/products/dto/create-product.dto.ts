@@ -1,6 +1,6 @@
-import {ProductImage} from "../schemas/product.schema";
 import {IsArray, IsNotEmpty, IsObject, IsOptional, ValidateNested} from "class-validator";
 import {Type} from "class-transformer";
+import {Attachment} from "../../_schemas/attachment.schema";
 
 export class CreateProductDto {
   @IsNotEmpty()
@@ -24,12 +24,12 @@ export class CreateProductDto {
   @IsNotEmpty()
   @IsObject()
   @ValidateNested({each: true})
-  @Type(() => ProductImage)
-  thumbnail: ProductImage;
+  @Type(() => Attachment)
+  thumbnail: Attachment;
   
   @IsNotEmpty()
   @IsArray()
   @ValidateNested({each: true})
-  @Type(() => ProductImage)
-  images: ProductImage[];
+  @Type(() => Attachment)
+  images: Attachment[];
 }

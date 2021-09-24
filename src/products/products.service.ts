@@ -3,10 +3,12 @@ import {Injectable} from '@nestjs/common';
 import {InjectModel} from "@nestjs/mongoose";
 import {CreateProductDto} from './dto/create-product.dto';
 import {UpdateProductDto} from './dto/update-product.dto';
-import {Product, ProductDocument, ProductImage} from "./schemas/product.schema";
+import {Product, ProductDocument} from "./schemas/product.schema";
 import {RemoveException} from "../_exceptions/remove.exception";
 import {UpdateException} from "../_exceptions/update.exception";
 import {FilesService} from "../files/files.service";
+import {Attachment} from "../_schemas/attachment.schema";
+import {FindException} from "../_exceptions/find.exception";
 
 @Injectable()
 export class ProductsService {
@@ -17,7 +19,7 @@ export class ProductsService {
   private getFilesToDelete(foundProduct: Partial<Product>): string[] {
     // creates the array of string with the files that must be deleted
     // relative the stored product data
-    const filesList: ProductImage[] = [];
+    const filesList: Attachment[] = [];
     
     if (!foundProduct) {
       return []
@@ -40,18 +42,9 @@ export class ProductsService {
   }
   
   async create(createProductDto: CreateProductDto): Promise<Product> {
-    let newProduct = null;
+    let newProduct = new this.productModel(createProductDto);
     
-    try {
-      newProduct = new this.productModel(createProductDto);
-      
-      return await newProduct.save()
-    } catch (er) {
-      
-      await this.removeFiles(this.getFilesToDelete(newProduct))
-      
-      return er
-    }
+    return await newProduct.save()
   }
   
   async findAll(): Promise<Product[]> {
@@ -64,6 +57,10 @@ export class ProductsService {
   
   async update(id: string, updateProductDto: UpdateProductDto): Promise<Product> {
     const productToUpdate: ProductDocument = await this.productModel.findById(id).exec();
+    
+    if(!productToUpdate){
+      throw new FindException("Can't find the requested product")
+    }
     
     // If trying to add a new Thumbnail while already existing one,
     // block the user and throw an error. The thumbnail must first be manually removed.

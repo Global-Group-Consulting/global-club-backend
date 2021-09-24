@@ -1,4 +1,4 @@
-import {Attachment} from "../../_basics/attachment.entity";
+import {Attachment} from "../../_schemas/attachment.schema";
 import {IsArray, IsNotEmpty, IsOptional, ValidateNested} from "class-validator";
 import {Type} from "class-transformer";
 

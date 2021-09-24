@@ -1,8 +1,7 @@
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
-import {BasicSchema} from "../../_basics/BasicSchema";
+import {BasicSchema} from "../../_schemas/BasicSchema";
 import {Document, Types, Schema as MongoSchema} from "mongoose";
 import {UserBasic} from "../../users/entities/user.basic.entity";
-import {Product, ProductSchema} from "../../products/schemas/product.schema";
 import {Communication} from "../../communications/schemas/communications.schema";
 import {OrderStatusEnum} from "../enums/order.status.enum";
 import {OrderProduct, orderProductSchema} from "./order-product";

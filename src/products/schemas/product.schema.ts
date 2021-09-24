@@ -1,15 +1,9 @@
 import {Document, Types} from "mongoose";
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
-import {BasicSchema} from "../../_basics/BasicSchema";
+import {BasicSchema} from "../../_schemas/BasicSchema";
+import {Attachment, AttachmentSchema} from "../../_schemas/attachment.schema";
 
 export type ProductDocument = Product & Document;
-
-export class ProductImage {
-  id: string;
-  fileName: string;
-  size: number;
-  mimetype: string;
-}
 
 @Schema({
   timestamps: true,
@@ -31,11 +25,11 @@ export class Product implements BasicSchema {
   @Prop({required: true})
   category: string[];
   
-  @Prop({type: ProductImage})
-  thumbnail: ProductImage;
+  @Prop({type: AttachmentSchema})
+  thumbnail: Attachment;
   
-  @Prop({type: ProductImage})
-  images: ProductImage[];
+  @Prop({type: [AttachmentSchema]})
+  images: Attachment[];
   
   _id: Types.ObjectId;
   createdAt: Date;
