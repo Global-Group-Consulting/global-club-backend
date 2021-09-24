@@ -4,6 +4,7 @@ import {OrdersController} from './orders.controller';
 import {MongooseModule} from "@nestjs/mongoose";
 import {Order, OrdersSchema} from "./schemas/order.schema";
 import {Product, ProductSchema} from "../products/schemas/product.schema";
+import {CommunicationsModule} from "../communications/communications.module";
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import {Product, ProductSchema} from "../products/schemas/product.schema";
         name: Product.name,
         schema: ProductSchema
       }
-    ], "club")
+    ], "club"),
+    CommunicationsModule
   ],
   controllers: [OrdersController],
   providers: [OrdersService]

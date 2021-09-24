@@ -16,7 +16,8 @@ import {FilesModule} from "../files/files.module";
     FilesModule
   ],
   controllers: [CommunicationsController],
-  providers: [CommunicationsService]
+  providers: [CommunicationsService],
+  exports: [CommunicationsService]
 })
 export class CommunicationsModule {
 }

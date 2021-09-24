@@ -16,7 +16,7 @@ export class CreateCommunicationDto {
   @IsArray()
   @Type(() => Attachment)
   @ValidateNested({each: true})
-  attachments: Attachment[]
+  attachments?: Attachment[]
   
   @IsOptional()
   title: string
@@ -30,12 +30,12 @@ export class CreateCommunicationDto {
   @IsArray()
   @ValidateNested({each: true})
   @Type(() => UserBasic)
-  receivers: UserBasic[]
+  receivers?: UserBasic[]
   
   // Required only when the type is NEWSLETTER | COMMUNICATION | CHAT
   @IsOptional()
   @IsArray()
   @ValidateNested({each: true})
   @Type(() => UserBasic)
-  watchers: UserBasic[]
+  watchers?: UserBasic[]
 }
