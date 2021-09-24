@@ -24,7 +24,7 @@ export class Order implements BasicSchema {
   @Prop({type: MongoSchema.Types.ObjectId, ref: "Communication"})
   communication: Communication
   
-  @Prop({enum: OrderStatusEnum})
+  @Prop({enum: OrderStatusEnum, default: OrderStatusEnum.PENDING})
   status: OrderStatusEnum
   
   _id: Types.ObjectId;
