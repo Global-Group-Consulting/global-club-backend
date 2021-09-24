@@ -4,6 +4,7 @@ import {INestApplication, ValidationPipe} from "@nestjs/common";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 import {AuthGuard} from "./auth.guard";
 import {ConfigModule, ConfigService} from "@nestjs/config";
+import {MongoExceptionFilter} from "./_filters/mongo-exception.filter";
 
 function initSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
@@ -25,6 +26,7 @@ async function bootstrap() {
   initSwagger(app)
   
   app.useGlobalGuards(new AuthGuard(configService))
+  app.useGlobalFilters(new MongoExceptionFilter())
   app.useGlobalPipes(new ValidationPipe({
     transform: true
   }));
