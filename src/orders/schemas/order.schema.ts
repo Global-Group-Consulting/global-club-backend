@@ -5,6 +5,7 @@ import {UserBasic} from "../../users/entities/user.basic.entity";
 import {Product, ProductSchema} from "../../products/schemas/product.schema";
 import {Communication} from "../../communications/schemas/communications.schema";
 import {OrderStatusEnum} from "../enums/order.status.enum";
+import {OrderProduct, orderProductSchema} from "./order-product";
 
 export type OrderDocument = Order & Document;
 
@@ -15,12 +16,8 @@ export class Order implements BasicSchema {
   @Prop({required: true})
   user: UserBasic;
   
-  @Prop({
-    type: [{
-      type: MongoSchema.Types.ObjectId, ref: "Product"
-    }]
-  })
-  products: Product[];
+  @Prop({type: [orderProductSchema]})
+  products: OrderProduct[];
   
   @Prop({required: false, default: 0})
   amount: number
