@@ -1,41 +1,66 @@
-import {Document, Mongoose, Types} from "mongoose";
+import {Document, Schema as MongoSchema, Types} from "mongoose";
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
 import {MovementTypeEnum} from "../enums/movement.type.enum";
+import {calcBritesUsage} from "../utils/movements.utils";
 
 export type MovementDocument = Movement & Document;
 
-@Schema()
+@Schema({
+  timestamps: true
+})
 export class Movement {
   
-  @Prop()
+  @Prop({required: true})
   amountChange: number;
   
-  @Prop()
-  userId: Types.ObjectId;
+  @Prop({type: MongoSchema.Types.ObjectId, required: true})
+  userId: string;
   
-  @Prop({required: false})
-  created_by?: Types.ObjectId
+  @Prop({required: false, type: MongoSchema.Types.ObjectId, alias: "created_by"})
+  createdBy?: string
   
-  @Prop()
+  @Prop({required: true})
   semesterId: string;
   
-  @Prop()
-  referenceSemester: number;
+  @Prop({required: true})
+  notes: string;
   
-  @Prop()
+  @Prop({required: true})
   movementType: MovementTypeEnum;
   
-  @Prop()
+  @Prop({
+    immutable: true,
+    default: (data: MovementDocument) => {
+      return +data.semesterId.split("_")[1]
+    }
+  })
+  referenceSemester: number;
+  
+  @Prop({
+    immutable: true,
+    default: (data: MovementDocument) => {
+      return +data.semesterId.split("_")[0]
+    }
+  })
+  referenceYear: number;
+  
+  @Prop({
+    immutable: true,
+    default: (data: MovementDocument) => calcBritesUsage(data.semesterId).usableFrom
+  })
   usableFrom: Date;
   
-  @Prop()
+  @Prop({
+    immutable: true,
+    default: (data: MovementDocument) => calcBritesUsage(data.semesterId).expiresAt
+  })
   expiresAt: Date;
   
   /* ReadOnly props */
   
   _id: Types.ObjectId;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
   
   /**
    * @deprecated

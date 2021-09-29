@@ -1,10 +1,11 @@
 import {Controller, Get, Post, Body, Patch, Param, Delete, Req} from '@nestjs/common';
 import {MovementsService} from './movements.service';
-import {CreateMovementDto} from './dto/create-movement.dto';
-import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import {CreateManualMovementDto} from './dto/create-manual-movement.dto';
+import {ApiBearerAuth, ApiOperation, ApiTags} from "@nestjs/swagger";
 import {Movement} from "./schemas/movement.schema";
-import {ReadMovementDto} from "./dto/read-movement.dto";
-import {Request} from "express";
+import {ReadDto} from "../_basics/read.dto";
+import {RemoveManualMovementDto} from "./dto/remove-manual-movement.dto";
+import {UseMovementDto} from "./dto/use-movement.dto";
 
 @ApiBearerAuth()
 @ApiTags("Movements")
@@ -14,47 +15,38 @@ export class MovementsController {
   }
   
   /**
-   * Manual adding for a new user movement
-   * @param createMovementDto
-   * @param targetUserId
+   * Manually add brites for a specific user
    */
-  @Post(":userId")
-  create(@Body() createMovementDto: CreateMovementDto, @Param('userId') targetUserId: string) {
-    /*const targetUserId = params.id
-    const authUserId = auth.user._id
-  
-    /!** @type { import("../../../../@types/Brite/dto/brite.manualAdd").BriteManualAdd } *!/
-    const data = request.all()
-  
-    return BriteModel.manualAdd({
-      amountChange: data.amountChange,
-      notes: data.notes,
-      semesterId: data.semester,
-      userId,
-      created_by: currentUser
-    });*/
-    
-    return this.movementsService.create(createMovementDto);
+  @ApiOperation({summary: "Manually add brites"})
+  @Post(":id")
+  manualAdd(@Param() params: ReadDto, @Body() createMovementDto: CreateManualMovementDto) {
+    return this.movementsService.manualAdd(params.id, createMovementDto);
   }
   
   /**
-   * Fetch all existing movements for all users
+   * Fetch all existing movements for a specified users
    */
-  @Get()
-  findAll(@Req() req: Request): Promise<Movement[]> {
-    return this.movementsService.findAll();
+  @ApiOperation({summary: "Movements list for user"})
+  @Get(":id")
+  findAllForUser(@Param() params: ReadDto): Promise<Movement[]> {
+    return this.movementsService.findAllForUser(params.id);
   }
   
   /**
-   * Fetch all movements for the given user
+   * Allow to use the user brites.
    */
-  @Get(':id')
-  findOne(@Param() params: ReadMovementDto) {
-    return this.movementsService.findOne(params.id);
+  @ApiOperation({summary: "Use brites"})
+  @Patch(":id")
+  use(@Body() useMovementDto: UseMovementDto, @Param() params: ReadDto) {
+    return this.movementsService.use(params.id, useMovementDto);
   }
   
+  /**
+   * Manually removes brites from a user wallet
+   */
+  @ApiOperation({summary: "Manually remove brites"})
   @Delete(':id')
-  remove(@Param() params: ReadMovementDto) {
-    return this.movementsService.remove(params.id);
+  manualRemove(@Param() params: ReadDto, @Body() removeMovementDto: RemoveManualMovementDto) {
+    return this.movementsService.manualRemove(params.id, removeMovementDto);
   }
 }
