@@ -1,6 +1,7 @@
 import {IsArray, IsNotEmpty, IsObject, IsOptional, ValidateNested} from "class-validator";
 import {Type} from "class-transformer";
 import {Attachment} from "../../_schemas/attachment.schema";
+import {IsMongoIdArray} from "../../_basics/validators/IsMongoIdArray";
 
 export class CreateProductDto {
   @IsNotEmpty()
@@ -18,8 +19,8 @@ export class CreateProductDto {
   tags?: string[];
   
   @IsNotEmpty()
-  @IsArray()
-  category: string[];
+  @IsMongoIdArray()
+  categories: string[];
   
   @IsNotEmpty()
   @IsObject()

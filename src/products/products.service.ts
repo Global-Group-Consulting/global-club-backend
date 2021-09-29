@@ -9,10 +9,12 @@ import {UpdateException} from "../_exceptions/update.exception";
 import {FilesService} from "../files/files.service";
 import {Attachment} from "../_schemas/attachment.schema";
 import {FindException} from "../_exceptions/find.exception";
+import {ProductCategory, ProductCategoryDocument} from "../product-category/schemas/product-category.schema";
 
 @Injectable()
 export class ProductsService {
   constructor(@InjectModel(Product.name) private productModel: Model<ProductDocument>,
+              @InjectModel(ProductCategory.name) private productCategoryModel: Model<ProductCategoryDocument>,
               private filesService: FilesService) {
   }
   
@@ -42,6 +44,8 @@ export class ProductsService {
   }
   
   async create(createProductDto: CreateProductDto): Promise<Product> {
+    await this.checkCategoryExistence(createProductDto.categories)
+    
     let newProduct = new this.productModel(createProductDto);
     
     return await newProduct.save()
@@ -52,20 +56,27 @@ export class ProductsService {
   }
   
   async findOne(id: string): Promise<Product> {
-    return this.productModel.findById(id);
+    return this.productModel.findById(id, null, {populate: ["categories"]});
+  }
+  
+  async findByCategory(id: string): Promise<Product[]> {
+    return this.productModel.find({categories: id}).exec()
   }
   
   async update(id: string, updateProductDto: UpdateProductDto): Promise<Product> {
     const productToUpdate: ProductDocument = await this.productModel.findById(id).exec();
     
-    if(!productToUpdate){
+    if (!productToUpdate) {
       throw new FindException("Can't find the requested product")
     }
+    
+    // Check if provided categories really exists
+    await this.checkCategoryExistence(updateProductDto.categories)
     
     // If trying to add a new Thumbnail while already existing one,
     // block the user and throw an error. The thumbnail must first be manually removed.
     if (updateProductDto.thumbnail && productToUpdate.thumbnail) {
-      // when throwing an error there is no neet to manually remove the uploaded files
+      // when throwing an error there is no need to manually remove the uploaded files
       // because this will be done by the server who proxied this call.
       
       throw new UpdateException("Can't change the thumbnail. First must be removed the existing one.")
@@ -79,7 +90,7 @@ export class ProductsService {
       delete updateProductDto.images
     }
     
-    return this.productModel.findByIdAndUpdate(id, updateProductDto, {new: true})
+    return this.productModel.findByIdAndUpdate(id, updateProductDto as any, {new: true})
   }
   
   async remove(id: string) {
@@ -128,7 +139,7 @@ export class ProductsService {
     
     try {
       // Wait for the files cancellation call
-      const deleteObserver = await this.filesService.delete(filesToDelete)
+      await this.filesService.delete(filesToDelete)
       
       /*
       I must work on an external array otherwise th slice won't work while splicing the undesired image
@@ -161,8 +172,23 @@ export class ProductsService {
       await productToUpdate.save()
       
     } catch (er) {
-      throw  new RemoveException(er.response?.statusText || er.message)
+      throw new RemoveException(er.response?.statusText || er.message)
     }
     
+  }
+  
+  /**
+   * Check if the provided ids really exists or not.
+   */
+  async checkCategoryExistence(ids: string[]): Promise<void | FindException> {
+    if (!ids) {
+      return
+    }
+    
+    const categories = await this.productCategoryModel.find({_id: {$in: ids}}).exec()
+    
+    if (!categories || categories.length !== ids.length) {
+      throw new FindException("Can't find one or more of the specified categories")
+    }
   }
 }

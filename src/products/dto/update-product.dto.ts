@@ -3,6 +3,7 @@ import { CreateProductDto } from './create-product.dto';
 import {IsArray, IsNotEmpty, IsObject, IsOptional, ValidateNested} from "class-validator";
 import {Type} from "class-transformer";
 import {Attachment} from "../../_schemas/attachment.schema";
+import {IsMongoIdArray} from "../../_basics/validators/IsMongoIdArray";
 
 export class UpdateProductDto extends PartialType(CreateProductDto) {
   @IsNotEmpty()
@@ -20,8 +21,8 @@ export class UpdateProductDto extends PartialType(CreateProductDto) {
   tags?: string[];
   
   @IsNotEmpty()
-  @IsArray()
-  category: string[];
+  @IsMongoIdArray()
+  categories: string[];
   
   @IsNotEmpty()
   @IsObject()
