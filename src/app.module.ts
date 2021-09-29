@@ -1,4 +1,4 @@
-import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
+import {Module} from '@nestjs/common';
 import {MongooseModule} from '@nestjs/mongoose';
 import {ConfigModule, ConfigService} from '@nestjs/config';
 
@@ -8,9 +8,10 @@ import {ProductsModule} from './products/products.module';
 import {UsersModule} from './users/users.module';
 import {CommunicationsModule} from './communications/communications.module';
 import {MovementsModule} from './movements/movements.module';
-import { AxiosModule } from './axios/axios.module';
-import { FilesModule } from './files/files.module';
-import { OrdersModule } from './orders/orders.module';
+import {AxiosModule} from './axios/axios.module';
+import {FilesModule} from './files/files.module';
+import {OrdersModule} from './orders/orders.module';
+import {ProductCategoryModule} from './product-category/product-category.module';
 import databaseConfig from './config/db.config';
 import httpConfig from './config/http.config';
 
@@ -44,6 +45,7 @@ import httpConfig from './config/http.config';
     CommunicationsModule,
     OrdersModule,
     ProductsModule,
+    ProductCategoryModule,
     MovementsModule,
     UsersModule,
     AxiosModule,
