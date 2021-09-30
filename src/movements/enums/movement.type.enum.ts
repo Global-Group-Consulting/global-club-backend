@@ -12,5 +12,5 @@ export enum MovementTypeEnum {
   DEPOSIT_TRANSFERRED = "deposit_transferred",
 
   // When a user uses them
-  DEPOSIT_COLLECTED = "deposit_collected"
+  DEPOSIT_USED = "deposit_used"
 }

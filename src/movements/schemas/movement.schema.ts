@@ -2,6 +2,7 @@ import {Document, Schema as MongoSchema, Types} from "mongoose";
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
 import {MovementTypeEnum} from "../enums/movement.type.enum";
 import {calcBritesUsage} from "../utils/movements.utils";
+import {castToFixedDecimal} from "../../utilities/Formatters";
 
 export type MovementDocument = Movement & Document;
 
@@ -10,7 +11,7 @@ export type MovementDocument = Movement & Document;
 })
 export class Movement {
   
-  @Prop({required: true})
+  @Prop({required: true, set: (val: number) => castToFixedDecimal(val)})
   amountChange: number;
   
   @Prop({type: MongoSchema.Types.ObjectId, required: true})
@@ -27,6 +28,9 @@ export class Movement {
   
   @Prop({required: true})
   movementType: MovementTypeEnum;
+  
+  @Prop({type: MongoSchema.Types.ObjectId, ref: "Orders"})
+  order: string;
   
   @Prop({
     immutable: true,
