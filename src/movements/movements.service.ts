@@ -9,6 +9,9 @@ import {UseMovementDto} from './dto/use-movement.dto';
 import {CreateManualMovementDto} from './dto/create-manual-movement.dto';
 import {RemoveManualMovementDto} from "./dto/remove-manual-movement.dto";
 import {MovementTypeEnum} from "./enums/movement.type.enum";
+import {castToObjectId} from "../utilities/Formatters";
+import {CalcTotalsDto} from "./dto/calc-totals.dto";
+import {WithdrawalException} from "./exceptions/withdrawal.exception";
 
 @Injectable()
 export class MovementsService {
@@ -36,13 +39,17 @@ export class MovementsService {
   }
   
   async use(userId: string, useMovementDto: UseMovementDto) {
-    await this.checkIfHasEnough(userId, useMovementDto.amountChange)
+    const totalBySemesters = await this.checkIfEnough(userId, useMovementDto.amountChange)
+    
+    
+    // TODO:: quando si riscuote,fare la somma per tutti i semestri, e per ciascuno,
+    // riscuotere partendo dal più vecchio
     
     return `This action updates a #${userId} movement`;
   }
   
   async manualRemove(userId: string, removeMovementDto: RemoveManualMovementDto) {
-    await this.checkIfHasEnough(userId, removeMovementDto.amountChange)
+    await this.checkIfEnough(userId, removeMovementDto.amountChange, removeMovementDto.semesterId)
     
     const newMovement = new this.movementModel({
       ...removeMovementDto,
@@ -54,22 +61,11 @@ export class MovementsService {
     return newMovement.save()
   }
   
-  async checkIfHasEnough(userId: string, amount: number) {
+  async calcTotalBrites(userId: string, semesterId?: string): Promise<CalcTotalsDto[]> {
     const usableFrom = new Date();
     const expiresAt = new Date(new Date().setHours(23, 59, 59))
     
-    const match = {
-      '$match': {
-        'userId': userId,
-        'usableFrom': {
-          '$lte': usableFrom
-        },
-        'expiresAt': {
-          '$gte': expiresAt
-        }
-      }
-    }
-    
+    // Convert query for converting a positive number to a negative one.
     const convertToNegative = {
       '$convert': {
         'input': {
@@ -86,6 +82,25 @@ export class MovementsService {
       }
     }
     
+    // Matching query for the aggregation
+    const match = {
+      '$match': {
+        'userId': castToObjectId(userId),
+        'usableFrom': {
+          '$lte': usableFrom
+        },
+        'expiresAt': {
+          '$gte': expiresAt
+        }
+      }
+    }
+    
+    // If the semesterId argument is provided, includes it in the match query
+    if (semesterId) {
+      match.$match["semesterId"] = semesterId
+    }
+    
+    // Grouping query
     const group = {
       '$group': {
         '_id': {
@@ -116,21 +131,28 @@ export class MovementsService {
             }
           }
         },
-        'movements': {
+        /*'movements': {
           '$push': '$$ROOT'
-        }
+        }*/
       }
     }
     
-    const result = await this.movementModel.aggregate([
+    return this.movementModel.aggregate([
         match,
         group
       ]
     )
+  }
+  
+  async checkIfEnough(userId: string, amount: number, semesterId?: string): Promise<CalcTotalsDto[]> {
+    const totalBySemesters = await this.calcTotalBrites(userId, semesterId);
     
-    // TODO:: una volta recuperato i dati, controllare se si posseggono abbastanza brite
+    const totals = totalBySemesters.reduce((acc, curr) => acc + curr.total, 0)
     
-    // TODO:: quando si riscuote,fare la somma per tutti i semestri, e per ciascuno,
-    // riscuotere partendo dal più vecchio
+    if (totals < amount) {
+      throw new WithdrawalException("The requestes amount is higher than the available amount.")
+    }
+    
+    return totalBySemesters
   }
 }

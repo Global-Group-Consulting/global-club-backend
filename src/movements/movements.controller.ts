@@ -6,6 +6,7 @@ import {Movement} from "./schemas/movement.schema";
 import {ReadDto} from "../_basics/read.dto";
 import {RemoveManualMovementDto} from "./dto/remove-manual-movement.dto";
 import {UseMovementDto} from "./dto/use-movement.dto";
+import {CalcTotalsDto} from "./dto/calc-totals.dto";
 
 @ApiBearerAuth()
 @ApiTags("Movements")
@@ -30,6 +31,15 @@ export class MovementsController {
   @Get(":id")
   findAllForUser(@Param() params: ReadDto): Promise<Movement[]> {
     return this.movementsService.findAllForUser(params.id);
+  }
+  
+  /**
+   * Get available brites per semester
+   */
+  @ApiOperation({summary: "Available brites per semester"})
+  @Get(":id/total")
+  calcTotalBrites(@Param() params: ReadDto): Promise<CalcTotalsDto[]> {
+    return this.movementsService.calcTotalBrites(params.id);
   }
   
   /**
