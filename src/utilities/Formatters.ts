@@ -147,3 +147,18 @@ export const formatPaymentMethod = function (method, otherMethod) {
   
   return toReturn.join(" ")
 }
+
+
+export function castToFixedDecimal(value: string | number) {
+  let newValue = value;
+  
+  if (typeof newValue === "string") {
+    newValue = Number(newValue)
+  }
+  
+  if (Number.isNaN(newValue)) {
+    return 0
+  }
+  
+  return +newValue.toFixed(2)
+}
