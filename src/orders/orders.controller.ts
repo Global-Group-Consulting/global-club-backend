@@ -5,6 +5,7 @@ import {UpdateOrderDto} from './dto/update-order.dto';
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {Order} from "./schemas/order.schema";
 import {ReadDto} from "../_basics/read.dto";
+import {UpdateOrderStatusDto} from "./dto/update-order-status.dto";
 
 @ApiBearerAuth()
 @ApiTags("Orders")
@@ -31,6 +32,11 @@ export class OrdersController {
   @Patch(':id')
   update(@Param() params: ReadDto, @Body() updateOrderDto: UpdateOrderDto) {
     return this.ordersService.update(params.id, updateOrderDto);
+  }
+  
+  @Patch(':id/status')
+  updateStatus(@Param() params: ReadDto, @Body() updateOrderStatusDto: UpdateOrderStatusDto): Promise<Order> {
+    return this.ordersService.updateStatus(params.id, updateOrderStatusDto);
   }
   
   @Delete(':id')

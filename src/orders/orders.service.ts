@@ -11,6 +11,7 @@ import {User} from '../users/entities/user.entity';
 import {FindException} from '../_exceptions/find.exception';
 import {CommunicationsService} from '../communications/communications.service';
 import {CommunicationTypeEnum} from '../communications/enums/communication.type.enum';
+import {UpdateOrderStatusDto} from "./dto/update-order-status.dto";
 
 @Injectable()
 export class OrdersService {
@@ -106,6 +107,14 @@ export class OrdersService {
   
   update(id: string, updateOrderDto: UpdateOrderDto) {
     return `This action updates a #${id} order`;
+  }
+  
+  async updateStatus(id: string, updateOrderStatusDto: UpdateOrderStatusDto): Promise<Order> {
+    // TODO:: completare la funzione che cambia lo stato dell'ordine
+    // nel caso in cui viene approvato, aggiungere i movimenti necessari usando il metodo
+    // use nel movementsService
+    
+    return {} as Order
   }
   
   remove(id: string) {
