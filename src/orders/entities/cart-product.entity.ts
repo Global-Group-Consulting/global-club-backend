@@ -1,4 +1,4 @@
-import {IsMongoId, IsNotEmpty, IsNumber} from "class-validator";
+import {IsMongoId, IsNotEmpty, IsNumber, Min} from "class-validator";
 
 export class CartProduct {
   @IsNotEmpty()
@@ -7,5 +7,6 @@ export class CartProduct {
   
   @IsNotEmpty()
   @IsNumber()
+  @Min(1)
   qta: number;
 }
