@@ -7,7 +7,8 @@ import {Movement, MovementSchema} from "./schemas/movement.schema";
 @Module({
   imports: [MongooseModule.forFeature([{name: Movement.name, schema: MovementSchema}], "club")],
   controllers: [MovementsController],
-  providers: [MovementsService]
+  providers: [MovementsService],
+  exports: [MovementsService],
 })
 export class MovementsModule {
 }
