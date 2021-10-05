@@ -45,8 +45,8 @@ export class MovementsController {
   /**
    * Allow to use the user brites.
    */
-  @ApiOperation({summary: "Use brites"})
-  @Patch(":id")
+  /* @ApiOperation({summary: "Use brites"})
+  @Patch(":id") */
   use(@Body() useMovementDto: UseMovementDto, @Param() params: ReadDto): Promise<Movement[]> {
     return this.movementsService.use(params.id, useMovementDto);
   }
