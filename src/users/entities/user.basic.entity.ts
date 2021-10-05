@@ -1,8 +1,7 @@
 import {UserRoleEnum} from "../enums/user.role.enum";
-import {Prop} from "@nestjs/mongoose";
 
 export class UserBasic {
-  _id: string;
+  id: string;
   clubPack: string;
   gold: boolean;
   email: string;
