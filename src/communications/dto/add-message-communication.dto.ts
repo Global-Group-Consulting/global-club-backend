@@ -10,5 +10,5 @@ export class AddMessageCommunicationDto {
   @IsArray()
   @Type(() => Attachment)
   @ValidateNested({each: true})
-  attachments: Attachment[]
+  attachments?: Attachment[]
 }
