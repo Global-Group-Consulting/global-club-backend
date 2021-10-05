@@ -1,26 +1,27 @@
 import {REQUEST} from "@nestjs/core";
 import {Model} from "mongoose";
 import {Inject, Injectable} from '@nestjs/common';
-import {InjectModel} from "@nestjs/mongoose";
-import {Movement, MovementDocument} from "./schemas/movement.schema";
-import {AuthRequest} from "../_basics/AuthRequest";
-import {User} from "../users/entities/user.entity";
-import {UseMovementDto} from './dto/use-movement.dto';
-import {CreateManualMovementDto} from './dto/create-manual-movement.dto';
-import {RemoveManualMovementDto} from "./dto/remove-manual-movement.dto";
-import {MovementTypeEnum} from "./enums/movement.type.enum";
-import {castToFixedDecimal, castToObjectId} from "../utilities/Formatters";
-import {CalcTotalsDto} from "./dto/calc-totals.dto";
-import {WithdrawalException} from "./exceptions/withdrawal.exception";
+import { InjectModel } from '@nestjs/mongoose'
+import { Movement, MovementDocument } from './schemas/movement.schema'
+import { AuthRequest } from '../_basics/AuthRequest'
+import { User } from '../users/entities/user.entity'
+import { UseMovementDto } from './dto/use-movement.dto'
+import { CreateManualMovementDto } from './dto/create-manual-movement.dto'
+import { RemoveManualMovementDto } from './dto/remove-manual-movement.dto'
+import { MovementTypeEnum } from './enums/movement.type.enum'
+import { castToFixedDecimal, castToObjectId } from '../utilities/Formatters'
+import { CalcTotalsDto } from './dto/calc-totals.dto'
+import { WithdrawalException } from './exceptions/withdrawal.exception'
+import { UpdateException } from '../_exceptions/update.exception'
 
 @Injectable()
 export class MovementsService {
-  constructor(@InjectModel(Movement.name) private movementModel: Model<MovementDocument>,
-              @Inject(REQUEST) private request: AuthRequest) {
+  constructor (@InjectModel(Movement.name) private movementModel: Model<MovementDocument>,
+    @Inject(REQUEST) private request: AuthRequest) {
   }
   
-  get authUser(): User {
-    return this.request.auth.user;
+  get authUser (): User {
+    return this.request.auth.user
   }
   
   async manualAdd(userId: string, createMovementDto: CreateManualMovementDto): Promise<Movement> {
@@ -52,16 +53,24 @@ export class MovementsService {
   }
   
   async use(userId: string, useMovementDto: UseMovementDto): Promise<Movement[]> {
+    if (!userId) {
+      throw new UpdateException('Missing userId')
+    }
+  
+    if (!useMovementDto.amountChange) {
+      throw new UpdateException("The amount must be higher than 1.")
+    }
+  
     const totalBySemesters = await this.checkIfEnough(userId, useMovementDto.amountChange)
     const semestersToUse: (CalcTotalsDto & { toWithdrawal?: number })[] = []
     const createdMovements: Movement[] = []
-    
+  
     let remainingAmount = useMovementDto.amountChange
-    
+  
     // Create a list of the semesters from which bust be withdrawal a certain amount.
     // This amount is specified in the property "toWithdrawal" created inside this cycle
     for (const semester of totalBySemesters) {
-      const availableAmount = semester.total;
+      const availableAmount = semester.total
       
       if (remainingAmount === 0) {
         break;
@@ -104,15 +113,22 @@ export class MovementsService {
         movementType: MovementTypeEnum.DEPOSIT_USED,
         order: useMovementDto.orderId
       })
-      
+  
       await newMovement.save()
-      
+  
       createdMovements.push(newMovement)
     }
-    
+  
     return createdMovements
   }
   
+  /**
+   * Allows to cancel a movement by completely removing it from the DB.
+   * This must be used ONLY to cancel automatic movements, not those created manually
+   */
+  async cancel (movementId) {
+    await this.movementModel.findByIdAndDelete(movementId)
+  }
   
   /**
    * Based on all user's movements, group them by semester and for each semester,
@@ -120,8 +136,8 @@ export class MovementsService {
    *
    * The semesters are fetched considering the usableFrom and expiresAt fields.
    */
-  async calcTotalBrites(userId: string, semesterId?: string): Promise<CalcTotalsDto[]> {
-    const usableFrom = new Date();
+  async calcTotalBrites (userId: string, semesterId?: string): Promise<CalcTotalsDto[]> {
+    const usableFrom = new Date()
     const expiresAt = new Date(new Date().setHours(23, 59, 59))
     
     // Convert query for converting a positive number to a negative one.
