@@ -12,24 +12,25 @@ function initSwagger(app: INestApplication) {
     .setDescription('The Global Club API description')
     .setVersion('1.0')
     .addBearerAuth()
-    .build();
+    .build()
   
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config)
   
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api-' + process.env.SWAGGER_KEY, app, document)
 }
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   
-  initSwagger(app)
-  
+  app.setGlobalPrefix('api')
   app.useGlobalGuards(new AuthGuard(configService))
   app.useGlobalFilters(new MongoExceptionFilter())
   app.useGlobalPipes(new ValidationPipe({
     transform: true
   }));
+  
+  initSwagger(app)
   
   await app.listen(process.env.PORT || 4000);
 }
