@@ -17,6 +17,7 @@ import { MessageTypeEnum } from '../communications/enums/message.type.enum'
 import { UpdateException } from '../_exceptions/update.exception'
 import { MovementsService } from '../movements/movements.service'
 import { Movement, MovementDocument } from '../movements/schemas/movement.schema'
+import { OrderProduct } from './schemas/order-product'
 
 @Injectable()
 export class OrdersService extends BasicService {
@@ -56,21 +57,34 @@ export class OrdersService extends BasicService {
   async create (createOrderDto: CreateOrderDto) {
     const newData: any = {
       ...createOrderDto,
-      user: this.authUser,
+      user: this.authUser
     }
-    
+  
     // Get the list of only ids
-    const productIds = createOrderDto.products.reduce((acc, curr) => {
+    const productIds: string[] = createOrderDto.products.reduce((acc, curr) => {
       acc.push(curr.id)
-      
+    
       return acc
     }, [])
+  
+    const productsExists: ProductDocument[] = await this.checkProductsExistence(productIds)
+  
+    // Map newData products to add for each one its actual price,
+    // this to avoid problems if in the meanwhile the product price gets updated and the order is not yet completed.
+    newData.products = newData.products.map((prod: OrderProduct) => {
+      // The find method doesn't need any check because the productsExists already has been checked so the products
+      // there are the same in newData.products
+      prod.price = productsExists.find(p => p._id.toString() === prod.id).price
     
-    const productsExists = await this.checkProductsExistence(productIds)
+      // Update total amount for the order by calculating each product price * qta
+      newOrder.amount += prod.price * prod.qta
     
+      return prod
+    })
+  
     // Temporary generates the order, but don't save it yet
     const newOrder = new this.orderModel(newData)
-    
+  
     // Generates the communication associated with this order.
     const relatedCommunication = await this.communicationService.create({
       type: CommunicationTypeEnum.ORDER,
@@ -84,22 +98,22 @@ export class OrdersService extends BasicService {
             (prod) => prod.id === curr.id,
           )
           acc.push(`<strong>${curr.title}</strong> x ${incomingProduct.qta}`)
-    
+  
           return acc
         }, [])
         .join('</li><li>')}</li>
         </ul>`,
     })
-    
+  
     // Assign the communication id as a ref to the order
-    newOrder.communication = relatedCommunication.id;
-    
+    newOrder.communication = relatedCommunication.id
+  
     try {
       return await newOrder.save()
     } catch (e) {
       // If there is an error i remove the created communication
       await this.communicationService.remove(relatedCommunication.id)
-      
+    
       throw e
     }
   }
