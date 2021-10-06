@@ -9,4 +9,6 @@ export class CartProduct {
   @IsNumber()
   @Min(1)
   qta: number;
+  
+  price?: number;
 }
