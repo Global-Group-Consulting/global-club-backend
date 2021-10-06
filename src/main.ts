@@ -2,9 +2,9 @@ import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app.module';
 import {INestApplication, ValidationPipe} from "@nestjs/common";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
-import {AuthGuard} from "./auth.guard";
-import {ConfigModule, ConfigService} from "@nestjs/config";
-import {MongoExceptionFilter} from "./_filters/mongo-exception.filter";
+import { AuthGuard } from './auth.guard'
+import { ConfigService } from '@nestjs/config'
+import { MongoExceptionFilter } from './_filters/mongo-exception.filter'
 
 function initSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
@@ -31,7 +31,7 @@ async function bootstrap() {
     transform: true
   }));
   
-  await app.listen(4000);
+  await app.listen(process.env.PORT || 4000);
 }
 
 bootstrap();
