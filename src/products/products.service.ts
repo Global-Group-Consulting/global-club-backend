@@ -90,7 +90,7 @@ export class ProductsService {
       delete updateProductDto.images
     }
     
-    return this.productModel.findByIdAndUpdate(id, updateProductDto as any, {new: true})
+    return this.productModel.findByIdAndUpdate(id, updateProductDto as any, { new: true, populate: ["categories"] })
   }
   
   async remove(id: string) {
@@ -163,14 +163,15 @@ export class ProductsService {
           finalImages.splice(imgIndex, 1)
         }
       })
-      
+  
       // If any image was removed, update the stored image
       if (finalImages.length !== productToUpdate.images.length) {
         productToUpdate.images = finalImages
       }
-      
+  
       await productToUpdate.save()
-      
+  
+      return this.findOne(productToUpdate.id.toString())
     } catch (er) {
       throw new RemoveException(er.response?.statusText || er.message)
     }
