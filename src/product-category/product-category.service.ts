@@ -60,12 +60,12 @@ export class ProductCategoryService {
     }
   }
   
-  async removeThumbnail(id: string, category?: ProductCategoryDocument) {
+  async removeThumbnail (id: string, category?: ProductCategoryDocument): Promise<ProductCategory> {
     /*
    By default tries to read the product from the params of the function
     */
     let categoryToUpdate: ProductCategoryDocument = category;
-    
+  
     /*
     If the product in the params of the function is null
     but the productId is provided, find the relative product
@@ -81,11 +81,13 @@ export class ProductCategoryService {
     try {
       // Wait for the files cancellation call
       await this.filesService.delete([categoryToUpdate.thumbnail.id])
-      
+  
       categoryToUpdate.thumbnail = null
-      
+  
       await categoryToUpdate.save()
-      
+  
+      return this.productCategoryModel.findById(id)
+  
     } catch (er) {
       throw new RemoveException(er.response?.statusText || er.message)
     }
