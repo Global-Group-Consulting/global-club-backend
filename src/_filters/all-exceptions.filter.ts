@@ -9,29 +9,38 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
-    
+  
     const status =
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
+  
+    let message = exception["message"];
+  
+    if (exception instanceof HttpException) {
+      const errResponse = exception.getResponse();
     
-    const message =
-      exception instanceof HttpException
-        ? exception.message
-        : exception["message"];
-    
+      if (errResponse) {
+        message = errResponse["message"] ?? errResponse;
+      }
+    }
+  
     const name = exception["name"]
-    const code = "CLUB"
-    
-    const newLoggedError = await this.systemLogs.add({
-      name,
-      message,
-      code,
-      status,
-      path: request.url,
-      stack: exception["stack"]
-    })
-    
+    const code = "CLUB";
+    let newLoggedError;
+  
+    // catch and log only server errors
+    if (status.toString().startsWith("5")) {
+      newLoggedError = await this.systemLogs.add({
+        name,
+        message,
+        code,
+        status,
+        path: request.url,
+        stack: exception["stack"]
+      })
+    }
+  
     response.status(status).json({
       statusCode: status,
       message,
@@ -39,7 +48,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       timestamp: new Date().toISOString(),
       path: request.url,
       code,
-      logId: newLoggedError._id?.toString()
+      logId: newLoggedError?._id?.toString()
     });
     
     /*{

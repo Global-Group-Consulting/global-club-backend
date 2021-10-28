@@ -39,7 +39,7 @@ async function bootstrap() {
   
   app.setGlobalPrefix('api')
   app.useGlobalGuards(new AuthGuard(configService))
-  // app.useGlobalFilters(new MongoExceptionFilter(), new AllExceptionsFilter(systemLogsService))
+  app.useGlobalFilters(new MongoExceptionFilter(), new AllExceptionsFilter(systemLogsService))
   app.useGlobalPipes(new ValidationPipe({
     transform: true
   }));
