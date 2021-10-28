@@ -77,9 +77,13 @@ export class AuthGuard implements CanActivate {
     }
     
     if (this.configService.get<string>("NODE_ENV") !== "development") {
-      validationResult = this.validateRequest(reqData._auth_user, reqHeaders["client-secret"], reqHeaders["server-secret"]);
-      
-      auth.user = reqData._auth_user;
+      validationResult = this.validateRequest(reqData._auth_user, reqHeaders['client-secret'], reqHeaders['server-secret'])
+  
+      if (!validationResult) {
+        return false
+      }
+  
+      auth.user = reqData._auth_user
       auth.permissions = reqData._auth_user.permissions
       auth.roles = reqData._auth_user.roles
     } else {
@@ -96,23 +100,28 @@ export class AuthGuard implements CanActivate {
   }
   
   validateRequest(authUser: User, clientSecret: string, serverSecret): boolean {
-    const clientRegExp = new RegExp("^clt-([A-Za-z0-9]{1,})-(main|club)$")
-    const serverRegExp = new RegExp("^srv-([A-Za-z0-9]{1,})-(main|club)$")
-    
-    const existenceTests = !!clientSecret && !!serverSecret && !!authUser;
-    const clientValidity = !!clientSecret.match(clientRegExp)
-    const serverValidity = !!serverSecret.match(serverRegExp)
-    
+    const clientRegExp = new RegExp('^clt-([A-Za-z0-9]{1,})-(main|club)$')
+    const serverRegExp = new RegExp('^srv-([A-Za-z0-9]{1,})-(main|club)$')
+  
+    const existenceTests = !!clientSecret && !!serverSecret && !!authUser
+  
     /*
     I'm checking exist and are in the required format and if a user is provided.
     I don't need too much checks because the server is not accessible from the outside,
     but only from another server.
      */
-    
-    if (!existenceTests || !clientValidity || !serverValidity) {
+  
+    if (!existenceTests) {
       return false
     }
-    
+  
+    const clientValidity = !!clientSecret.match(clientRegExp)
+    const serverValidity = !!serverSecret.match(serverRegExp)
+  
+    if (!clientValidity || !serverValidity) {
+      return false
+    }
+  
     return true
   }
 }

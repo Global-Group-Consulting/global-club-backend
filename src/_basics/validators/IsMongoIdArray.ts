@@ -10,15 +10,19 @@ import {
 @ValidatorConstraint({async: true})
 export class IsMongoIdArrayConstraint implements ValidatorConstraintInterface {
   validate(value: any[], args: ValidationArguments) {
+    if (!value) {
+      return false;
+    }
+  
     for (const str of value) {
-      const isValid = isMongoId(str)
-      
+      const isValid = isMongoId(str);
+    
       if (!isValid) {
-        return false
+        return false;
       }
     }
-    
-    return true
+  
+    return true;
   }
   
   defaultMessage() {

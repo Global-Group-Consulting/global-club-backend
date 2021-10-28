@@ -51,7 +51,7 @@ export class ProductsController {
   }
   
   @Delete(':id/files')
-  async removeFiles(@Param() params: ReadProductDto, @Body() body: DeleteProductFilesDto): Promise<void> {
+  async removeFiles (@Param() params: ReadProductDto, @Body() body: DeleteProductFilesDto): Promise<Product> {
     return this.productsService.removeFiles(body.filesToDelete, params.id)
   }
 }

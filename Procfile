@@ -1,1 +1,1 @@
-web: ENV_SILENT=true yarn start
+web: yarn run start:prod
