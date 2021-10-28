@@ -89,7 +89,7 @@ export class ProductCategoryService {
       return this.productCategoryModel.findById(id)
   
     } catch (er) {
-      throw new RemoveException(er.response?.statusText || er.message)
+      throw new RemoveException("Can't remove this file due to: " + (er.response?.statusText || er.message || er.code))
     }
   }
   
