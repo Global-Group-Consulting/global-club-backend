@@ -26,7 +26,8 @@ export class PaginatedFilterDto<T = any> implements Pick<PaginatedResult, "order
   @Min(10)
   perPage?: number = 30;
   
-  /*  @IsOptional()
-    @IsArray()
-    filter?: string[]*/
+  // @IsOptional()
+  @Transform(({ value }) => (value instanceof Array) ? value : [value])
+  @IsArray()
+  filter?: string[]
 }

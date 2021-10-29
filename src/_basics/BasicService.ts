@@ -1,5 +1,5 @@
 import { FindException } from "../_exceptions/find.exception";
-import { Document, Model, Query, QueryOptions } from 'mongoose';
+import { Model, QueryOptions } from 'mongoose';
 
 export enum PaginationOrderEnum {
   ASC = "ASC",
@@ -11,6 +11,7 @@ export interface PaginationOptions {
   perPage?: number;
   sortBy?: string[];
   order?: PaginationOrderEnum
+  filter?: string[]
 }
 
 export interface PaginatedResult<T = any> extends PaginationOptions {
@@ -44,7 +45,7 @@ export abstract class BasicService {
    *
    * @protected
    */
-  protected async findPaginated<T> (filter: any,
+  protected async findPaginated<T> (filter: Partial<T>,
     paginationOptions?: PaginationOptions,
     projection?: any, options?: QueryOptions): Promise<PaginatedResult<T[]>> {
     
@@ -66,10 +67,30 @@ export abstract class BasicService {
       Object.assign(opts, options)
     }
     
-    console.log("paginating data", opts)
+    const filters = { ...filter };
     
-    const count: number = await this.model.find(filter, projection, options).count().exec()
-    const data: T[] = await this.model.find(filter, projection, opts).exec()
+    if (paginationOptions.filter) {
+      paginationOptions.filter.forEach(filter => {
+        const blocks = filter.split(":");
+        const key: string = blocks[0].trim();
+        const originalValue: string = blocks[1].trim();
+        let value: any = originalValue;
+        
+        if (originalValue.startsWith("+")) {
+          value = +originalValue.replace("+", "")
+        }
+        
+        // if prop already exists, ignore it
+        if (!key || !value || filters.hasOwnProperty(key)) {
+          return
+        }
+        
+        filters[key] = value
+      })
+    }
+    
+    const count: number = await this.model.find(filters, projection, options).count().exec()
+    const data: T[] = await this.model.find(filters, projection, opts).exec()
     
     return {
       ...sortOptions,
