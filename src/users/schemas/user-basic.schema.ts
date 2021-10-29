@@ -1,10 +1,14 @@
-import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Document } from 'mongoose';
+
+export type UserBasicDocument = UserBasic & Document
 
 @Schema({
-  _id: false
+  _id: false,
+  collection: "users"
 })
 export class UserBasic {
-  @Prop({alias: "id"})
+  @Prop({ alias: "id" })
   _id: string
   
   @Prop()
