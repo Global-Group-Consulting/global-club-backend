@@ -6,6 +6,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
 import { AuthGuard } from './auth.guard'
 import { MongoExceptionFilter } from './_filters/mongo-exception.filter'
+import { AllExceptionsFilter } from './_filters/all-exceptions.filter';
+import { SystemLogsService } from './system-logs/system-logs.service';
 
 function initSwagger (app: INestApplication) {
   const config = new DocumentBuilder()
@@ -33,10 +35,11 @@ function initSwagger (app: INestApplication) {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
+  const systemLogsService = app.get(SystemLogsService);
   
   app.setGlobalPrefix('api')
   app.useGlobalGuards(new AuthGuard(configService))
-  app.useGlobalFilters(new MongoExceptionFilter())
+  app.useGlobalFilters(new MongoExceptionFilter(), new AllExceptionsFilter(systemLogsService))
   app.useGlobalPipes(new ValidationPipe({
     transform: true
   }));
