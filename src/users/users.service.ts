@@ -7,6 +7,7 @@ import { Model } from 'mongoose';
 import { BasicService, PaginatedResult } from '../_basics/BasicService';
 import { User } from './entities/user.entity';
 import { PaginatedFilterDto } from '../_basics/pagination.dto';
+import { ReadUserGroupsDto } from './dto/read-user-groups.dto';
 
 @Injectable()
 export class UsersService extends BasicService {
@@ -20,9 +21,23 @@ export class UsersService extends BasicService {
   }
   
   async findAll (paginationDto: PaginatedFilterDto): Promise<PaginatedResult<User[]>> {
-    const result = await this.findPaginated<User>({}, paginationDto)
-    
-    return result
+    return await this.findPaginated<User>({
+      gold: true
+    }, paginationDto)
+  }
+  
+  async groupBy (field: keyof User): Promise<ReadUserGroupsDto[]> {
+    return this.userModel.aggregate<ReadUserGroupsDto>([
+      {
+        $match: { gold: true }
+      },
+      {
+        $group: {
+          _id: "$" + field,
+          count: { $count: {} }
+        }
+      }
+    ]).exec()
   }
   
   findOne (id: number) {

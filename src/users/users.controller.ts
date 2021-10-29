@@ -4,6 +4,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from "@nestjs/swagger";
 import { PaginatedFilterDto } from '../_basics/pagination.dto';
+import { User } from './entities/user.entity';
+import { PaginatedResult } from '../_basics/BasicService';
+import { ReadUserGroupsDto } from './dto/read-user-groups.dto';
 
 @ApiTags("Users")
 @Controller('users')
@@ -16,17 +19,22 @@ export class UsersController {
   }
   
   @Get()
-  findAll (@Query() paginationDto: PaginatedFilterDto) {
+  findAll (@Query() paginationDto: PaginatedFilterDto): Promise<PaginatedResult<User[]>> {
     return this.usersService.findAll(paginationDto);
   }
-
+  
+  @Get("/groups")
+  readGroups (): Promise<ReadUserGroupsDto[]> {
+    return this.usersService.groupBy("role");
+  }
+  
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne (@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
-
+  
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update (@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
