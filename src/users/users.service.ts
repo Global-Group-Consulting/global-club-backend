@@ -34,7 +34,7 @@ export class UsersService extends BasicService {
       {
         $group: {
           _id: "$" + field,
-          count: { $count: {} }
+          count: { $sum: 1 }
         }
       }
     ]).exec()
