@@ -173,7 +173,7 @@ export class ProductsService {
   
       return this.findOne(productToUpdate.id.toString())
     } catch (er) {
-      throw new RemoveException(er.response?.data?.error?.message || er.response?.statusText || er.message, er.response?.status)
+      throw new RemoveException(er.message, er.status)
     }
     
   }
