@@ -9,15 +9,15 @@ export type ProductDocument = Product & Document;
 @Schema({
   timestamps: true,
 })
-export class Product implements BasicSchema {
+export class Product extends BasicSchema {
   
-  @Prop({required: true})
+  @Prop({ required: true })
   title: string;
   
-  @Prop({required: true})
+  @Prop({ required: true })
   description: string;
   
-  @Prop({required: true})
+  @Prop({ required: true })
   price: number;
   
   @Prop()

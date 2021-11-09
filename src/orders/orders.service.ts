@@ -11,13 +11,18 @@ import { FindException } from '../_exceptions/find.exception'
 import { CommunicationsService } from '../communications/communications.service'
 import { CommunicationTypeEnum } from '../communications/enums/communication.type.enum'
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto'
-import { BasicService } from '../_basics/BasicService'
+import { BasicService, PaginatedResult } from '../_basics/BasicService'
 import { OrderStatusEnum } from './enums/order.status.enum'
 import { MessageTypeEnum } from '../communications/enums/message.type.enum'
 import { UpdateException } from '../_exceptions/update.exception'
 import { MovementsService } from '../movements/movements.service'
-import { Movement, MovementDocument } from '../movements/schemas/movement.schema'
+import { Movement } from '../movements/schemas/movement.schema'
 import { OrderProduct } from './schemas/order-product'
+import { UserAclRolesEnum } from '../users/enums/user.acl.roles.enum';
+import { UserBasic } from '../users/entities/user.basic.entity';
+import { PaginatedFilterDto } from '../_basics/pagination.dto';
+import { PaginatedFilterOrderDto } from './dto/paginated-filter-order.dto';
+import { PaginatedResultOrderDto } from './dto/paginated-result-order.dto';
 
 @Injectable()
 export class OrdersService extends BasicService {
@@ -37,6 +42,13 @@ export class OrdersService extends BasicService {
   
   get authUser (): User {
     return this.request.auth.user
+  }
+  
+  get userIsAdmin (): boolean {
+    const validRoles = [UserAclRolesEnum.ADMIN, UserAclRolesEnum.SUPER_ADMIN]
+    
+    return this.request.auth.roles.some(
+      (value) => validRoles.includes(value))
   }
   
   private async checkProductsExistence (productIds: string[]): Promise<ProductDocument[]> {
@@ -118,8 +130,19 @@ export class OrdersService extends BasicService {
     }
   }
   
-  findAll (): Promise<Order[]> {
-    return this.orderModel.find().exec()
+  findAll (paginationDto: PaginatedFilterOrderDto): Promise<PaginatedResult<Order[]>> {
+    const query: {
+      user?: Partial<UserBasic>;
+      status: OrderStatusEnum[];
+    } = {
+      status: paginationDto.filter.status
+    }
+    
+    if (!this.userIsAdmin) {
+      query.user.id = this.authUser.id;
+    }
+    
+    return this.findPaginated<Order>(query as any, paginationDto)
   }
   
   async findOne (id: string): Promise<Order> {

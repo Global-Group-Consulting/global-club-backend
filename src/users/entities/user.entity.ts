@@ -1,3 +1,5 @@
+import { UserAclRolesEnum } from '../enums/user.acl.roles.enum';
+
 export class User {
   account_status: string;
   activated_at: string;
@@ -49,7 +51,7 @@ export class User {
   phone: string;
   referenceAgent: string;
   role: number;
-  roles: string[];
+  roles: UserAclRolesEnum[];
   updated_at: string;
   superAdmin: boolean;
   vatNumber: string;

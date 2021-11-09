@@ -8,6 +8,8 @@ import { BasicService, PaginatedResult } from '../_basics/BasicService';
 import { User } from './entities/user.entity';
 import { PaginatedFilterDto } from '../_basics/pagination.dto';
 import { ReadUserGroupsDto } from './dto/read-user-groups.dto';
+import { query } from 'express';
+import { PaginatedFilterUserDto } from './dto/paginated-filter-user.dto';
 
 @Injectable()
 export class UsersService extends BasicService {
@@ -20,9 +22,14 @@ export class UsersService extends BasicService {
     return 'This action adds a new user';
   }
   
-  async findAll (paginationDto: PaginatedFilterDto): Promise<PaginatedResult<User[]>> {
+  async findAll (paginationDto: PaginatedFilterUserDto): Promise<PaginatedResult<User[]>> {
+    const query = paginationDto.filter ?? {}
+    
+    // Todo:: usare regex per filtrare case sensitive in string.
+    
     return await this.findPaginated<User>({
-      gold: true
+      ...query,
+      gold: true,
     }, paginationDto)
   }
   

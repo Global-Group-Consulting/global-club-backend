@@ -7,6 +7,8 @@ import { PaginatedFilterDto } from '../_basics/pagination.dto';
 import { User } from './entities/user.entity';
 import { PaginatedResult } from '../_basics/BasicService';
 import { ReadUserGroupsDto } from './dto/read-user-groups.dto';
+import { PaginatedFilterUserDto } from './dto/paginated-filter-user.dto';
+import { PaginatedResultUserDto } from './dto/paginated-result-user.dto';
 
 @ApiTags("Users")
 @Controller('users')
@@ -19,7 +21,7 @@ export class UsersController {
   }
   
   @Get()
-  findAll (@Query() paginationDto: PaginatedFilterDto): Promise<PaginatedResult<User[]>> {
+  findAll (@Query() paginationDto: PaginatedFilterUserDto): Promise<PaginatedResultUserDto> {
     return this.usersService.findAll(paginationDto);
   }
   

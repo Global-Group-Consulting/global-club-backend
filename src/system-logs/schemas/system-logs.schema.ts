@@ -8,7 +8,7 @@ export type SystemLogDocument = SystemLog & Document;
   timestamps: true,
   collection: "system_logs"
 })
-export class SystemLog implements BasicSchema {
+export class SystemLog extends BasicSchema {
   @Prop()
   code: string;
   

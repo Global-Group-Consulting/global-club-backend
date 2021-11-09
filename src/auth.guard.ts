@@ -1,8 +1,9 @@
-import {CanActivate, ExecutionContext, Injectable} from '@nestjs/common';
-import {Observable} from 'rxjs';
-import {User} from "./users/entities/user.entity";
-import {ConfigService} from "@nestjs/config";
-import {AuthUser} from "./_basics/AuthRequest";
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { User } from "./users/entities/user.entity";
+import { ConfigService } from "@nestjs/config";
+import { AuthUser } from "./_basics/AuthRequest";
+import { UserAclRolesEnum } from './users/enums/user.acl.roles.enum';
 
 interface InputReqData {
   _auth_user: User;
@@ -36,7 +37,7 @@ export class AuthGuard implements CanActivate {
     "lastChangedBy": "5fc412a93d36340022d494bb",
     "birthDate": "1989-09-06T00:00:00.000Z",
     "roles": [
-      "super_admin"
+      UserAclRolesEnum.SUPER_ADMIN
     ],
     "permissions": [
       "communications:*",

@@ -2,7 +2,7 @@ import { PaginatedResult, PaginationOrderEnum } from './BasicService';
 import { IsArray, IsEnum, IsNumber, IsOptional, IsString, Max, Min, } from 'class-validator';
 import { Transform } from 'class-transformer';
 
-export class PaginatedFilterDto<T = any> implements Pick<PaginatedResult, "order" | "page" | "perPage"> {
+export class PaginatedFilterDto<T = any> {
   @IsOptional()
   @IsArray()
   @Transform(({ value }) => (value instanceof Array) ? value : [value])
@@ -27,7 +27,7 @@ export class PaginatedFilterDto<T = any> implements Pick<PaginatedResult, "order
   perPage?: number = 30;
   
   // @IsOptional()
-  @Transform(({ value }) => (value instanceof Array) ? value : [value])
+  /*@Transform(({ value }) => (value instanceof Array) ? value : [value])
   @IsArray()
-  filter?: string[]
+  filter?: string[]*/
 }
