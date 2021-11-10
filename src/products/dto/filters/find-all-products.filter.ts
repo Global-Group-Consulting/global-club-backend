@@ -6,7 +6,7 @@ import { toRegExp } from '../../../_basics/transformers/toRegExp';
 import { castToObjectId } from '../../../utilities/Formatters';
 import { toObjectIdArray } from '../../../_basics/transformers/toObjectIdArray';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsMongoId, IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
 import { ToArray } from '../../../_basics/transformers/toArray';
 import { IsMongoIdArray } from '../../../_basics/validators/IsMongoIdArray';
 
@@ -33,7 +33,7 @@ export class FindAllProductsFilter implements Partial<Product> {
   })
   @IsOptional()
   @ToArray()
-  @IsMongoIdArray({always: false})
+  @IsMongoId({ each: true })
   categories?: string[];
 }
 

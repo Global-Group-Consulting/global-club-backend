@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { OrderStatusEnum } from '../../enums/order.status.enum';
-import { IsEnum, IsNotEmpty, ValidateNested } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
 import { FilterMap } from '../../../_basics/FilterMap.dto';
 import { toString } from '../../../_basics/transformers/toString';
 import { toStringArray } from '../../../_basics/transformers/toStringArray';
+import { ToArray } from '../../../_basics/transformers/toArray';
 
 export class FindAllOrdersFilter {
   @ApiProperty({
@@ -13,9 +14,9 @@ export class FindAllOrdersFilter {
     isArray: true,
     required: false
   })
-  // @IsNotEmpty()
-  // @ValidateNested()
-  @IsEnum(OrderStatusEnum, {each: true})
+  @IsOptional()
+  @ToArray()
+  @IsEnum(OrderStatusEnum, { each: true })
   status?: OrderStatusEnum[]
 }
 
