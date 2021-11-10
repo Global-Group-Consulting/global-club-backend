@@ -8,6 +8,7 @@ import { AuthGuard } from './auth.guard'
 import { MongoExceptionFilter } from './_filters/mongo-exception.filter'
 import { AllExceptionsFilter } from './_filters/all-exceptions.filter';
 import { SystemLogsService } from './system-logs/system-logs.service';
+import { config } from 'rxjs';
 
 function initSwagger (app: INestApplication) {
   const config = new DocumentBuilder()
@@ -39,7 +40,7 @@ async function bootstrap() {
   
   app.setGlobalPrefix('api')
   app.useGlobalGuards(new AuthGuard(configService))
-  app.useGlobalFilters(new MongoExceptionFilter(), new AllExceptionsFilter(systemLogsService))
+  app.useGlobalFilters(new MongoExceptionFilter(), new AllExceptionsFilter(systemLogsService, configService))
   app.useGlobalPipes(new ValidationPipe({
     transform: true
   }));

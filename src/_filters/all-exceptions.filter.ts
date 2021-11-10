@@ -1,9 +1,10 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import { SystemLogsService } from '../system-logs/system-logs.service';
+import { ConfigService } from '@nestjs/config';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
-  constructor (private systemLogs: SystemLogsService) {}
+  constructor (private systemLogs: SystemLogsService, private config: ConfigService) {}
   
   async catch (exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -41,7 +42,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       })
     }
   
-    response.status(status).json({
+    const respJson = {
       statusCode: status,
       message,
       name,
@@ -49,8 +50,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
       path: request.url,
       code,
       logId: newLoggedError?._id?.toString()
-    });
-    
+    }
+  
+    if (this.config.get("NODE_ENV") !== "production") {
+      respJson["rawError"] = exception
+    }
+  
+    response.status(status).json(respJson);
+  
     /*{
       statusCode = 400
       message = "Can't remove this file due to: Cannot read property 'id' of null"
