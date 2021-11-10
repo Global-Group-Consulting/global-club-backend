@@ -21,6 +21,9 @@ export class SystemLog extends BasicSchema {
   @Prop()
   status: number;
   
+  @Prop({ type: Object })
+  request: any;
+  
   @Prop()
   stack: any[];
   
