@@ -12,12 +12,26 @@ import { FilesService } from '../files/files.service'
 import { UpdateException } from '../_exceptions/update.exception'
 import { MessageTypeEnum } from './enums/message.type.enum'
 import { castToObjectId } from '../utilities/Formatters'
+import { PaginatedFilterCommunicationDto } from './dto/paginated-filter-communication.dto';
+import { PaginatedResultDto } from '../_basics/pagination-result.dto';
+import { BasicService, PaginatedResult } from '../_basics/BasicService';
+import { ConfigService } from '@nestjs/config';
+import { Mode } from 'fs';
+import {
+  FindAllCommunicationsFilter,
+  FindAllCommunicationsFilterMap
+} from './dto/filters/find-all-communications.filter';
 
 @Injectable()
-export class CommunicationsService {
+export class CommunicationsService extends BasicService {
+  model: Model<CommunicationDocument>
+  
   constructor (@InjectModel(Communication.name) private communicationModel: Model<CommunicationDocument>,
-    @Inject(REQUEST) private request: AuthRequest,
-    private filesService: FilesService) {
+               @Inject(REQUEST) private request: AuthRequest,
+               protected config: ConfigService,
+               private filesService: FilesService) {
+    super();
+    this.model = communicationModel;
   }
   
   get authUser (): User {
@@ -34,12 +48,13 @@ export class CommunicationsService {
       }],
       initiator: this.authUser
     })
-    
+  
     return newCommunication.save()
   }
   
-  findAll (): Promise<Communication[]> {
-    return this.communicationModel.find().exec()
+  findAll (queryData: PaginatedFilterCommunicationDto): Promise<PaginatedResult<Communication[]>> {
+    const query: any = this.prepareQuery(queryData.filter, FindAllCommunicationsFilterMap)
+    return this.findPaginated<Communication>(query, queryData)
   }
   
   findOne (id: string) {

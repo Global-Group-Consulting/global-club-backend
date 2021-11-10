@@ -1,24 +1,35 @@
-import {Model} from "mongoose";
-import {Injectable} from '@nestjs/common';
-import {InjectModel} from "@nestjs/mongoose";
-import {CreateProductDto} from './dto/create-product.dto';
-import {UpdateProductDto} from './dto/update-product.dto';
-import {Product, ProductDocument} from "./schemas/product.schema";
-import {RemoveException} from "../_exceptions/remove.exception";
-import {UpdateException} from "../_exceptions/update.exception";
-import {FilesService} from "../files/files.service";
-import {Attachment} from "../_schemas/attachment.schema";
-import {FindException} from "../_exceptions/find.exception";
-import {ProductCategory, ProductCategoryDocument} from "../product-category/schemas/product-category.schema";
+import { Model } from "mongoose";
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from "@nestjs/mongoose";
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { Product, ProductDocument } from "./schemas/product.schema";
+import { RemoveException } from "../_exceptions/remove.exception";
+import { UpdateException } from "../_exceptions/update.exception";
+import { FilesService } from "../files/files.service";
+import { Attachment } from "../_schemas/attachment.schema";
+import { FindException } from "../_exceptions/find.exception";
+import { ProductCategory, ProductCategoryDocument } from "../product-category/schemas/product-category.schema";
+import { PaginatedFindAllProductDto } from './dto/paginated-find-all-product.dto';
+import { BasicService } from '../_basics/BasicService';
+import { ConfigService } from '@nestjs/config';
+import { PaginatedResultProductDto } from './dto/paginated-result-product.dto';
+import { FindAllUserFilterMap } from '../users/dto/filters/find-all-user.filter';
+import { FindAllProductsFilterMap } from './dto/filters/find-all-products.filter';
 
 @Injectable()
-export class ProductsService {
-  constructor(@InjectModel(Product.name) private productModel: Model<ProductDocument>,
-              @InjectModel(ProductCategory.name) private productCategoryModel: Model<ProductCategoryDocument>,
-              private filesService: FilesService) {
+export class ProductsService extends BasicService {
+  model: Model<ProductDocument>
+  
+  constructor (@InjectModel(Product.name) private productModel: Model<ProductDocument>,
+    @InjectModel(ProductCategory.name) private productCategoryModel: Model<ProductCategoryDocument>,
+    private filesService: FilesService, protected config: ConfigService) {
+    
+    super()
+    this.model = productModel;
   }
   
-  private getFilesToDelete(foundProduct: Partial<Product>): string[] {
+  private getFilesToDelete (foundProduct: Partial<Product>): string[] {
     // creates the array of string with the files that must be deleted
     // relative the stored product data
     const filesList: Attachment[] = [];
@@ -43,7 +54,7 @@ export class ProductsService {
     
   }
   
-  async create(createProductDto: CreateProductDto): Promise<Product> {
+  async create (createProductDto: CreateProductDto): Promise<Product> {
     await this.checkCategoryExistence(createProductDto.categories)
     
     let newProduct = new this.productModel(createProductDto);
@@ -51,19 +62,21 @@ export class ProductsService {
     return await newProduct.save()
   }
   
-  async findAll(): Promise<Product[]> {
-    return this.productModel.find();
+  async findAll (paginationData: PaginatedFindAllProductDto): Promise<PaginatedResultProductDto> {
+    const query = this.prepareQuery((paginationData.filter ?? {}), FindAllProductsFilterMap)
+    
+    return this.findPaginated<Product>(query, paginationData);
   }
   
-  async findOne(id: string): Promise<Product> {
-    return this.productModel.findById(id, null, {populate: ["categories"]});
+  async findOne (id: string): Promise<Product> {
+    return this.productModel.findById(id, null, { populate: ["categories"] });
   }
   
-  async findByCategory(id: string): Promise<Product[]> {
-    return this.productModel.find({categories: id}).exec()
+  async findByCategory (id: string): Promise<Product[]> {
+    return this.productModel.find({ categories: id }).exec()
   }
   
-  async update(id: string, updateProductDto: UpdateProductDto): Promise<Product> {
+  async update (id: string, updateProductDto: UpdateProductDto): Promise<Product> {
     const productToUpdate: ProductDocument = await this.productModel.findById(id).exec();
     
     if (!productToUpdate) {

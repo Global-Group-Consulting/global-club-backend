@@ -1,4 +1,4 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete, Put} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Query } from '@nestjs/common';
 import {CommunicationsService} from './communications.service';
 import {CreateCommunicationDto} from './dto/create-communication.dto';
 import {UpdateCommunicationDto} from './dto/update-communication.dto';
@@ -6,6 +6,8 @@ import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {ReadProductDto} from "../products/dto/read-product.dto";
 import {Communication} from "./schemas/communications.schema";
 import {AddMessageCommunicationDto} from "./dto/add-message-communication.dto";
+import { PaginatedFilterCommunicationDto } from './dto/paginated-filter-communication.dto';
+import { PaginatedResultCommunicationDto } from './dto/paginated-result-communication.dto';
 
 @ApiBearerAuth()
 @ApiTags("Communications")
@@ -20,8 +22,8 @@ export class CommunicationsController {
   }
   
   @Get()
-  findAll(): Promise<Communication[]> {
-    return this.communicationsService.findAll();
+  findAll(@Query() queryData:PaginatedFilterCommunicationDto): Promise<PaginatedResultCommunicationDto> {
+    return this.communicationsService.findAll(queryData);
   }
   
   @Get(':id')

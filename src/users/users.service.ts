@@ -6,14 +6,14 @@ import { UserBasic, UserBasicDocument } from './schemas/user-basic.schema';
 import { Model } from 'mongoose';
 import { BasicService, PaginatedResult } from '../_basics/BasicService';
 import { User } from './entities/user.entity';
-import { PaginatedFilterDto } from '../_basics/pagination.dto';
 import { ReadUserGroupsDto } from './dto/read-user-groups.dto';
-import { query } from 'express';
 import { PaginatedFilterUserDto } from './dto/paginated-filter-user.dto';
+import { FindAllUserFilterMap } from './dto/filters/find-all-user.filter';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService extends BasicService {
-  constructor (@InjectModel(UserBasic.name) private userModel: Model<UserBasicDocument>) {
+  constructor (@InjectModel(UserBasic.name) private userModel: Model<UserBasicDocument>, protected config: ConfigService) {
     super();
     this.model = userModel
   }
@@ -23,10 +23,8 @@ export class UsersService extends BasicService {
   }
   
   async findAll (paginationDto: PaginatedFilterUserDto): Promise<PaginatedResult<User[]>> {
-    const query = paginationDto.filter ?? {}
-    
-    // Todo:: usare regex per filtrare case sensitive in string.
-    
+    const query = this.prepareQuery((paginationDto.filter ?? {}), FindAllUserFilterMap)
+  
     return await this.findPaginated<User>({
       ...query,
       gold: true,

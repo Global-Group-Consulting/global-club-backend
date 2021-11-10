@@ -23,6 +23,8 @@ import { UserBasic } from '../users/entities/user.basic.entity';
 import { PaginatedFilterDto } from '../_basics/pagination.dto';
 import { PaginatedFilterOrderDto } from './dto/paginated-filter-order.dto';
 import { PaginatedResultOrderDto } from './dto/paginated-result-order.dto';
+import { FindAllOrdersFilter, FindAllOrdersFilterMap } from './dto/filters/find-all-orders.filter';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class OrdersService extends BasicService {
@@ -33,6 +35,7 @@ export class OrdersService extends BasicService {
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
     private communicationService: CommunicationsService,
     private movementsService: MovementsService,
+    protected config: ConfigService,
     @Inject(REQUEST) private request: AuthRequest,
   ) {
     super()
@@ -131,18 +134,17 @@ export class OrdersService extends BasicService {
   }
   
   findAll (paginationDto: PaginatedFilterOrderDto): Promise<PaginatedResult<Order[]>> {
-    const query: {
-      user?: Partial<UserBasic>;
-      status: OrderStatusEnum[];
-    } = {
-      status: paginationDto.filter.status
-    }
-    
+    const query: any = this.prepareQuery(paginationDto.filter, FindAllOrdersFilterMap)
+  
     if (!this.userIsAdmin) {
-      query.user.id = this.authUser.id;
+      query.user = {
+        id: this.authUser.id
+      }
     }
-    
-    return this.findPaginated<Order>(query as any, paginationDto)
+  
+    return this.findPaginated<Order>(query, paginationDto, {
+      "user.permissions": 0
+    })
   }
   
   async findOne (id: string): Promise<Order> {

@@ -5,7 +5,7 @@ import {
   Body,
   Patch,
   Param,
-  Delete
+  Delete, Query
 } from '@nestjs/common';
 import {ProductsService} from './products.service';
 import {CreateProductDto} from './dto/create-product.dto';
@@ -17,6 +17,8 @@ import {DeleteProductFilesDto} from "./dto/delete-product-files.dto";
 import {HttpService} from "@nestjs/axios";
 import {ConfigService} from "@nestjs/config";
 import {Product} from "./schemas/product.schema";
+import { PaginatedFindAllProductDto } from './dto/paginated-find-all-product.dto';
+import { PaginatedResultProductDto } from './dto/paginated-result-product.dto';
 
 @ApiBearerAuth()
 @ApiTags("Products")
@@ -31,8 +33,8 @@ export class ProductsController {
   }
   
   @Get()
-  findAll(): Promise<Product[]> {
-    return this.productsService.findAll();
+  findAll(@Query() paginationQuery: PaginatedFindAllProductDto): Promise<PaginatedResultProductDto> {
+    return this.productsService.findAll(paginationQuery);
   }
   
   @Get(':id')
