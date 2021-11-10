@@ -9,7 +9,9 @@ export class FindAllOrdersFilter {
   @ApiProperty({
     name: "filter[status]",
     enum: OrderStatusEnum,
-    example: "filter[status]=pending&filter[status]=inProgress"
+    example: "filter[status]=pending&filter[status]=inProgress",
+    isArray: true,
+    required: false
   })
   // @IsNotEmpty()
   // @ValidateNested()
