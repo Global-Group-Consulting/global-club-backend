@@ -14,6 +14,7 @@ import { OrdersModule } from './orders/orders.module';
 import { ProductCategoryModule } from './product-category/product-category.module';
 import { SystemLogsModule } from './system-logs/system-logs.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { AclModule } from './acl/acl.module';
 import databaseConfig from './config/db.config';
 import httpConfig from './config/http.config';
 
@@ -53,6 +54,7 @@ import httpConfig from './config/http.config';
     AxiosModule,
     FilesModule,
     SystemLogsModule,
+    AclModule,
   ],
   controllers: [AppController],
   providers: [AppService],
