@@ -10,26 +10,30 @@ import { CreateManualMovementDto } from './dto/create-manual-movement.dto'
 import { RemoveManualMovementDto } from './dto/remove-manual-movement.dto'
 import { MovementTypeEnum } from './enums/movement.type.enum'
 import { castToFixedDecimal, castToObjectId } from '../utilities/Formatters'
-import { CalcTotalsDto } from './dto/calc-totals.dto'
+import { CalcTotalsDto, CalcTotalsGroup } from './dto/calc-totals.dto'
 import { WithdrawalException } from './exceptions/withdrawal.exception'
 import { UpdateException } from '../_exceptions/update.exception'
+import { BasicService } from '../_basics/BasicService';
+import { ConfigService } from '@nestjs/config';
+import { calcBritesUsage } from './utils/movements.utils';
 
 @Injectable()
-export class MovementsService {
+export class MovementsService extends BasicService {
+  model: Model<MovementDocument>
+  
   constructor (@InjectModel(Movement.name) private movementModel: Model<MovementDocument>,
-    @Inject(REQUEST) private request: AuthRequest) {
+               protected config: ConfigService
+  ) {
+    super()
   }
   
-  get authUser (): User {
-    return this.request.auth.user
-  }
-  
-  async manualAdd(userId: string, createMovementDto: CreateManualMovementDto): Promise<Movement> {
+  async manualAdd (userId: string, createMovementDto: CreateManualMovementDto): Promise<Movement> {
     const newMovement = new this.movementModel({
       ...createMovementDto,
       userId: userId,
       createdBy: this.authUser.id,
-      movementType: MovementTypeEnum.DEPOSIT_ADDED
+      movementType: MovementTypeEnum.DEPOSIT_ADDED,
+      clubPack: this.authUser.clubPack
     })
     
     return newMovement.save()
@@ -107,7 +111,7 @@ export class MovementsService {
       const newMovement = new this.movementModel({
         amountChange: semester.toWithdrawal,
         notes: useMovementDto.notes,
-        semesterId: semester._id.semesterId,
+        semesterId: semester.semesterId,
         userId: userId,
         createdBy: userId,
         movementType: MovementTypeEnum.DEPOSIT_USED,
@@ -136,7 +140,7 @@ export class MovementsService {
    *
    * The semesters are fetched considering the usableFrom and expiresAt fields.
    */
-  async calcTotalBrites (userId: string, semesterId?: string): Promise<CalcTotalsDto[]> {
+  async calcTotalBrites (userId: string, semesterId?: string, excludeFutureUsability = true): Promise<CalcTotalsDto[]> {
     const usableFrom = new Date()
     const expiresAt = new Date(new Date().setHours(23, 59, 59))
     
@@ -161,12 +165,18 @@ export class MovementsService {
     const match = {
       '$match': {
         'userId': castToObjectId(userId),
-        'usableFrom': {
+        /*'usableFrom': {
           '$lte': usableFrom
-        },
+        },*/
         'expiresAt': {
           '$gte': expiresAt
         }
+      }
+    }
+    
+    if (excludeFutureUsability) {
+      match.$match["usableFrom"] = {
+        '$lte': usableFrom
       }
     }
     
@@ -179,7 +189,8 @@ export class MovementsService {
     const group = {
       '$group': {
         '_id': {
-          'semesterId': '$semesterId'
+          'semesterId': '$semesterId',
+          'pack': "$clubPack"
         },
         'total': {
           '$sum': {
@@ -208,7 +219,6 @@ export class MovementsService {
                 }
               }, 2]
           }
-          
         },
         /*'movements': {
           '$push': '$$ROOT'
@@ -216,25 +226,53 @@ export class MovementsService {
       }
     }
     
-    const toReturn: CalcTotalsDto[] = await this.movementModel.aggregate([
+    const toReturn: CalcTotalsGroup[] = await this.movementModel.aggregate([
         match,
         group,
         {
           "$sort": {
-            "_id.semesterId": 1
+            "_id.semesterId": 1,
+            "_id.pack": 1,
           }
         }
       ]
     )
     
-    return toReturn
-      .map(el => {
+    const reducedData = toReturn
+      .reduce((acc, el) => {
+        const usageData = calcBritesUsage(el._id.semesterId)
+        const pack = el._id["pack"] || "_none";
+        const semesterId = el._id.semesterId;
         //convert to fixed decimal to avoid JS bug with decimals
-        el.total = castToFixedDecimal(el.total)
+        let total = castToFixedDecimal(el.total)
+        let forcedZero = false
         
-        return el
-      })
-      .filter(el => el.total > 0)
+        if (!acc[semesterId]) {
+          acc[semesterId] = {
+            semesterId,
+            packs: {},
+            total: 0,
+            usableFrom: usageData.usableFrom.toISOString(),
+            expiresAt: usageData.expiresAt.toISOString(),
+          }
+        }
+        
+        if (total < 0) {
+          total = 0;
+          forcedZero = true
+        }
+        
+        acc[semesterId].total = castToFixedDecimal(acc[semesterId].total + total);
+        acc[semesterId].packs[pack] = {
+          total,
+          forcedZero
+        }
+        
+        return acc
+      }, {})
+    
+    return Object.values(reducedData)
+    // .filter(el => el.total > 0)
   }
   
   /**
@@ -246,13 +284,15 @@ export class MovementsService {
    */
   async checkIfEnough(userId: string, amount: number, semesterId?: string): Promise<CalcTotalsDto[]> {
     const totalBySemesters = await this.calcTotalBrites(userId, semesterId);
-    
+  
+    throw new Error("Function must still be implemented")
+  
     const totals = totalBySemesters.reduce((acc, curr) => acc + curr.total, 0)
-    
+  
     if (totals < amount) {
       throw new WithdrawalException("The requested amount is higher than the available amount.")
     }
-    
+  
     return totalBySemesters
   }
 }

@@ -1,4 +1,4 @@
-export function calcBritesUsage(semesterString: string) {
+export function calcBritesUsage (semesterString: string): { semesterId: string, usableFrom: Date, expiresAt: Date } {
   const semesterData = semesterString.split("_")
   const semesterYear = +semesterData[0]
   const semesterId = +semesterData[1]
