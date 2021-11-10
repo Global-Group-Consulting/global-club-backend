@@ -13,8 +13,9 @@ export class DashboardService extends BasicService {
     super()
   }
   
-  readUserDashboard () {
-    return this.movementsService.calcTotalBrites(this.authUser.id.toString())
+  async readUserDashboard () {
+    const data = await this.movementsService.calcTotalBrites(this.authUser.id.toString(), null, false)
+    return data
   }
   
   readAdminDashboard () {
