@@ -15,6 +15,7 @@ import { ProductCategoryModule } from './product-category/product-category.modul
 import { SystemLogsModule } from './system-logs/system-logs.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { AclModule } from './acl/acl.module';
+import { PacksModule } from './packs/packs.module';
 import databaseConfig from './config/db.config';
 import httpConfig from './config/http.config';
 
@@ -55,6 +56,7 @@ import httpConfig from './config/http.config';
     FilesModule,
     SystemLogsModule,
     AclModule,
+    PacksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
