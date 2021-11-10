@@ -125,23 +125,27 @@ export abstract class BasicService {
   
   protected prepareQuery<T = any> (filters: any, filtersMap: FilterMap<T>): T {
     const toReturn: any = {}
-    
+  
+    if (!filters) {
+      return toReturn
+    }
+  
     Object.keys(filtersMap).forEach(key => {
       let value = filters[key]
       let filterOptions: FilterOptions = filtersMap[key]
-      
+    
       if (value === undefined) {
         return
       }
-      
+    
       if (filterOptions.hasOwnProperty("castValue")) {
         value = filterOptions.castValue(value);
       }
-      
+    
       if (filterOptions.hasOwnProperty("query")) {
         value = filterOptions.query(value)
       }
-      
+    
       toReturn[key] = value
     })
     
