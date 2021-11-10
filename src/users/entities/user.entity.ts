@@ -1,4 +1,5 @@
 import { UserAclRolesEnum } from '../enums/user.acl.roles.enum';
+import { PackEnum } from '../../packs/enums/pack.enum';
 
 export class User {
   account_status: string;
@@ -15,7 +16,7 @@ export class User {
   businessRegion: string;
   businessZip: string;
   clubCardNumber: string
-  clubPack: string
+  clubPack: PackEnum;
   commissionsAssigned: string[];
   contractBic: string;
   contractDate: string;
