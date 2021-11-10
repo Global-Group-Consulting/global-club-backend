@@ -13,6 +13,9 @@ import { FilesModule } from './files/files.module';
 import { OrdersModule } from './orders/orders.module';
 import { ProductCategoryModule } from './product-category/product-category.module';
 import { SystemLogsModule } from './system-logs/system-logs.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { AclModule } from './acl/acl.module';
+import { PacksModule } from './packs/packs.module';
 import databaseConfig from './config/db.config';
 import httpConfig from './config/http.config';
 
@@ -42,16 +45,18 @@ import httpConfig from './config/http.config';
       inject: [ConfigService],
     }),
     
-    // Custom Modules
     CommunicationsModule,
+    DashboardModule,
+    MovementsModule,
     OrdersModule,
     ProductsModule,
     ProductCategoryModule,
-    MovementsModule,
     UsersModule,
     AxiosModule,
     FilesModule,
     SystemLogsModule,
+    AclModule,
+    PacksModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,11 +1,11 @@
 import { FilterMap } from '../../../_basics/FilterMap.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { OrderStatusEnum } from '../../../orders/enums/order.status.enum';
 import { IsEnum, IsOptional } from 'class-validator';
 import { CommunicationTypeEnum } from '../../enums/communication.type.enum';
 import { toString } from '../../../_basics/transformers/toString';
 import { toRegExp } from '../../../_basics/transformers/toRegExp';
 import { toStringArray } from '../../../_basics/transformers/toStringArray';
+import { ToArray } from '../../../_basics/transformers/toArray';
 
 export class FindAllCommunicationsFilter {
   @ApiProperty({
@@ -15,8 +15,9 @@ export class FindAllCommunicationsFilter {
     required: false,
     example: "filter[order]=pending&filter[type]=chat"
   })
-  // TODO:: controllare perchè viene inviato il campo vuoto
+  
   @IsOptional()
+  @ToArray()
   @IsEnum(CommunicationTypeEnum, { each: true })
   type?: CommunicationTypeEnum[]
   

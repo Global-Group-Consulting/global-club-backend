@@ -27,7 +27,6 @@ export class CommunicationsService extends BasicService {
   model: Model<CommunicationDocument>
   
   constructor (@InjectModel(Communication.name) private communicationModel: Model<CommunicationDocument>,
-               @Inject(REQUEST) private request: AuthRequest,
                protected config: ConfigService,
                private filesService: FilesService) {
     super();

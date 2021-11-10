@@ -39,7 +39,7 @@ export class MovementsController {
   @ApiOperation({summary: "Available brites per semester"})
   @Get(":id/total")
   calcTotalBrites(@Param() params: ReadDto): Promise<CalcTotalsDto[]> {
-    return this.movementsService.calcTotalBrites(params.id);
+    return this.movementsService.calcTotalBrites(params.id, null, false);
   }
   
   /**

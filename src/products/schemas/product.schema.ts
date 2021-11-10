@@ -20,13 +20,19 @@ export class Product extends BasicSchema {
   @Prop({ required: true })
   price: number;
   
+  /**
+   * Indicates if the product is quantifiable of not.
+   */
+  @Prop({ default: true })
+  hasQta: boolean
+  
   @Prop()
   tags: string[];
   
-  @Prop({required: true, type: [MongoSchema.Types.ObjectId], ref: "ProductCategory"})
+  @Prop({ required: true, type: [MongoSchema.Types.ObjectId], ref: "ProductCategory" })
   categories: ProductCategory[] | string[];
   
-  @Prop({type: AttachmentSchema})
+  @Prop({ type: AttachmentSchema })
   thumbnail: Attachment;
   
   @Prop({type: [AttachmentSchema]})
