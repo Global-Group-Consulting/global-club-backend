@@ -36,22 +36,10 @@ export class OrdersService extends BasicService {
     private communicationService: CommunicationsService,
     private movementsService: MovementsService,
     protected config: ConfigService,
-    @Inject(REQUEST) private request: AuthRequest,
   ) {
     super()
     
     this.model = orderModel
-  }
-  
-  get authUser (): User {
-    return this.request.auth.user
-  }
-  
-  get userIsAdmin (): boolean {
-    const validRoles = [UserAclRolesEnum.ADMIN, UserAclRolesEnum.SUPER_ADMIN]
-    
-    return this.request.auth.roles.some(
-      (value) => validRoles.includes(value))
   }
   
   private async checkProductsExistence (productIds: string[]): Promise<ProductDocument[]> {

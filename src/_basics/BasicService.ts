@@ -2,6 +2,10 @@ import { FindException } from "../_exceptions/find.exception";
 import { Model, QueryOptions } from 'mongoose';
 import { FilterMap, FilterOptions } from './FilterMap.dto';
 import { ConfigService } from '@nestjs/config';
+import { Inject } from '@nestjs/common';
+import { AuthRequest } from './AuthRequest';
+import { User } from '../users/entities/user.entity';
+import { UserAclRolesEnum } from '../users/enums/user.acl.roles.enum';
 
 export enum PaginationOrderEnum {
   ASC = "ASC",
@@ -33,10 +37,22 @@ const defaultPaginationOptions: PaginationOptions = {
 export abstract class BasicService {
   abstract model: Model<any>;
   protected abstract config: ConfigService;
+  @Inject("REQUEST") protected request: AuthRequest
   
-  /*protected constructor (protected config: ConfigService) {
+  protected constructor () {
   
-  }*/
+  }
+  
+  get authUser (): User {
+    return this.request.auth.user
+  }
+  
+  get userIsAdmin (): boolean {
+    const validRoles = [UserAclRolesEnum.ADMIN, UserAclRolesEnum.SUPER_ADMIN]
+    
+    return this.request.auth.roles.some(
+      (value) => validRoles.includes(value))
+  }
   
   protected async findOrFail<T> (id: string): Promise<T> {
     const item = await this.model.findById(id)
