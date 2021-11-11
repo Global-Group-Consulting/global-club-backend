@@ -9,7 +9,9 @@ import { AuthRequest } from '../_basics/AuthRequest';
 export class DashboardService extends BasicService {
   model: Model<any>
   
-  constructor (protected config: ConfigService, private movementsService: MovementsService) {
+  constructor (protected config: ConfigService,
+               private movementsService: MovementsService,
+               @Inject("REQUEST") protected request: AuthRequest) {
     super()
   }
   
@@ -19,6 +21,6 @@ export class DashboardService extends BasicService {
   }
   
   readAdminDashboard () {
-  
+    return this.movementsService.calcTotalBrites("5fc7ca57c2df820021c94959", null, false)
   }
 }
