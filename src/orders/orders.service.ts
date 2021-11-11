@@ -36,6 +36,7 @@ export class OrdersService extends BasicService {
     private communicationService: CommunicationsService,
     private movementsService: MovementsService,
     protected config: ConfigService,
+    @Inject("REQUEST") protected request: AuthRequest
   ) {
     super()
     

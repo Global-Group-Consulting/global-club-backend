@@ -8,7 +8,7 @@ import { User } from '../users/entities/user.entity'
 import { UseMovementDto } from './dto/use-movement.dto'
 import { CreateManualMovementDto } from './dto/create-manual-movement.dto'
 import { RemoveManualMovementDto } from './dto/remove-manual-movement.dto'
-import { MovementTypeEnum } from './enums/movement.type.enum'
+import { MovementTypeEnum, MovementTypeInList, MovementTypeOutList } from './enums/movement.type.enum'
 import { castToFixedDecimal, castToObjectId } from '../utilities/Formatters'
 import { CalcTotalsDto, CalcTotalsGroup } from './dto/calc-totals.dto'
 import { WithdrawalException } from './exceptions/withdrawal.exception'
@@ -22,8 +22,8 @@ export class MovementsService extends BasicService {
   model: Model<MovementDocument>
   
   constructor (@InjectModel(Movement.name) private movementModel: Model<MovementDocument>,
-               protected config: ConfigService
-  ) {
+               protected config: ConfigService,
+               @Inject("REQUEST") protected request: AuthRequest) {
     super()
   }
   
@@ -173,13 +173,26 @@ export class MovementsService extends BasicService {
         }
       }
     }
+  
+    // for each MovementType create an entry in the result to get the total only for that type
+    const subTotals = {}
+    for (const movementTypeEnumKey in MovementTypeEnum) {
+      const value = MovementTypeEnum[movementTypeEnumKey];
     
+      subTotals[value] = {
+        $sum: {
+          $cond: [{ '$eq': ['$movementType', value] }, "$amountChange", 0]
+        }
+      }
+    }
+  
+    // excludeFutureUsability allow to limit the result to only the usableOnes or not
     if (excludeFutureUsability) {
       match.$match["usableFrom"] = {
         '$lte': usableFrom
       }
     }
-    
+  
     // If the semesterId argument is provided, includes it in the match query
     if (semesterId) {
       match.$match["semesterId"] = semesterId
@@ -197,35 +210,53 @@ export class MovementsService extends BasicService {
             '$round': [
               {
                 '$switch': {
-                  'branches': [
-                    {
-                      'case': {'$eq': ['$movementType', MovementTypeEnum.DEPOSIT_ADDED]},
-                      'then': '$amountChange'
-                    }, {
-                      'case': {'$eq': ['$movementType', MovementTypeEnum.DEPOSIT_REMOVED]},
-                      'then': convertToNegative
-                    }, {
-                      'case': {'$eq': ['$movementType', MovementTypeEnum.DEPOSIT_USED]},
-                      'then': convertToNegative
-                    }, {
-                      'case': {'$eq': ['$movementType', MovementTypeEnum.DEPOSIT_TRANSFERRED]},
-                      'then': convertToNegative
-                    }, {
-                      'case': {'$eq': ['$movementType', MovementTypeEnum.INTEREST_RECAPITALIZED]},
-                      'then': '$amountChange'
-                    }
-                  ],
+                  'branches': Object.values(MovementTypeEnum).map(enumValue => ({
+                      'case': { '$eq': ['$movementType', enumValue] },
+                      'then': MovementTypeOutList.includes(enumValue) ? convertToNegative : '$amountChange'
+                    })
+                  ),
                   'default': 0
                 }
               }, 2]
           }
         },
+        'totalUsed': {
+          '$sum': {
+            '$round': [
+              {
+                '$switch': {
+                  'branches': Object.values(MovementTypeOutList).map(enumValue => ({
+                      'case': { '$eq': ['$movementType', enumValue] },
+                      'then': '$amountChange'
+                    })
+                  ),
+                  'default': 0
+                }
+              }, 2]
+          }
+        },
+        'totalEarned': {
+          '$sum': {
+            '$round': [
+              {
+                '$switch': {
+                  'branches': Object.values(MovementTypeInList).map(enumValue => ({
+                      'case': { '$eq': ['$movementType', enumValue] },
+                      'then': '$amountChange'
+                    })
+                  ),
+                  'default': 0
+                }
+              }, 2]
+          }
+        },
+        ...subTotals
         /*'movements': {
           '$push': '$$ROOT'
         }*/
       }
     }
-    
+  
     const toReturn: CalcTotalsGroup[] = await this.movementModel.aggregate([
         match,
         group,
@@ -237,40 +268,47 @@ export class MovementsService extends BasicService {
         }
       ]
     )
+  
+    const reducedData = toReturn.reduce((acc, el) => {
+      const { totalUsed, totalEarned } = el;
+      const usageData = calcBritesUsage(el._id.semesterId)
+      const pack = el._id["pack"] || "_none";
+      const semesterId = el._id.semesterId;
+      //convert to fixed decimal to avoid JS bug with decimals
+      let total = castToFixedDecimal(el.total)
+      let forcedZero = false
     
-    const reducedData = toReturn
-      .reduce((acc, el) => {
-        const usageData = calcBritesUsage(el._id.semesterId)
-        const pack = el._id["pack"] || "_none";
-        const semesterId = el._id.semesterId;
-        //convert to fixed decimal to avoid JS bug with decimals
-        let total = castToFixedDecimal(el.total)
-        let forcedZero = false
-        
-        if (!acc[semesterId]) {
-          acc[semesterId] = {
-            semesterId,
-            packs: {},
-            total: 0,
-            usableFrom: usageData.usableFrom.toISOString(),
-            expiresAt: usageData.expiresAt.toISOString(),
-          }
+      if (!acc[semesterId]) {
+        acc[semesterId] = {
+          semesterId,
+          packs: {},
+          total: 0,
+          usableFrom: usageData.usableFrom.toISOString(),
+          usableNow: usageData.usableFrom.getTime() <= Date.now(),
+          expiresAt: usageData.expiresAt.toISOString(),
         }
-        
-        if (total < 0) {
-          total = 0;
-          forcedZero = true
-        }
-        
-        acc[semesterId].total = castToFixedDecimal(acc[semesterId].total + total);
-        acc[semesterId].packs[pack] = {
-          total,
-          forcedZero
-        }
-        
-        return acc
-      }, {})
+      }
     
+      if (total < 0) {
+        total = 0;
+        forcedZero = true
+      }
+    
+      acc[semesterId].total = castToFixedDecimal(acc[semesterId].total + total);
+      acc[semesterId].packs[pack] = {
+        total,
+        totalUsed: castToFixedDecimal(totalUsed),
+        totalEarned: castToFixedDecimal(totalEarned),
+        forcedZero,
+        subTotals: Object.values(MovementTypeEnum).reduce((acc, curr) => {
+          acc[curr] = castToFixedDecimal(el[curr])
+          return acc
+        }, {})
+      }
+    
+      return acc
+    }, {})
+  
     return Object.values(reducedData)
     // .filter(el => el.total > 0)
   }
@@ -285,6 +323,7 @@ export class MovementsService extends BasicService {
   async checkIfEnough(userId: string, amount: number, semesterId?: string): Promise<CalcTotalsDto[]> {
     const totalBySemesters = await this.calcTotalBrites(userId, semesterId);
   
+    // must check what type of brites the user have and how much of each one can be used
     throw new Error("Function must still be implemented")
   
     const totals = totalBySemesters.reduce((acc, curr) => acc + curr.total, 0)
