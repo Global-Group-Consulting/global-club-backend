@@ -4,6 +4,9 @@ import { ConfigService } from '@nestjs/config';
 import { BasicService } from '../_basics/BasicService';
 import { MovementsService } from '../movements/movements.service';
 import { AuthRequest } from '../_basics/AuthRequest';
+import { CalcTotalsDto, CalcTotalsGroup } from '../movements/dto/calc-totals.dto';
+import { DashboardSemesterExpirations, ReadDashboardSemestersDto } from './dto/read-dashboard-semesters.dto';
+import exp from 'constants';
 
 @Injectable()
 export class DashboardService extends BasicService {
@@ -15,12 +18,50 @@ export class DashboardService extends BasicService {
     super()
   }
   
-  async readUserDashboard () {
-    const data = await this.movementsService.calcTotalBrites(this.authUser.id.toString(), null, false)
-    return data
+  addMainReport (data: CalcTotalsDto[]): ReadDashboardSemestersDto {
+    const expirations: Record<string, DashboardSemesterExpirations> = {}
+    let totalUsable = 0;
+    let totalRemaining = 0;
+    
+    data.forEach(el => {
+      const date = el.expiresAt.toString();
+      
+      if (!el.usableNow) {
+        return
+      }
+      
+      if (!expirations[date]) {
+        expirations[date] = {
+          date: el.expiresAt,
+          remaining: 0,
+          usable: 0
+        }
+      }
+      
+      expirations[date].usable += el.totalUsable;
+      expirations[date].remaining += el.totalRemaining;
+      
+      totalUsable += el.totalUsable;
+      totalRemaining += el.totalRemaining
+    })
+    
+    return {
+      totalUsable,
+      totalRemaining,
+      expirations: Object.values(expirations),
+      semesters: data
+    }
   }
   
-  readAdminDashboard () {
-    return this.movementsService.calcTotalBrites("5fc7ca57c2df820021c94959", null, false)
+  async readUserDashboard (): Promise<ReadDashboardSemestersDto> {
+    const data: CalcTotalsDto[] = await this.movementsService.calcTotalBrites(this.authUser.id.toString(), null, false)
+    
+    return this.addMainReport(data)
+  }
+  
+  async readAdminDashboard (): Promise<ReadDashboardSemestersDto> {
+    const data = await this.movementsService.calcTotalBrites("5fc4fa19a5a62400217a2f55", null, false)
+    
+    return this.addMainReport(data)
   }
 }

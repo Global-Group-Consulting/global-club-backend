@@ -3,6 +3,7 @@ import { DashboardService } from './dashboard.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthRequest } from '../_basics/AuthRequest';
 import { BasicController } from '../_basics/BasicController';
+import { ReadDashboardSemestersDto } from './dto/read-dashboard-semesters.dto';
 
 @ApiBearerAuth()
 @ApiTags("Dashboard")
@@ -18,7 +19,7 @@ export class DashboardController extends BasicController {
     Last there is a "packs" object which will contain all details for the remaining amount, based on the clubPack associated `
   })
   @Get("statistics")
-  async read (@Req() req: AuthRequest) {
+  async read (@Req() req: AuthRequest): Promise<ReadDashboardSemestersDto> {
     if (this.dashboardService.userIsAdmin) {
       return this.dashboardService.readAdminDashboard()
     } else {

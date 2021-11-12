@@ -4,16 +4,21 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { PackEnum } from '../../packs/enums/pack.enum';
 
-class CalcTotalPackDetails {
-  total: number;
+export class CalcTotalPackDetailsSupTotals {
+  interest_recapitalized: number;
+  deposit_added: number;
+  deposit_removed: number;
+  deposit_transferred: number;
+  deposit_used: number;
+}
+
+export class CalcTotalPackDetails {
+  totalRemaining: number;
+  totalUsable: number;
+  totalUsed: number;
+  totalEarned: number;
   forcedZero: boolean;
-  subTotals: {
-    interest_recapitalized: number;
-    deposit_added: number;
-    deposit_removed: number;
-    deposit_transferred: number;
-    deposit_used: number;
-  }
+  subTotals: CalcTotalPackDetailsSupTotals
 }
 
 class CalcTotalPacks {
@@ -48,7 +53,10 @@ class CalcTotalPacks {
 export class CalcTotalsDto {
   semesterId: string;
   
-  total: number;
+  // indicates the total money still available. This won't take in count the type of pack
+  totalRemaining: number;
+  // indicate the total money still available, based on their pack type and usability of each type
+  totalUsable: number;
   totalUsed: number;
   totalEarned: number;
   
@@ -81,4 +89,6 @@ export class CalcTotalsGroup {
   deposit_removed: number;
   deposit_transferred: number;
   deposit_used: number;
+  
+  movements: Movement[]
 }
