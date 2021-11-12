@@ -13,7 +13,14 @@ export class CalcTotalPackDetailsSupTotals {
 }
 
 export class CalcTotalPackDetails {
+  @ApiProperty({
+    description: "Refers to the total amount of money the user has for that semester or pack, but does not take in consideration all the various usability conditions of the different packs."
+  })
   totalRemaining: number;
+  
+  @ApiProperty({
+    description: "refers to the total amount of money the user has AND TAKES in consideration all the various packs conditions. For this reasons, this amount could equal or less than “totalRemaining”."
+  })
   totalUsable: number;
   totalUsed: number;
   totalEarned: number;
@@ -53,11 +60,20 @@ class CalcTotalPacks {
 export class CalcTotalsDto {
   semesterId: string;
   
-  // indicates the total money still available. This won't take in count the type of pack
+  @ApiProperty({
+    description: "Refers to the total amount of money the user has for that semester or pack, but does not take in consideration all the various usability conditions of the different packs."
+  })
   totalRemaining: number;
-  // indicate the total money still available, based on their pack type and usability of each type
+  
+  @ApiProperty({
+    description: "refers to the total amount of money the user has AND TAKES in consideration all the various packs conditions. For this reasons, this amount could equal or less than “totalRemaining”."
+  })
   totalUsable: number;
+  
+  @ApiProperty({})
   totalUsed: number;
+  
+  @ApiProperty({})
   totalEarned: number;
   
   @ApiProperty({
@@ -70,8 +86,10 @@ export class CalcTotalsDto {
   })
   usableFrom: string
   
+  @ApiProperty({})
   usableNow: boolean
   
+  @ApiProperty({})
   packs: CalcTotalPacks
 }
 
