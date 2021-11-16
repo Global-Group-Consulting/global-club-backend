@@ -3,6 +3,7 @@ import { toRegExp } from '../../../_basics/transformers/toRegExp';
 import { toString } from '../../../_basics/transformers/toString';
 import { User } from '../../entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { castToNumber } from '../../../utilities/Formatters';
 
 export class FindAllUserFilter implements Partial<User> {
   @ApiProperty({
@@ -25,6 +26,13 @@ export class FindAllUserFilter implements Partial<User> {
     // example: "filter[lastName]"
   })
   lastName?: string
+  
+  @ApiProperty({
+    name: "filter[role]",
+    required: false
+    // example: "filter[lastName]"
+  })
+  role?: number
 }
 
 export const FindAllUserFilterMap: FilterMap<FindAllUserFilter> = {
@@ -39,6 +47,9 @@ export const FindAllUserFilterMap: FilterMap<FindAllUserFilter> = {
   email: {
     query: toRegExp,
     castValue: toString
+  },
+  role: {
+    castValue: castToNumber
   },
 }
 
