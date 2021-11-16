@@ -37,7 +37,7 @@ const defaultPaginationOptions: PaginationOptions = {
 export abstract class BasicService {
   abstract model: Model<any>;
   protected abstract config: ConfigService;
-  @Inject("REQUEST") protected request: AuthRequest
+  protected abstract request: AuthRequest
   
   protected constructor () {
   

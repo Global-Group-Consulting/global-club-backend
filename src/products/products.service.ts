@@ -1,5 +1,5 @@
 import { Model } from "mongoose";
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -16,16 +16,19 @@ import { ConfigService } from '@nestjs/config';
 import { PaginatedResultProductDto } from './dto/paginated-result-product.dto';
 import { FindAllUserFilterMap } from '../users/dto/filters/find-all-user.filter';
 import { FindAllProductsFilterMap } from './dto/filters/find-all-products.filter';
+import { AuthRequest } from '../_basics/AuthRequest';
 
 @Injectable()
 export class ProductsService extends BasicService {
   model: Model<ProductDocument>
   
   constructor (@InjectModel(Product.name) private productModel: Model<ProductDocument>,
-    @InjectModel(ProductCategory.name) private productCategoryModel: Model<ProductCategoryDocument>,
-    private filesService: FilesService, protected config: ConfigService) {
+               @InjectModel(ProductCategory.name) private productCategoryModel: Model<ProductCategoryDocument>,
+               private filesService: FilesService, protected config: ConfigService,
+               @Inject("REQUEST") protected request: AuthRequest) {
     
     super()
+    
     this.model = productModel;
   }
   

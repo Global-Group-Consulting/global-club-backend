@@ -4,9 +4,28 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { PackEnum } from '../../packs/enums/pack.enum';
 
-class CalcTotalPackDetails {
-  total: number;
-  forcedZero: boolean
+export class CalcTotalPackDetailsSupTotals {
+  interest_recapitalized: number;
+  deposit_added: number;
+  deposit_removed: number;
+  deposit_transferred: number;
+  deposit_used: number;
+}
+
+export class CalcTotalPackDetails {
+  @ApiProperty({
+    description: "Refers to the total amount of money the user has for that semester or pack, but does not take in consideration all the various usability conditions of the different packs."
+  })
+  totalRemaining: number;
+  
+  @ApiProperty({
+    description: "refers to the total amount of money the user has AND TAKES in consideration all the various packs conditions. For this reasons, this amount could equal or less than “totalRemaining”."
+  })
+  totalUsable: number;
+  totalUsed: number;
+  totalEarned: number;
+  forcedZero: boolean;
+  subTotals: CalcTotalPackDetailsSupTotals
 }
 
 class CalcTotalPacks {
@@ -39,9 +58,23 @@ class CalcTotalPacks {
 }
 
 export class CalcTotalsDto {
-  semesterId: string
+  semesterId: string;
   
-  total: number
+  @ApiProperty({
+    description: "Refers to the total amount of money the user has for that semester or pack, but does not take in consideration all the various usability conditions of the different packs."
+  })
+  totalRemaining: number;
+  
+  @ApiProperty({
+    description: "refers to the total amount of money the user has AND TAKES in consideration all the various packs conditions. For this reasons, this amount could equal or less than “totalRemaining”."
+  })
+  totalUsable: number;
+  
+  @ApiProperty({})
+  totalUsed: number;
+  
+  @ApiProperty({})
+  totalEarned: number;
   
   @ApiProperty({
     type: Date
@@ -53,8 +86,11 @@ export class CalcTotalsDto {
   })
   usableFrom: string
   
-  packs: CalcTotalPacks
+  @ApiProperty({})
+  usableNow: boolean
   
+  @ApiProperty({})
+  packs: CalcTotalPacks
 }
 
 export class CalcTotalsGroup {
@@ -62,5 +98,15 @@ export class CalcTotalsGroup {
     semesterId: string
   }
   
-  total: number
+  total: number;
+  totalUsed: number;
+  totalEarned: number;
+  
+  interest_recapitalized: number;
+  deposit_added: number;
+  deposit_removed: number;
+  deposit_transferred: number;
+  deposit_used: number;
+  
+  movements: Movement[]
 }

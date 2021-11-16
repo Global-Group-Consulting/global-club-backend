@@ -28,7 +28,8 @@ export class CommunicationsService extends BasicService {
   
   constructor (@InjectModel(Communication.name) private communicationModel: Model<CommunicationDocument>,
                protected config: ConfigService,
-               private filesService: FilesService) {
+               private filesService: FilesService,
+               @Inject("REQUEST") protected request: AuthRequest) {
     super();
     this.model = communicationModel;
   }
