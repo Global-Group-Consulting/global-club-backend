@@ -1,4 +1,4 @@
-import { PaginatedResult, PaginationOptions, PaginationOrderEnum } from './BasicService';
+import { PaginatedResult, PaginationOrderEnum } from './BasicService';
 
 export class PaginatedResultDto implements PaginatedResult {
   data: any;
@@ -6,7 +6,7 @@ export class PaginatedResultDto implements PaginatedResult {
   order: PaginationOrderEnum;
   page: number;
   perPage: number;
-  sortBy: string[];
+  sortBy: Record<string, number>[];
   totalItems: number;
   totalPages: number;
   
