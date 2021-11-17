@@ -1,12 +1,19 @@
-import { PaginatedResult, PaginationOrderEnum } from './BasicService';
-import { IsArray, IsEnum, IsNumber, IsOptional, IsString, Max, Min, } from 'class-validator';
+import { PaginationOrderEnum } from './BasicService';
+import { IsEnum, IsNumber, IsOptional, IsString, Max, Min, } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { ToArrayOfNumbers } from './transformers/toArray';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class PaginatedFilterDto<T = any> {
+  @ApiProperty({
+    name: "sortBy[propName]",
+    description: "Example: sortBy[_id]=1&sortBy[createdAt]=-1",
+    type: Number,
+    default: "1"
+  })
   @IsOptional()
-  @IsArray()
-  @Transform(({ value }) => (value instanceof Array) ? value : [value])
-  sortBy?: string[] = ["_id"];
+  @ToArrayOfNumbers()
+  sortBy?: Record<string, number>[] = [{ "_id": 1 }];
   
   @IsOptional()
   @IsString()

@@ -2,7 +2,6 @@ import { FindException } from "../_exceptions/find.exception";
 import { Model, QueryOptions } from 'mongoose';
 import { FilterMap, FilterOptions } from './FilterMap.dto';
 import { ConfigService } from '@nestjs/config';
-import { Inject } from '@nestjs/common';
 import { AuthRequest } from './AuthRequest';
 import { User } from '../users/entities/user.entity';
 import { UserAclRolesEnum } from '../users/enums/user.acl.roles.enum';
@@ -15,7 +14,7 @@ export enum PaginationOrderEnum {
 export interface PaginationOptions {
   page: number;
   perPage: number;
-  sortBy: string[];
+  sortBy: Record<string, number>[];
   order: PaginationOrderEnum
   filter?: any
 }
@@ -30,7 +29,7 @@ export interface PaginatedResult<T = any> extends PaginationOptions {
 const defaultPaginationOptions: PaginationOptions = {
   page: 1,
   perPage: 30,
-  sortBy: ["_id"],
+  sortBy: [{ "_id": 1 }],
   order: PaginationOrderEnum.ASC
 }
 
@@ -78,12 +77,12 @@ export abstract class BasicService {
     const opts: QueryOptions = {
       skip: sortOptions.page <= 1 ? 0 : sortOptions.page * sortOptions.perPage,
       limit: sortOptions.perPage,
-      sort: sortOptions.sortBy.reduce((acc, curr) => {
-        acc[curr] = sortOptions.order === "ASC" ? 1 : -1;
-        
-        return acc
-      }, {}),
-  
+      /* sort: sortOptions.sortBy.reduce((acc, curr) => {
+         acc[curr] = sortOptions.order === "ASC" ? 1 : -1;
+         
+         return acc
+       }, {}),*/
+      sort: sortOptions.sortBy
     }
   
     // If there are other options, merge them
@@ -113,7 +112,7 @@ export abstract class BasicService {
         })
       }
       */
-    let count: number = 0;
+    let count: number;
     const data: T[] = await this.model.find(filters, projection, opts).exec()
   
     // If the result length is higher or equal to the perPageLimit,
