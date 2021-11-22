@@ -25,6 +25,8 @@ import { PaginatedFilterOrderDto } from './dto/paginated-filter-order.dto';
 import { PaginatedResultOrderDto } from './dto/paginated-result-order.dto';
 import { FindAllOrdersFilter, FindAllOrdersFilterMap } from './dto/filters/find-all-orders.filter';
 import { ConfigService } from '@nestjs/config';
+import { ReadOrderStatusesDto } from './dto/read-order-statuses.dto';
+import { ReadUserGroupsDto } from '../users/dto/read-user-groups.dto';
 
 @Injectable()
 export class OrdersService extends BasicService {
@@ -134,6 +136,17 @@ export class OrdersService extends BasicService {
     return this.findPaginated<Order>(query, paginationDto, {
       "user.permissions": 0
     })
+  }
+  
+  async groupBy (field: keyof Order): Promise<any> {
+    return this.orderModel.aggregate([
+      {
+        $group: {
+          _id: "$" + field,
+          count: { $sum: 1 }
+        }
+      }
+    ]).exec()
   }
   
   async findOne (id: string): Promise<Order> {

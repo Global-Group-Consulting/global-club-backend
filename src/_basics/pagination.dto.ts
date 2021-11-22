@@ -9,23 +9,35 @@ export class PaginatedFilterDto<T = any> {
     name: "sortBy[propName]",
     description: "Example: sortBy[_id]=1&sortBy[createdAt]=-1",
     type: Number,
-    default: "1"
+    default: null,
+    required: false
   })
   @IsOptional()
   @ToArrayOfNumbers()
   sortBy?: Record<string, number>[] = [{ "_id": 1 }];
   
+  @ApiProperty({
+    default: null
+  })
   @IsOptional()
   @IsString()
   @IsEnum(PaginationOrderEnum)
   order?: PaginationOrderEnum = PaginationOrderEnum.ASC;
   
+  @ApiProperty({
+    default: null,
+    description: "Default 1"
+  })
   @IsOptional()
   @Transform(({ value }) => +value)
   @IsNumber()
   @Min(1)
   page?: number = 1;
   
+  @ApiProperty({
+    default: null,
+    description: "Default 30"
+  })
   @IsOptional()
   @Transform(({ value }) => +value)
   @IsNumber()

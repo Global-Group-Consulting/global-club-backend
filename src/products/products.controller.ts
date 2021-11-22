@@ -10,7 +10,7 @@ import {
 import {ProductsService} from './products.service';
 import {CreateProductDto} from './dto/create-product.dto';
 import {UpdateProductDto} from './dto/update-product.dto';
-import {ApiBearerAuth, ApiBody, ApiConsumes, ApiTags} from "@nestjs/swagger";
+import { ApiBasicAuth, ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import {ReadProductDto} from "./dto/read-product.dto";
 import {FileInterceptor, FilesInterceptor} from "@nestjs/platform-express";
 import {DeleteProductFilesDto} from "./dto/delete-product-files.dto";
@@ -21,6 +21,7 @@ import { PaginatedFindAllProductDto } from './dto/paginated-find-all-product.dto
 import { PaginatedResultProductDto } from './dto/paginated-result-product.dto';
 
 @ApiBearerAuth()
+@ApiBasicAuth("client-key")
 @ApiTags("Products")
 @Controller('products')
 export class ProductsController {
