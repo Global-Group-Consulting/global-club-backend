@@ -1,7 +1,7 @@
 import {Controller, Get, Post, Body, Patch, Param, Delete, Req} from '@nestjs/common';
 import {MovementsService} from './movements.service';
 import {CreateManualMovementDto} from './dto/create-manual-movement.dto';
-import {ApiBearerAuth, ApiOperation, ApiTags} from "@nestjs/swagger";
+import { ApiBasicAuth, ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import {Movement} from "./schemas/movement.schema";
 import {ReadDto} from "../_basics/read.dto";
 import {RemoveManualMovementDto} from "./dto/remove-manual-movement.dto";
@@ -9,6 +9,7 @@ import {UseMovementDto} from "./dto/use-movement.dto";
 import {CalcTotalsDto} from "./dto/calc-totals.dto";
 
 @ApiBearerAuth()
+@ApiBasicAuth("client-key")
 @ApiTags("Movements")
 @Controller('movements')
 export class MovementsController {

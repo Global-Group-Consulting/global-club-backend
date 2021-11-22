@@ -15,7 +15,6 @@ export class FindAllCommunicationsFilter {
     required: false,
     example: "filter[order]=pending&filter[type]=chat"
   })
-  
   @IsOptional()
   @ToArray()
   @IsEnum(CommunicationTypeEnum, { each: true })

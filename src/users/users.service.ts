@@ -36,17 +36,17 @@ export class UsersService extends BasicService {
   }
   
   async groupBy (field: keyof User): Promise<ReadUserGroupsDto[]> {
-    return this.userModel.aggregate<ReadUserGroupsDto>([
-      {
-        $match: { gold: true }
-      },
-      {
-        $group: {
-          _id: "$" + field,
-          count: { $sum: 1 }
+      return this.userModel.aggregate<ReadUserGroupsDto>([
+        {
+          $match: { gold: true }
+        },
+        {
+          $group: {
+            _id: "$" + field,
+            count: { $sum: 1 }
+          }
         }
-      }
-    ]).exec()
+      ]).exec()
   }
   
   findOne (id: number) {

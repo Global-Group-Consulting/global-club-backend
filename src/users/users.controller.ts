@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBasicAuth, ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { PaginatedFilterDto } from '../_basics/pagination.dto';
 import { User } from './entities/user.entity';
 import { PaginatedResult } from '../_basics/BasicService';
@@ -10,6 +10,8 @@ import { ReadUserGroupsDto } from './dto/read-user-groups.dto';
 import { PaginatedFilterUserDto } from './dto/paginated-filter-user.dto';
 import { PaginatedResultUserDto } from './dto/paginated-result-user.dto';
 
+@ApiBearerAuth()
+@ApiBasicAuth("client-key")
 @ApiTags("Users")
 @Controller('users')
 export class UsersController {

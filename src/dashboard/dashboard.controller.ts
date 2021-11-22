@@ -1,11 +1,12 @@
 import { Controller, Get, Req } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBasicAuth, ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthRequest } from '../_basics/AuthRequest';
 import { BasicController } from '../_basics/BasicController';
 import { ReadDashboardSemestersDto } from './dto/read-dashboard-semesters.dto';
 
 @ApiBearerAuth()
+@ApiBasicAuth("client-key")
 @ApiTags("Dashboard")
 @Controller('dashboard')
 export class DashboardController extends BasicController {

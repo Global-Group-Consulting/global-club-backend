@@ -2,11 +2,12 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ProductCategoryService } from './product-category.service';
 import { CreateProductCategoryDto } from './dto/create-product-category.dto';
 import { UpdateProductCategoryDto } from './dto/update-product-category.dto';
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiBasicAuth, ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ReadDto } from "../_basics/read.dto";
 import { ProductCategory } from './schemas/product-category.schema';
 
 @ApiBearerAuth()
+@ApiBasicAuth("client-key")
 @ApiTags("ProductCategories")
 @Controller('product-categories')
 export class ProductCategoryController {
