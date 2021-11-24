@@ -15,7 +15,8 @@ export interface PaginationOptions {
   page: number;
   perPage: number;
   sortBy: Record<string, number>[];
-  order: PaginationOrderEnum
+  order: PaginationOrderEnum,
+  limit?: number;
   filter?: any
 }
 
@@ -71,12 +72,18 @@ export abstract class BasicService {
   protected async findPaginated<T> (filter: Partial<T>,
     paginationOptions?: Partial<PaginationOptions>,
     projection?: any, options?: QueryOptions): Promise<PaginatedResult<T[]>> {
-    
+  
     const sortOptions: PaginationOptions = Object.assign({}, defaultPaginationOptions, paginationOptions);
-    
+  
+    let limit = sortOptions.perPage;
+  
+    if (paginationOptions.limit && paginationOptions.limit < sortOptions.perPage) {
+      limit = paginationOptions.limit
+    }
+  
     const opts: QueryOptions = {
       skip: sortOptions.page <= 1 ? 0 : sortOptions.page * sortOptions.perPage,
-      limit: sortOptions.perPage,
+      limit: limit,
       /* sort: sortOptions.sortBy.reduce((acc, curr) => {
          acc[curr] = sortOptions.order === "ASC" ? 1 : -1;
          
