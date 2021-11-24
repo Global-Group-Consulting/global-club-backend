@@ -3,7 +3,7 @@ import { Model, QueryOptions } from 'mongoose';
 import { FilterMap, FilterOptions } from './FilterMap.dto';
 import { ConfigService } from '@nestjs/config';
 import { AuthRequest } from './AuthRequest';
-import { User } from '../users/entities/user.entity';
+import { User } from '../users/schemas/user.schema';
 import { UserAclRolesEnum } from '../users/enums/user.acl.roles.enum';
 
 export enum PaginationOrderEnum {
@@ -148,20 +148,25 @@ export abstract class BasicService {
     Object.keys(filtersMap).forEach(key => {
       let value = filters[key]
       let filterOptions: FilterOptions = filtersMap[key]
+      let filterKey = key
     
       if (value === undefined) {
         return
       }
-    
+  
       if (filterOptions.hasOwnProperty("castValue")) {
         value = filterOptions.castValue(value);
       }
-    
+  
       if (filterOptions.hasOwnProperty("query")) {
         value = filterOptions.query(value)
       }
-    
-      toReturn[key] = value
+  
+      if (filterOptions.hasOwnProperty("keyFormat")) {
+        filterKey = filterOptions.keyFormat(key);
+      }
+  
+      toReturn[filterKey] = value
     })
     
     return toReturn

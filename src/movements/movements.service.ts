@@ -16,10 +16,15 @@ import {
 } from './dto/calc-totals.dto'
 import { WithdrawalException } from './exceptions/withdrawal.exception'
 import { UpdateException } from '../_exceptions/update.exception'
-import { BasicService } from '../_basics/BasicService';
+import { BasicService, PaginatedResult } from '../_basics/BasicService';
 import { ConfigService } from '@nestjs/config';
 import { calcBritesUsage } from './utils/movements.utils';
 import { PackEnum } from '../packs/enums/pack.enum';
+import { FindAllCommunicationsFilterMap } from '../communications/dto/filters/find-all-communications.filter';
+import { Communication } from '../communications/schemas/communications.schema';
+import { FindAllMovementsFilter, FindAllMovementsFilterMap } from './dto/filters/find-all-movements.filter';
+import { PaginatedFilterMovementDto } from './dto/paginated-filter-movement.dto';
+import { PaginatedResultMovementDto } from './dto/paginated-result-movement.dto';
 
 @Injectable()
 export class MovementsService extends BasicService {
@@ -29,6 +34,16 @@ export class MovementsService extends BasicService {
                protected config: ConfigService,
                @Inject("REQUEST") protected request: AuthRequest) {
     super()
+    
+    this.model = movementModel
+  }
+  
+  async findAll (userId: string, queryData: PaginatedFilterMovementDto): Promise<PaginatedResultMovementDto> {
+    const query: any = this.prepareQuery({
+      ...queryData.filter,
+      userId: castToObjectId(userId)
+    }, FindAllMovementsFilterMap)
+    return this.findPaginated<Movement>(query, queryData)
   }
   
   async manualAdd (userId: string, createMovementDto: CreateManualMovementDto): Promise<Movement> {
@@ -54,10 +69,6 @@ export class MovementsService extends BasicService {
     })
     
     return newMovement.save()
-  }
-  
-  async findAllForUser(id: string): Promise<Movement[]> {
-    return this.movementModel.find({userId: id});
   }
   
   async use(userId: string, useMovementDto: UseMovementDto): Promise<Movement[]> {

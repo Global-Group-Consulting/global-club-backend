@@ -6,7 +6,6 @@ import { CreateOrderDto } from './dto/create-order.dto'
 import { Order, OrderDocument } from './schemas/order.schema'
 import { Product, ProductDocument } from '../products/schemas/product.schema'
 import { AuthRequest } from '../_basics/AuthRequest'
-import { User } from '../users/entities/user.entity'
 import { FindException } from '../_exceptions/find.exception'
 import { CommunicationsService } from '../communications/communications.service'
 import { CommunicationTypeEnum } from '../communications/enums/communication.type.enum'
@@ -18,11 +17,7 @@ import { UpdateException } from '../_exceptions/update.exception'
 import { MovementsService } from '../movements/movements.service'
 import { Movement } from '../movements/schemas/movement.schema'
 import { OrderProduct } from './schemas/order-product'
-import { UserAclRolesEnum } from '../users/enums/user.acl.roles.enum';
-import { UserBasic } from '../users/entities/user.basic.entity';
-import { PaginatedFilterDto } from '../_basics/pagination.dto';
 import { PaginatedFilterOrderDto } from './dto/paginated-filter-order.dto';
-import { PaginatedResultOrderDto } from './dto/paginated-result-order.dto';
 import { FindAllOrdersFilter, FindAllOrdersFilterMap } from './dto/filters/find-all-orders.filter';
 import { ConfigService } from '@nestjs/config';
 import { ReadOrderStatusesDto } from './dto/read-order-statuses.dto';
@@ -132,7 +127,7 @@ export class OrdersService extends BasicService {
         id: this.authUser.id
       }
     }
-  
+    
     return this.findPaginated<Order>(query, paginationDto, {
       "user.permissions": 0
     })
@@ -211,7 +206,7 @@ export class OrdersService extends BasicService {
       
       // If the order status is complete, generate the withdrawal movement
       if (order.status === OrderStatusEnum.COMPLETED) {
-        newMovement = await this.movementsService.use(order.user.id, {
+        newMovement = await this.movementsService.use(order.user._id, {
           amountChange: order.amount,
           orderId: order._id,
           notes: 'Completamento ordine #' + order._id.toString()

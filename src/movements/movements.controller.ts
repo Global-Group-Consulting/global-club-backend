@@ -1,19 +1,22 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete, Req} from '@nestjs/common';
-import {MovementsService} from './movements.service';
-import {CreateManualMovementDto} from './dto/create-manual-movement.dto';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Query } from '@nestjs/common';
+import { MovementsService } from './movements.service';
+import { CreateManualMovementDto } from './dto/create-manual-movement.dto';
 import { ApiBasicAuth, ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
-import {Movement} from "./schemas/movement.schema";
-import {ReadDto} from "../_basics/read.dto";
-import {RemoveManualMovementDto} from "./dto/remove-manual-movement.dto";
-import {UseMovementDto} from "./dto/use-movement.dto";
-import {CalcTotalsDto} from "./dto/calc-totals.dto";
+import { Movement } from "./schemas/movement.schema";
+import { ReadDto } from "../_basics/read.dto";
+import { RemoveManualMovementDto } from "./dto/remove-manual-movement.dto";
+import { UseMovementDto } from "./dto/use-movement.dto";
+import { CalcTotalsDto } from "./dto/calc-totals.dto";
+import { PaginatedFilterMovementDto } from './dto/paginated-filter-movement.dto';
+import { PaginatedResult } from '../_basics/BasicService';
+import { PaginatedResultMovementDto } from './dto/paginated-result-movement.dto';
 
 @ApiBearerAuth()
 @ApiBasicAuth("client-key")
 @ApiTags("Movements")
 @Controller('movements')
 export class MovementsController {
-  constructor(private readonly movementsService: MovementsService) {
+  constructor (private readonly movementsService: MovementsService) {
   }
   
   /**
@@ -28,10 +31,10 @@ export class MovementsController {
   /**
    * Fetch all existing movements for a specified users
    */
-  @ApiOperation({summary: "Movements list for user"})
+  @ApiOperation({ summary: "Movements list for user" })
   @Get(":id")
-  findAllForUser(@Param() params: ReadDto): Promise<Movement[]> {
-    return this.movementsService.findAllForUser(params.id);
+  findAllForUser (@Param() params: ReadDto, @Query() query: PaginatedFilterMovementDto): Promise<PaginatedResultMovementDto> {
+    return this.movementsService.findAll(params.id, query);
   }
   
   /**

@@ -2,20 +2,22 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { UserBasic, UserBasicDocument } from './schemas/user-basic.schema';
+import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import { BasicService, PaginatedResult } from '../_basics/BasicService';
-import { User } from './entities/user.entity';
 import { ReadUserGroupsDto } from './dto/read-user-groups.dto';
 import { PaginatedFilterUserDto } from './dto/paginated-filter-user.dto';
 import { FindAllUserFilterMap } from './dto/filters/find-all-user.filter';
 import { ConfigService } from '@nestjs/config';
 import { AuthRequest } from 'src/_basics/AuthRequest';
+import { castToObjectId } from '../utilities/Formatters';
+import { UserDocument } from './schemas/user.schema';
+import { UserBasic, userBasicProjection } from './entities/user.basic.entity';
 
 @Injectable()
 export class UsersService extends BasicService {
   
-  constructor (@InjectModel(UserBasic.name) private userModel: Model<UserBasicDocument>,
+  constructor (@InjectModel(User.name) private userModel: Model<UserDocument>,
                protected config: ConfigService,
                @Inject("REQUEST") protected request: AuthRequest) {
     super();
@@ -30,9 +32,11 @@ export class UsersService extends BasicService {
     const query = this.prepareQuery((paginationDto.filter ?? {}), FindAllUserFilterMap)
   
     return await this.findPaginated<User>({
-      ...query,
-      gold: true,
-    }, paginationDto)
+        ...query,
+        gold: true,
+      }, paginationDto,
+      userBasicProjection
+    )
   }
   
   async groupBy (field: keyof User): Promise<ReadUserGroupsDto[]> {
@@ -49,8 +53,8 @@ export class UsersService extends BasicService {
       ]).exec()
   }
   
-  findOne (id: number) {
-    return `This action returns a #${id} user`;
+  async findOne (id: string): Promise<UserBasic> {
+    return await this.userModel.findById(id, userBasicProjection).exec()
   }
   
   update (id: number, updateUserDto: UpdateUserDto) {

@@ -24,6 +24,7 @@ function initSwagger (app: INestApplication) {
     .setVersion(process.env.npm_package_version)
     .addBearerAuth()
     .addServer(process.env.MAIN_SERVER_URL + "/ext/club/", "Server that will proxy the requests to this server.")
+    .addServer("http://localhost:4000/api", "Local server")
     .addApiKey({ type: "apiKey", name: "Client-Key", description: "Client key specific for each client app." }, "client-key")
     .build()
   

@@ -1,7 +1,7 @@
 import { FilterMap } from '../../../_basics/FilterMap.dto';
 import { toRegExp } from '../../../_basics/transformers/toRegExp';
 import { toString } from '../../../_basics/transformers/toString';
-import { User } from '../../entities/user.entity';
+import { User } from '../../schemas/user.schema';
 import { ApiProperty } from '@nestjs/swagger';
 import { castToNumber } from '../../../utilities/Formatters';
 

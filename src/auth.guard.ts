@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { User } from "./users/entities/user.entity";
+import { User } from "./users/schemas/user.schema";
 import { ConfigService } from "@nestjs/config";
 import { AuthUser } from "./_basics/AuthRequest";
 import { UserAclRolesEnum } from './users/enums/user.acl.roles.enum';
@@ -16,9 +16,9 @@ export class AuthGuard implements CanActivate {
     "lastName": "Leica",
     "email": "florian.leica@gmail.com",
     "account_status": "active",
-    "created_at": "2020-10-03T09:24:52.054Z",
-    "updated_at": "2021-06-28T13:58:27.586Z",
-    "contractNumber": 12345,
+    "created_at": new Date("2020-10-03T09:24:52.054Z"),
+    "updated_at": new Date("2021-06-28T13:58:27.586Z"),
+    "contractNumber": "12345",
     "role": 1,
     "personType": 1,
     "birthCity": "Valbella di sotto",
@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
     "birthProvince": "ao",
     "businessName": "Azienda La mantovana",
     "docNumber": "AI787363",
-    "docType": 2,
+    "docType": "2",
     "fiscalCode": "MRSNSY76765AB76I",
     "gender": "m",
     "vatNumber": "0128675657234",

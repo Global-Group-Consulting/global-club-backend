@@ -68,6 +68,8 @@ export class Movement {
   
   _id: Types.ObjectId;
   createdAt: Date;
+  created_at?: Date;
+  updated_at?: Date;
   updatedAt: Date;
   
   /**
