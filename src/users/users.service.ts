@@ -13,6 +13,7 @@ import { AuthRequest } from 'src/_basics/AuthRequest';
 import { castToObjectId } from '../utilities/Formatters';
 import { UserDocument } from './schemas/user.schema';
 import { UserBasic, userBasicProjection } from './entities/user.basic.entity';
+import { ReadUserDto } from './dto/read-user.dto';
 
 @Injectable()
 export class UsersService extends BasicService {
@@ -53,8 +54,12 @@ export class UsersService extends BasicService {
       ]).exec()
   }
   
-  async findOne (id: string): Promise<UserBasic> {
-    return await this.userModel.findById(id, userBasicProjection).exec()
+  async findOne (id: string, query?: ReadUserDto): Promise<UserBasic | User> {
+    const projection = query.full ? {
+      password: 0 // avoid returning user password
+    } : userBasicProjection;
+    
+    return await this.userModel.findById(id, projection).exec()
   }
   
   update (id: number, updateUserDto: UpdateUserDto) {

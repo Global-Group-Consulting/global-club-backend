@@ -1,5 +1,4 @@
 import { Transform } from 'class-transformer';
-import { toRegExp } from './toRegExp';
 
 export function toString (value: any) {
   if (!value) {
