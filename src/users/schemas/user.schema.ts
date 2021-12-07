@@ -7,7 +7,7 @@ import { UserBasic } from '../entities/user.basic.entity';
 export type UserDocument = User & Document
 
 @Schema({
-  collection: "users"
+  collection: "users",
 })
 export class User {
   @Prop({
@@ -153,7 +153,7 @@ export class User {
   @Prop()
   personType: number;
   
-  @Prop()
+  @Prop({ immutable: true })
   permissions: string[];
   
   @Prop()
@@ -184,3 +184,9 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)
+
+export const userProjection = Object.keys(UserSchema.obj).reduce((acc, key) => {
+  acc[key] = 1;
+  
+  return acc
+}, {})

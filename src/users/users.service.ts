@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from './schemas/user.schema';
+import { User, userProjection } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import { BasicService, PaginatedResult } from '../_basics/BasicService';
 import { ReadUserGroupsDto } from './dto/read-user-groups.dto';
@@ -62,8 +62,17 @@ export class UsersService extends BasicService {
     return await this.userModel.findById(id, projection).exec()
   }
   
-  update (id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update (id: string, updateUserDto: UpdateUserDto) {
+    const userToUpdate = await this.findOrFail(id);
+    
+    // return only the changed keys;
+    return this.userModel.findByIdAndUpdate(id, updateUserDto as any, {
+      new: true,
+      projection: Object.keys(updateUserDto).reduce((acc, key) => {
+        acc[key] = 1;
+        return acc
+      }, {})
+    })
   }
   
   remove (id: number) {
