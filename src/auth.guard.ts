@@ -77,7 +77,7 @@ export class AuthGuard implements CanActivate {
       roles: []
     }
     
-    if (this.configService.get<string>("NODE_ENV") !== "development") {
+    // if (this.configService.get<string>("NODE_ENV") !== "development") {
       validationResult = this.validateRequest(reqData._auth_user, reqHeaders['client-secret'], reqHeaders['server-secret'])
   
       if (!validationResult) {
@@ -87,11 +87,11 @@ export class AuthGuard implements CanActivate {
       auth.user = reqData._auth_user
       auth.permissions = reqData._auth_user.permissions
       auth.roles = reqData._auth_user.roles
-    } else {
+    /*} else {
       auth.user = this.fakeUser as any;
       auth.permissions = this.fakeUser.permissions
       auth.roles = this.fakeUser.roles
-    }
+    }*/
     
     request.auth = auth
     
