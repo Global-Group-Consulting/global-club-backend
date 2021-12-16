@@ -70,6 +70,8 @@ export class OrdersService extends BasicService {
   
     const productsExists: ProductDocument[] = await this.checkProductsExistence(productIds)
   
+    let orderAmount = 0;
+  
     // Map newData products to add for each one its actual price,
     // this to avoid problems if in the meanwhile the product price gets updated and the order is not yet completed.
     newData.products = newData.products.map((prod: OrderProduct) => {
@@ -78,13 +80,15 @@ export class OrdersService extends BasicService {
       prod.price = productsExists.find(p => p._id.toString() === prod.id).price
     
       // Update total amount for the order by calculating each product price * qta
-      newOrder.amount += prod.price * prod.qta
+      orderAmount += prod.price * prod.qta
     
       return prod
     })
   
     // Temporary generates the order, but don't save it yet
     const newOrder = new this.orderModel(newData)
+  
+    newOrder.amount = orderAmount;
   
     // Generates the communication associated with this order.
     const relatedCommunication = await this.communicationService.create({
