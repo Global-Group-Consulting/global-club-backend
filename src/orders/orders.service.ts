@@ -127,9 +127,7 @@ export class OrdersService extends BasicService {
     const query: any = this.prepareQuery(paginationDto.filter, FindAllOrdersFilterMap)
   
     if (!this.userIsAdmin) {
-      query.user = {
-        id: this.authUser.id.toString()
-      }
+      query["user.id"] = this.authUser.id.toString()
     }
     
     return this.findPaginated<Order>(query, paginationDto, {
