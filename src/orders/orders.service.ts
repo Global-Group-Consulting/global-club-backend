@@ -128,7 +128,7 @@ export class OrdersService extends BasicService {
   
     if (!this.userIsAdmin) {
       query.user = {
-        id: this.authUser.id
+        id: this.authUser.id.toString()
       }
     }
     
