@@ -21,6 +21,8 @@ export class CreateCommunicationDto {
   @IsOptional()
   title: string
   
+  messageData?: any
+  
   // The sender will be automatically set by the auth user
   /*@IsOptional()
   sender: UserBasic*/

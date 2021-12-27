@@ -12,14 +12,17 @@ export class Message extends Document {
   @Prop({ type: User, required: true })
   sender: UserBasic
   
-  @Prop({type: [AttachmentSchema]})
+  @Prop({ type: [AttachmentSchema] })
   attachments: Attachment[] = []
   
-  @Prop({required: true})
+  @Prop({ required: true })
   content: string
   
-  @Prop({default: MessageTypeEnum.MESSAGE, enum: MessageTypeEnum})
+  @Prop({ default: MessageTypeEnum.MESSAGE, enum: MessageTypeEnum })
   type: string
+  
+  @Prop()
+  data: any
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message)

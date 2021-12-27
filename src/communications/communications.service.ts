@@ -15,6 +15,7 @@ import { PaginatedFilterCommunicationDto } from './dto/paginated-filter-communic
 import { BasicService, PaginatedResult } from '../_basics/BasicService';
 import { ConfigService } from '@nestjs/config';
 import { FindAllCommunicationsFilterMap } from './dto/filters/find-all-communications.filter';
+import { OrderStatusEnum } from '../orders/enums/order.status.enum';
 
 @Injectable()
 export class CommunicationsService extends BasicService {
@@ -32,14 +33,15 @@ export class CommunicationsService extends BasicService {
     return this.request.auth.user
   }
   
-  async create (createCommunicationDto: CreateCommunicationDto, messageType?: MessageTypeEnum) {
+  async create (createCommunicationDto: CreateCommunicationDto, messageType?: MessageTypeEnum, orderStatus?: OrderStatusEnum) {
     const newCommunication = new this.communicationModel({
       ...createCommunicationDto,
       messages: [{
         sender: this.authUser,
         content: createCommunicationDto.message,
         attachments: createCommunicationDto.attachments,
-        messageType
+        messageType,
+        data: createCommunicationDto.messageData
       }],
       initiator: this.authUser
     })

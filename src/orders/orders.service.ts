@@ -103,11 +103,14 @@ export class OrdersService extends BasicService {
             (prod) => prod.id === curr.id,
           )
           acc.push(`<strong>${curr.title}</strong> x ${incomingProduct.qta}`)
-  
+    
           return acc
         }, [])
         .join('</li><li>')}</li>
         </ul>`,
+      messageData: {
+        orderStatus: OrderStatusEnum.PENDING
+      }
     }, MessageTypeEnum.ORDER_STATUS_UPDATE)
   
     // Assign the communication id as a ref to the order
