@@ -1,5 +1,4 @@
 import { Model } from 'mongoose'
-import { REQUEST } from '@nestjs/core'
 import { InjectModel } from '@nestjs/mongoose'
 import { Inject, Injectable } from '@nestjs/common'
 import { CreateCommunicationDto } from './dto/create-communication.dto'
@@ -13,14 +12,9 @@ import { UpdateException } from '../_exceptions/update.exception'
 import { MessageTypeEnum } from './enums/message.type.enum'
 import { castToObjectId } from '../utilities/Formatters'
 import { PaginatedFilterCommunicationDto } from './dto/paginated-filter-communication.dto';
-import { PaginatedResultDto } from '../_basics/pagination-result.dto';
 import { BasicService, PaginatedResult } from '../_basics/BasicService';
 import { ConfigService } from '@nestjs/config';
-import { Mode } from 'fs';
-import {
-  FindAllCommunicationsFilter,
-  FindAllCommunicationsFilterMap
-} from './dto/filters/find-all-communications.filter';
+import { FindAllCommunicationsFilterMap } from './dto/filters/find-all-communications.filter';
 
 @Injectable()
 export class CommunicationsService extends BasicService {
@@ -38,13 +32,14 @@ export class CommunicationsService extends BasicService {
     return this.request.auth.user
   }
   
-  async create (createCommunicationDto: CreateCommunicationDto) {
+  async create (createCommunicationDto: CreateCommunicationDto, messageType?: MessageTypeEnum) {
     const newCommunication = new this.communicationModel({
       ...createCommunicationDto,
       messages: [{
         sender: this.authUser,
         content: createCommunicationDto.message,
-        attachments: createCommunicationDto.attachments
+        attachments: createCommunicationDto.attachments,
+        messageType
       }],
       initiator: this.authUser
     })

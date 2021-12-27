@@ -108,7 +108,7 @@ export class OrdersService extends BasicService {
         }, [])
         .join('</li><li>')}</li>
         </ul>`,
-    })
+    }, MessageTypeEnum.ORDER_STATUS_UPDATE)
   
     // Assign the communication id as a ref to the order
     newOrder.communication = relatedCommunication.id
