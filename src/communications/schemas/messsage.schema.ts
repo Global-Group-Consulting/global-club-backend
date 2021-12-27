@@ -21,8 +21,8 @@ export class Message extends Document {
   @Prop({ default: MessageTypeEnum.MESSAGE, enum: MessageTypeEnum })
   type: string
   
-  @Prop()
-  data: any
+  @Prop({type: Object})
+  data: object
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message)

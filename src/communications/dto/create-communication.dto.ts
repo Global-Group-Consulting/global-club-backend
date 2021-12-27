@@ -2,7 +2,8 @@ import {IsArray, IsEnum, IsNotEmpty, IsOptional, ValidateNested} from "class-val
 import {CommunicationTypeEnum} from "../enums/communication.type.enum";
 import {UserBasic} from "../../users/entities/user.basic.entity";
 import {Type} from "class-transformer";
-import {Attachment} from "../../_schemas/attachment.schema";
+import { Attachment } from "../../_schemas/attachment.schema";
+import { OrderStatusEnum } from '../../orders/enums/order.status.enum';
 
 export class CreateCommunicationDto {
   @IsNotEmpty()
@@ -15,13 +16,15 @@ export class CreateCommunicationDto {
   @IsOptional()
   @IsArray()
   @Type(() => Attachment)
-  @ValidateNested({each: true})
+  @ValidateNested({ each: true })
   attachments?: Attachment[]
   
   @IsOptional()
   title: string
   
-  messageData?: any
+  messageData?: {
+    orderStatus?: OrderStatusEnum
+  }
   
   // The sender will be automatically set by the auth user
   /*@IsOptional()
@@ -30,7 +33,7 @@ export class CreateCommunicationDto {
   // Required only when the type is NEWSLETTER | COMMUNICATION | CHAT
   @IsOptional()
   @IsArray()
-  @ValidateNested({each: true})
+  @ValidateNested({ each: true })
   @Type(() => UserBasic)
   receivers?: UserBasic[]
   
