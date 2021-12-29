@@ -10,6 +10,8 @@ import { PaginatedFilterOrderDto } from './dto/paginated-filter-order.dto';
 import { PaginatedResultOrderDto } from './dto/paginated-result-order.dto';
 import { OrderResponseInterceptor } from './interceptors/order-response.interceptor';
 import { ReadOrderStatusesDto } from './dto/read-order-statuses.dto';
+import { UpdateOrderProductDto } from './dto/update-order-product.dto';
+import { ReadOrderProductDto } from './dto/read-order-product.dto';
 
 @ApiBearerAuth()
 @ApiBasicAuth("client-key")
@@ -39,9 +41,9 @@ export class OrdersController {
     return this.ordersService.findOne(params.id);
   }
   
-  //@Patch(':id')
-  update (@Param() params: ReadDto, @Body() updateOrderDto: UpdateOrderDto) {
-    //return this.ordersService.update(params.id, updateOrderDto);
+  @Patch(':id/:productId')
+  updateProduct (@Param() params: ReadOrderProductDto, @Body() updateOrderProductDto: UpdateOrderProductDto) {
+    return this.ordersService.updateProduct(params.id, params.productId, updateOrderProductDto);
   }
   
   /**

@@ -22,6 +22,8 @@ import { FindAllOrdersFilter, FindAllOrdersFilterMap } from './dto/filters/find-
 import { ConfigService } from '@nestjs/config';
 import { ReadOrderStatusesDto } from './dto/read-order-statuses.dto';
 import { ReadUserGroupsDto } from '../users/dto/read-user-groups.dto';
+import { UpdateOrderProductDto } from './dto/update-order-product.dto';
+import { castToObjectId } from '../utilities/Formatters';
 
 @Injectable()
 export class OrdersService extends BasicService {
@@ -119,7 +121,7 @@ export class OrdersService extends BasicService {
     try {
       return await newOrder.save()
     } catch (e) {
-      // If there is an error i remove the created communication
+      // If there is an error I remove the created communication
       await this.communicationService.remove(relatedCommunication.id)
     
       throw e
@@ -226,16 +228,47 @@ export class OrdersService extends BasicService {
       if (newMessageId) {
         await this.communicationService.removeMessage(newMessageId)
       }
-      
+  
       if (newMovement) {
         await this.movementsService.cancel(newMovement)
       }
-      
+  
       throw er
     }
   }
   
+  async updateProduct (id: string, productId: string, updateOrderProductDto: UpdateOrderProductDto) {
+    const orders: OrderDocument[] = await this.model.where({
+      _id: castToObjectId(id),
+      "products.product": castToObjectId(productId)
+    }).exec()
+    
+    if (!orders || orders.length === 0) {
+      throw new FindException('The order or product can\'t be found')
+    }
+    
+    const order = orders[0];
+    const prodIndex = order.products.findIndex(el => el.product.toString() === productId);
+    
+    if (updateOrderProductDto.hasOwnProperty("qta")) {
+      order.products[prodIndex].qta = updateOrderProductDto.qta
+    }
+    if (updateOrderProductDto.hasOwnProperty("price")) {
+      order.products[prodIndex].price = updateOrderProductDto.price
+    }
+    
+    order.amount = OrdersService.calcOrderAmount(order);
+    
+    await order.save();
+    
+    return order.populate(['products.product', 'communication'])
+  }
+  
   remove (id: string) {
     return this.orderModel.findByIdAndDelete(id)
+  }
+  
+  private static calcOrderAmount (order: Order): number {
+    return order.products.reduce((acc, curr) => acc + (curr.price * curr.qta), 0)
   }
 }

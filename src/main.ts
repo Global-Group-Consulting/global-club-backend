@@ -49,7 +49,8 @@ async function bootstrap() {
   app.useGlobalGuards(new AuthGuard(configService))
   app.useGlobalFilters(new MongoExceptionFilter(), new AllExceptionsFilter(systemLogsService, configService))
   app.useGlobalPipes(new ValidationPipe({
-    transform: true
+    transform: true,
+    whitelist: true
   }));
   
   initSwagger(app)

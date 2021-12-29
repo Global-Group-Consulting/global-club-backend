@@ -33,14 +33,14 @@ export class CommunicationsService extends BasicService {
     return this.request.auth.user
   }
   
-  async create (createCommunicationDto: CreateCommunicationDto, messageType?: MessageTypeEnum, orderStatus?: OrderStatusEnum) {
+  async create (createCommunicationDto: CreateCommunicationDto, messageType?: MessageTypeEnum) {
     const newCommunication = new this.communicationModel({
       ...createCommunicationDto,
       messages: [{
         sender: this.authUser,
         content: createCommunicationDto.message,
         attachments: createCommunicationDto.attachments,
-        messageType,
+        type: messageType,
         data: createCommunicationDto.messageData
       }],
       initiator: this.authUser

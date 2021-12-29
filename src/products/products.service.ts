@@ -97,15 +97,19 @@ export class ProductsService extends BasicService {
       
       throw new UpdateException("Can't change the thumbnail. First must be removed the existing one.")
     }
-    
+  
     // if there are pushed new images to the images list, add them to the existing ones.
     if (updateProductDto.images) {
       // To add to a mongo array i must use the push method
-      updateProductDto["$push"] = {images: {$each: updateProductDto.images}}
-      
+      updateProductDto["$push"] = { images: { $each: updateProductDto.images } }
+    
       delete updateProductDto.images
     }
-    
+  
+    if (updateProductDto.priceUndefined) {
+      updateProductDto.price = 0;
+    }
+  
     return this.productModel.findByIdAndUpdate(id, updateProductDto as any, { new: true, populate: ["categories"] })
   }
   
