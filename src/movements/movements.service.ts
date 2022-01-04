@@ -306,6 +306,7 @@ export class MovementsService extends BasicService {
       let forcedZero = false
       
       console.log(usageData)
+      console.log(usageData.usableFrom.toUTCString())
     
       // If doesn't exist yet, add it with default values.
       if (!acc[semesterId]) {
