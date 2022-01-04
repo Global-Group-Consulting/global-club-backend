@@ -316,9 +316,9 @@ export class MovementsService extends BasicService {
           totalEarned: 0,
           totalUsed: 0,
           totalUsable: 0,
-          usableFrom: usageData.usableFrom.toJSON(),
+          usableFrom: usageData.usableFrom.toUTCString(),
           usableNow: usageData.usableFrom.getTime() <= Date.now(),
-          expiresAt: usageData.expiresAt.toJSON(),
+          expiresAt: usageData.expiresAt.toUTCString(),
         }
       }
     
