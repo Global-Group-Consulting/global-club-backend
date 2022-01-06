@@ -18,12 +18,11 @@ import { MovementsService } from '../movements/movements.service'
 import { Movement } from '../movements/schemas/movement.schema'
 import { OrderProduct } from './schemas/order-product'
 import { PaginatedFilterOrderDto } from './dto/paginated-filter-order.dto';
-import { FindAllOrdersFilter, FindAllOrdersFilterMap } from './dto/filters/find-all-orders.filter';
+import { FindAllOrdersFilterMap } from './dto/filters/find-all-orders.filter';
 import { ConfigService } from '@nestjs/config';
-import { ReadOrderStatusesDto } from './dto/read-order-statuses.dto';
-import { ReadUserGroupsDto } from '../users/dto/read-user-groups.dto';
 import { UpdateOrderProductDto } from './dto/update-order-product.dto';
 import { castToObjectId } from '../utilities/Formatters';
+import { detailedDiff, diff } from 'deep-object-diff';
 
 @Injectable()
 export class OrdersService extends BasicService {
@@ -83,7 +82,7 @@ export class OrdersService extends BasicService {
     
       // Update total amount for the order by calculating each product price * qta
       orderAmount += prod.price * prod.qta
-    
+  
       return prod
     })
   
@@ -92,28 +91,29 @@ export class OrdersService extends BasicService {
   
     newOrder.amount = orderAmount;
   
+    /* const messageProducts =
+   */
     // Generates the communication associated with this order.
     const relatedCommunication = await this.communicationService.create({
       type: CommunicationTypeEnum.ORDER,
       title: `Ordine #${newOrder.id} del ${new Date().toLocaleString('it')}`,
-      message: `Riepilogo dell'ordine: <br>
-        N° prodotti: ${productIds.length}<br>
-        <ul>
-        <li>${productsExists
-        .reduce((acc, curr) => {
-          const incomingProduct = createOrderDto.products.find(
-            (prod) => prod.id === curr.id,
-          )
-          acc.push(`<strong>${curr.title}</strong> x ${incomingProduct.qta}`)
-    
+      message: "order created",
+      messageData: {
+        orderStatus: OrderStatusEnum.PENDING,
+        orderProducts: newOrder.products.reduce((acc, el) => {
+          acc.push({
+            qta: el.qta,
+            price: el.price,
+            product: {
+              _id: castToObjectId(el.product),
+              title: productsExists.find(prod => prod._id.toString() === el.product.toString()).title
+            }
+          });
+        
           return acc
         }, [])
-        .join('</li><li>')}</li>
-        </ul>`,
-      messageData: {
-        orderStatus: OrderStatusEnum.PENDING
       }
-    }, MessageTypeEnum.ORDER_STATUS_UPDATE)
+    }, MessageTypeEnum.ORDER_CREATED)
   
     // Assign the communication id as a ref to the order
     newOrder.communication = relatedCommunication.id
@@ -201,16 +201,17 @@ export class OrdersService extends BasicService {
     order.status = updateOrderStatusDto.status
     
     try {
-      
       // Adds a message inside the communication for each state change
       const communication = await this.communicationService.addMessage(order.communication as any, {
-        message: `Stato ordine aggiornato in <strong>${order.status}</strong>`
-          + (order.status === OrderStatusEnum.CANCELLED ? `<br>${updateOrderStatusDto.reason}` : '')
+        message: "status changed",
+        messageData: {
+          orderStatus: updateOrderStatusDto.status
+        }
       }, MessageTypeEnum.ORDER_STATUS_UPDATE)
       
       // store the new message id so if necessary can remove it later.
       newMessageId = communication.messages[communication.messages.length - 1]._id.toString()
-      
+  
       // If the order status is complete, generate the withdrawal movement
       if (order.status === OrderStatusEnum.COMPLETED) {
         newMovement = await this.movementsService.use(order.user._id, {
@@ -219,8 +220,11 @@ export class OrdersService extends BasicService {
           notes: 'Completamento ordine #' + order._id.toString()
         })
       }
-      
-      return await order.save()
+  
+      const result = await order.save();
+      await communication.save()
+  
+      return result.populate("communication")
     } catch (er) {
       // In case of error while applying the changes to the order,
       // remove the created message and eventually the created movement
@@ -242,26 +246,50 @@ export class OrdersService extends BasicService {
       _id: castToObjectId(id),
       "products.product": castToObjectId(productId)
     }).exec()
-    
+  
     if (!orders || orders.length === 0) {
       throw new FindException('The order or product can\'t be found')
     }
-    
+  
     const order = orders[0];
     const prodIndex = order.products.findIndex(el => el.product.toString() === productId);
-    
+    const originalOrder = order.toJSON();
+    const product: Product = await this.productModel.findById(originalOrder.products[prodIndex].product).exec()
+  
     if (updateOrderProductDto.hasOwnProperty("qta")) {
       order.products[prodIndex].qta = updateOrderProductDto.qta
     }
     if (updateOrderProductDto.hasOwnProperty("price")) {
       order.products[prodIndex].price = updateOrderProductDto.price
     }
-    
+  
     order.amount = OrdersService.calcOrderAmount(order);
+  
+    const prodDiff = diff(originalOrder.products[prodIndex], updateOrderProductDto)
+  
+    const newMessage = await this.communicationService.addMessage(order.communication as any, {
+      message: "product updated",
+      messageData: {
+        productUpdate: {
+          product: {
+            _id: product._id,
+            title: product.title
+          },
+          diff: prodDiff,
+          originalData: originalOrder.products[prodIndex]
+        }
+      }
+    }, MessageTypeEnum.ORDER_PRODUCT_UPDATE)
+  
+    try {
+      await order.save();
     
-    await order.save();
-    
-    return order.populate(['products.product', 'communication'])
+      return order.populate(['products.product', 'communication'])
+    } catch (er) {
+      if (newMessage) {
+        await this.communicationService.removeMessage(newMessage.id)
+      }
+    }
   }
   
   remove (id: string) {

@@ -1,9 +1,18 @@
-import {IsArray, IsEnum, IsNotEmpty, IsOptional, ValidateNested} from "class-validator";
-import {CommunicationTypeEnum} from "../enums/communication.type.enum";
-import {UserBasic} from "../../users/entities/user.basic.entity";
-import {Type} from "class-transformer";
+import { IsArray, IsEnum, IsNotEmpty, IsOptional, ValidateNested } from "class-validator";
+import { CommunicationTypeEnum } from "../enums/communication.type.enum";
+import { UserBasic } from "../../users/entities/user.basic.entity";
+import { Type } from "class-transformer";
 import { Attachment } from "../../_schemas/attachment.schema";
 import { OrderStatusEnum } from '../../orders/enums/order.status.enum';
+
+interface MessageOrderProduct {
+  qta: number;
+  price: number,
+  product: {
+    _id: any,
+    title: string
+  }
+}
 
 export class CreateCommunicationDto {
   @IsNotEmpty()
@@ -22,8 +31,9 @@ export class CreateCommunicationDto {
   @IsOptional()
   title: string
   
-  messageData?: {
-    orderStatus?: OrderStatusEnum
+  messageData: {
+    orderStatus: OrderStatusEnum,
+    orderProducts: MessageOrderProduct[]
   }
   
   // The sender will be automatically set by the auth user

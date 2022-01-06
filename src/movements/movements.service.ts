@@ -304,9 +304,6 @@ export class MovementsService extends BasicService {
       //convert to fixed decimal to avoid JS bug with decimals
       let totalRemaining = castToFixedDecimal(el.total)
       let forcedZero = false
-      
-      console.log(usageData)
-      console.log(usageData.usableFrom.toUTCString())
     
       // If doesn't exist yet, add it with default values.
       if (!acc[semesterId]) {

@@ -41,17 +41,17 @@ export class OrdersController {
     return this.ordersService.findOne(params.id);
   }
   
-  @Patch(':id/:productId')
-  updateProduct (@Param() params: ReadOrderProductDto, @Body() updateOrderProductDto: UpdateOrderProductDto) {
-    return this.ordersService.updateProduct(params.id, params.productId, updateOrderProductDto);
-  }
-  
   /**
    * Update the status of an existing order
    */
   @Patch(':id/status')
   updateStatus(@Param() params: ReadDto, @Body() updateOrderStatusDto: UpdateOrderStatusDto): Promise<Order> {
     return this.ordersService.updateStatus(params.id, updateOrderStatusDto);
+  }
+  
+  @Patch(':id/:productId')
+  updateProduct (@Param() params: ReadOrderProductDto, @Body() updateOrderProductDto: UpdateOrderProductDto) {
+    return this.ordersService.updateProduct(params.id, params.productId, updateOrderProductDto);
   }
   
   @Delete(':id')

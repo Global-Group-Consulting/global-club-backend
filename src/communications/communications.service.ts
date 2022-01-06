@@ -75,6 +75,7 @@ export class CommunicationsService extends BasicService {
           sender: this.authUser,
           content: addMessageCommunicationDto.message,
           attachments: addMessageCommunicationDto.attachments,
+          data: addMessageCommunicationDto.messageData,
           type
         }
       }
