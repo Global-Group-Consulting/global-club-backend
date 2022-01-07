@@ -1,5 +1,5 @@
-import {Model} from "mongoose";
-import {Inject, Injectable} from '@nestjs/common';
+import { Model } from "mongoose";
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose'
 import { Movement, MovementDocument } from './schemas/movement.schema'
 import { AuthRequest } from '../_basics/AuthRequest'
@@ -16,13 +16,11 @@ import {
 } from './dto/calc-totals.dto'
 import { WithdrawalException } from './exceptions/withdrawal.exception'
 import { UpdateException } from '../_exceptions/update.exception'
-import { BasicService, PaginatedResult } from '../_basics/BasicService';
+import { BasicService } from '../_basics/BasicService';
 import { ConfigService } from '@nestjs/config';
 import { calcBritesUsage } from './utils/movements.utils';
 import { PackEnum } from '../packs/enums/pack.enum';
-import { FindAllCommunicationsFilterMap } from '../communications/dto/filters/find-all-communications.filter';
-import { Communication } from '../communications/schemas/communications.schema';
-import { FindAllMovementsFilter, FindAllMovementsFilterMap } from './dto/filters/find-all-movements.filter';
+import { FindAllMovementsFilterMap } from './dto/filters/find-all-movements.filter';
 import { PaginatedFilterMovementDto } from './dto/paginated-filter-movement.dto';
 import { PaginatedResultMovementDto } from './dto/paginated-result-movement.dto';
 
@@ -80,67 +78,46 @@ export class MovementsService extends BasicService {
       throw new UpdateException("The amount must be higher than 1.")
     }
   
-    // Todo:: implementare controlli in base al pacchetto associato ad ogni importo.
-  
     const totalBySemesters = await this.checkIfEnough(userId, useMovementDto.amountChange)
-    const semestersToUse: (CalcTotalsDto & { toWithdrawal?: number })[] = []
-    const createdMovements: Movement[] = []
+    const movementsToCreate: Movement[] = []
   
     let remainingAmount = useMovementDto.amountChange
   
-    // Create a list of the semesters from which bust be withdrawal a certain amount.
-    // This amount is specified in the property "toWithdrawal" created inside this cycle
+    // for each semester
     for (const semester of totalBySemesters) {
-      const availableAmount = semester.totalRemaining
-      
-      if (remainingAmount === 0) {
-        break;
-      }
-      
-      // If the remainingAmount is higher than the availableAmount,
-      // use all availableAmount and subtract it from remainingAmount
-      // so at the next iteration, i'll understand how much must be removed from the next semester
-      if (remainingAmount >= availableAmount) {
-        semestersToUse.push({
-          ...semester,
-          toWithdrawal: castToFixedDecimal(availableAmount)
-        })
-        
-        remainingAmount -= availableAmount;
-      } else {
-        // If the remainingAmount is lower thant the availableAmount,
-        // withdrawal only the necessary amount.
-        semestersToUse.push({
-          ...semester,
-          toWithdrawal: castToFixedDecimal(remainingAmount)
-        })
-        
-        remainingAmount -= remainingAmount
-        
-        break;
-      }
-    }
+      const validPacks = [PackEnum.FAST, PackEnum.PREMIUM];
     
-    // For each semester stored in semestersToUse,
-    // create a newMovement with the relative amount and with type "DEPOSIT_USED"
-    for (const semester of semestersToUse) {
-      // Adds a movement for each semester
-      const newMovement = new this.movementModel({
-        amountChange: semester.toWithdrawal,
-        notes: useMovementDto.notes,
-        semesterId: semester.semesterId,
-        userId: userId,
-        createdBy: userId,
-        movementType: MovementTypeEnum.DEPOSIT_USED,
-        order: useMovementDto.orderId
-      })
-  
-      await newMovement.save()
-  
-      createdMovements.push(newMovement)
+      // for each available pack
+      for (const packKey of Object.keys(semester.packs)) {
+      
+        if (!validPacks.includes(packKey as PackEnum)) {
+          continue;
+        }
+      
+        const usable = semester.packs[packKey].totalUsable
+        const toUse = remainingAmount >= usable ? usable : remainingAmount;
+      
+        remainingAmount -= toUse;
+      
+        if (toUse) {
+          // Adds a movement for each pack
+          const newMovement = new this.movementModel({
+            amountChange: castToFixedDecimal(toUse),
+            notes: useMovementDto.notes,
+            semesterId: semester.semesterId,
+            clubPack: packKey,
+            userId: userId,
+            createdBy: this.authUser.id,
+            movementType: MovementTypeEnum.DEPOSIT_USED,
+            order: useMovementDto.orderId
+          })
+        
+          movementsToCreate.push(await newMovement.save())
+        }
+      }
     }
   
-    return createdMovements
+    return movementsToCreate;
   }
   
   /**
@@ -149,6 +126,44 @@ export class MovementsService extends BasicService {
    */
   async cancel (movementId) {
     await this.movementModel.findByIdAndDelete(movementId)
+  }
+  
+  async checkRemainingPerMonthFastUsage (userId: string) {
+    const date = new Date()
+    const query = {
+      createdAt: {
+        "$gte": new Date(date.getFullYear(), date.getMonth(), 1),
+        "$lte": new Date(date.getFullYear(), new Date(new Date().setMonth(date.getMonth() + 1)).getMonth(), 0, 23, 59, 59)
+      },
+      usableFrom: {
+        "$lte": date,
+      },
+      expiresAt: {
+        "$gte": date
+      },
+      movementType: {
+        "$in": MovementTypeOutList
+      },
+      clubPack: PackEnum.FAST
+    }
+    
+    const movements = await this.movementModel.where(query).exec()
+    const maxExpendable = 1000;
+    
+    // Max 2 movements per month
+    if (movements.length > 1) {
+      return 0
+    }
+    
+    return movements.reduce((acc, curr) => {
+      acc -= curr.amountChange;
+      
+      if (acc < 0) {
+        acc = 0;
+      }
+      
+      return acc
+    }, maxExpendable)
   }
   
   /**
@@ -396,16 +411,64 @@ export class MovementsService extends BasicService {
   async checkIfEnough(userId: string, amount: number, semesterId?: string): Promise<CalcTotalsDto[]> {
     const totalBySemesters = await this.calcTotalBrites(userId, semesterId);
   
-    // Todo:: implementare controlli in base al pacchetto associato ad ogni importo.
-    // must check what type of brites the user have and how much of each one can be used
-    throw new Error("Function must still be implemented")
+    const packsMap = {
+      [PackEnum.NONE]: null,
+      [PackEnum.UNSUBSCRIBED]: null,
+      [PackEnum.FAST]: await this.checkRemainingPerMonthFastUsage(userId),
+      [PackEnum.PREMIUM]: 0
+    }
   
-    const totals = totalBySemesters.reduce((acc, curr) => acc + curr.totalRemaining, 0)
+    const filteredSemesters: CalcTotalsDto[] = totalBySemesters.reduce((acc, curr) => {
+      const data: CalcTotalsDto = {
+        ...curr
+      };
+    
+      const packs = {}
+    
+      Object.entries(curr.packs).forEach(entry => {
+        const pack = entry[0];
+        const value: CalcTotalPackDetails = entry[1]
+      
+        // use only the valid packs
+        if (packsMap[pack] !== null) {
+          // if the pack is fast, calc the remaining for this month
+          if (pack === PackEnum.FAST) {
+            const remaining = packsMap[pack];
+          
+            if (remaining) {
+              packs[pack] = value
+              packs[pack].totalUsable = remaining
+            }
+          } else {
+            packs[pack] = value
+          }
+        }
+      })
+    
+      data.packs = packs
+    
+      if (Object.keys(packs).length > 0) {
+        acc.push(data)
+      }
+    
+      return acc;
+    }, [])
+  
+    // Total that is currently available to the user
+    const totals = filteredSemesters.reduce((acc, curr) => {
+      Object.entries(curr.packs).forEach(entry => {
+        const value: CalcTotalPackDetails = entry[1]
+      
+        acc += value.totalUsable
+      })
+    
+      return acc;
+    }, 0)
   
     if (totals < amount) {
       throw new WithdrawalException("The requested amount is higher than the available amount.")
     }
   
-    return totalBySemesters
+    return filteredSemesters
   }
 }

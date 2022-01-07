@@ -214,7 +214,7 @@ export class OrdersService extends BasicService {
   
       // If the order status is complete, generate the withdrawal movement
       if (order.status === OrderStatusEnum.COMPLETED) {
-        newMovement = await this.movementsService.use(order.user._id, {
+        newMovement = await this.movementsService.use((order.user._id || order.user.id), {
           amountChange: order.amount,
           orderId: order._id,
           notes: 'Completamento ordine #' + order._id.toString()

@@ -4,6 +4,8 @@ import { toString } from '../../../_basics/transformers/toString';
 import { User } from '../../schemas/user.schema';
 import { ApiProperty } from '@nestjs/swagger';
 import { castToNumber } from '../../../utilities/Formatters';
+import { IsNumber, IsNumberString, IsOptional } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
 
 export class FindAllUserFilter implements Partial<User> {
   @ApiProperty({
@@ -11,6 +13,7 @@ export class FindAllUserFilter implements Partial<User> {
     required: false
     // example: "filter[email]"
   })
+  @IsOptional()
   email?: string
   
   @ApiProperty({
@@ -18,6 +21,7 @@ export class FindAllUserFilter implements Partial<User> {
     required: false
     // example: "filter[firstName]"
   })
+  @IsOptional()
   firstName?: string
   
   @ApiProperty({
@@ -25,6 +29,7 @@ export class FindAllUserFilter implements Partial<User> {
     required: false
     // example: "filter[lastName]"
   })
+  @IsOptional()
   lastName?: string
   
   @ApiProperty({
@@ -32,6 +37,8 @@ export class FindAllUserFilter implements Partial<User> {
     required: false
     // example: "filter[lastName]"
   })
+  @IsOptional()
+  @Type(() => Number)
   role?: number
 }
 

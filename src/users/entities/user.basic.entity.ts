@@ -6,6 +6,7 @@ import { User } from '../schemas/user.schema';
 
 export class UserBasic extends BasicEntity {
   _id: string;
+  id?: string;
   clubPack: PackEnum;
   gold: boolean;
   email: string;
@@ -21,6 +22,7 @@ export class UserBasic extends BasicEntity {
 
 export const userBasicProjection: Record<keyof UserBasic, number> = {
   _id: 1,
+  id: 1,
   clubPack: 1,
   gold: 1,
   email: 1,

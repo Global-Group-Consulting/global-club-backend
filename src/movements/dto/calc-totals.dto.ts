@@ -33,7 +33,7 @@ class CalcTotalPacks {
     required: false,
     type: CalcTotalPackDetails,
   })
-  _none?: CalcTotalPackDetails
+  [PackEnum.NONE]?: CalcTotalPackDetails
   
   @ApiProperty({
     name: PackEnum.BASIC,

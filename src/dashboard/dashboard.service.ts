@@ -44,7 +44,7 @@ export class DashboardService extends BasicService {
       totalUsable += el.totalUsable;
       totalRemaining += el.totalRemaining
     })
-    
+  
     return {
       totalUsable,
       totalRemaining,
@@ -53,8 +53,8 @@ export class DashboardService extends BasicService {
     }
   }
   
-  async readUserDashboard (): Promise<ReadDashboardSemestersDto> {
-    const data: CalcTotalsDto[] = await this.movementsService.calcTotalBrites(this.authUser.id.toString(), null, false)
+  async readUserDashboard (userId?: string): Promise<ReadDashboardSemestersDto> {
+    const data: CalcTotalsDto[] = await this.movementsService.calcTotalBrites(userId || this.authUser.id.toString(), null, false)
     
     return this.addMainReport(data)
   }
