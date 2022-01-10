@@ -72,7 +72,7 @@ export class ProductsService extends BasicService {
   }
   
   async findOne (id: string): Promise<Product> {
-    return this.productModel.findById(id, null, { populate: ["categories"] });
+    return this.findOrFail(id, null, { populate: ["categories"] });
   }
   
   async findByCategory (id: string): Promise<Product[]> {

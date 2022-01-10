@@ -54,11 +54,11 @@ export abstract class BasicService {
       (value) => validRoles.includes(value))
   }
   
-  protected async findOrFail<T> (id: string): Promise<T> {
-    const item = await this.model.findById(id)
+  protected async findOrFail<T> (id: string, projection?: any, options?: any): Promise<T> {
+    const item = await this.model.findById(id, projection, options)
     
     if (!item) {
-      throw new FindException()
+      throw new FindException(null, 404)
     }
     
     return item

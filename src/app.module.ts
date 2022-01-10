@@ -16,8 +16,10 @@ import { SystemLogsModule } from './system-logs/system-logs.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { AclModule } from './acl/acl.module';
 import { PacksModule } from './packs/packs.module';
+import { NewsModule } from './news/news.module';
 import databaseConfig from './config/db.config';
 import httpConfig from './config/http.config';
+import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -57,6 +59,7 @@ import httpConfig from './config/http.config';
     SystemLogsModule,
     AclModule,
     PacksModule,
+    NewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
