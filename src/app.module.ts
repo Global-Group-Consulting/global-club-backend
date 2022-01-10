@@ -59,7 +59,7 @@ import { ClientProxyFactory, Transport } from '@nestjs/microservices';
     SystemLogsModule,
     AclModule,
     PacksModule,
-    NewsModule,
+    //NewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
