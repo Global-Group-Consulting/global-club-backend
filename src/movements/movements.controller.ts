@@ -10,6 +10,7 @@ import { CalcTotalsDto } from "./dto/calc-totals.dto";
 import { PaginatedFilterMovementDto } from './dto/paginated-filter-movement.dto';
 import { PaginatedResult } from '../_basics/BasicService';
 import { PaginatedResultMovementDto } from './dto/paginated-result-movement.dto';
+import { CheckIfEnoughDto } from './dto/check-if-enough.dto';
 
 @ApiBearerAuth()
 @ApiBasicAuth("client-key")
@@ -53,6 +54,11 @@ export class MovementsController {
   @Get(":id/total")
   calcTotalBrites (@Param() params: ReadDto): Promise<CalcTotalsDto[]> {
     return this.movementsService.calcTotalBrites(params.id, null, false);
+  }
+  
+  @Get(":id/checkEnough")
+  checkIfEnough (@Param() params: ReadDto, @Query() query: CheckIfEnoughDto): Promise<CalcTotalsDto[]> {
+    return this.movementsService.checkIfEnough(params.id, query.amount);
   }
   
   /**
