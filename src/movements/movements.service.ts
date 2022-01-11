@@ -39,8 +39,10 @@ export class MovementsService extends BasicService {
   async findAll (userId: string, queryData: PaginatedFilterMovementDto): Promise<PaginatedResultMovementDto> {
     const query: any = this.prepareQuery({
       ...queryData.filter,
-      userId: castToObjectId(userId)
     }, FindAllMovementsFilterMap)
+  
+    query.userId = castToObjectId(userId);
+    
     return this.findPaginated<Movement>(query, queryData)
   }
   
