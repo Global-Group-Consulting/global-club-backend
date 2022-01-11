@@ -137,6 +137,8 @@ export class OrdersService extends BasicService {
     
     return this.findPaginated<Order>(query, paginationDto, {
       "user.permissions": 0
+    }, {
+      populate: ["products.product"]
     })
   }
   
