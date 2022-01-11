@@ -18,6 +18,9 @@ export class Product extends BasicSchema {
   @Prop({ required: true })
   description: string;
   
+  @Prop()
+  conditions: string;
+  
   @Prop({ required: true })
   price: number;
   

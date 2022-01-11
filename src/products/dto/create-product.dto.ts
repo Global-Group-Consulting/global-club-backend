@@ -12,6 +12,9 @@ export class CreateProductDto {
   @IsNotEmpty()
   description: string;
   
+  @IsOptional()
+  conditions: string;
+  
   @Type(() => Number)
   @IsNotEmpty()
   price: number;

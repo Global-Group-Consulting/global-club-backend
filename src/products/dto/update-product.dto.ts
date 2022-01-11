@@ -25,6 +25,9 @@ export class UpdateProductDto {
   @IsNotEmpty()
   description: string;
   
+  @IsOptional()
+  conditions: string;
+  
   @Type(() => Number)
   @IsNotEmpty()
   price: number;
