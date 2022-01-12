@@ -1,5 +1,6 @@
-import {IsNotEmpty, IsNumber, IsString, Min} from "class-validator";
-import {IsSemesterId} from "../../_basics/validators/IsSemesterId";
+import { IsEnum, IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
+import { IsSemesterId } from '../../_basics/validators/IsSemesterId';
+import { PackEnum } from '../../packs/enums/pack.enum';
 
 export class CreateManualMovementDto {
   @IsNumber()
@@ -13,4 +14,8 @@ export class CreateManualMovementDto {
   @IsNotEmpty()
   @IsSemesterId()
   semesterId: string;
+  
+  @IsNotEmpty()
+  @IsEnum(PackEnum)
+  clubPack: PackEnum;
 }

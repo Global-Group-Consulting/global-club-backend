@@ -1,6 +1,6 @@
-import { Model } from "mongoose";
-import { Inject, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { Movement, MovementDocument } from './schemas/movement.schema'
 import { AuthRequest } from '../_basics/AuthRequest'
 import { UseMovementDto } from './dto/use-movement.dto'
@@ -23,14 +23,16 @@ import { PackEnum } from '../packs/enums/pack.enum';
 import { FindAllMovementsFilterMap } from './dto/filters/find-all-movements.filter';
 import { PaginatedFilterMovementDto } from './dto/paginated-filter-movement.dto';
 import { PaginatedResultMovementDto } from './dto/paginated-result-movement.dto';
+import { User, UserDocument } from '../users/schemas/user.schema';
 
 @Injectable()
 export class MovementsService extends BasicService {
   model: Model<MovementDocument>
   
   constructor (@InjectModel(Movement.name) private movementModel: Model<MovementDocument>,
-               protected config: ConfigService,
-               @Inject("REQUEST") protected request: AuthRequest) {
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    protected config: ConfigService,
+    @Inject('REQUEST') protected request: AuthRequest) {
     super()
     
     this.model = movementModel
@@ -47,19 +49,35 @@ export class MovementsService extends BasicService {
   }
   
   async manualAdd (userId: string, createMovementDto: CreateManualMovementDto): Promise<Movement> {
+    const user = await this.userModel.findById(userId).exec();
+  
+    if (!user) {
+      throw new HttpException('Can\'t find the requested user', 400);
+    }
+  
     const newMovement = new this.movementModel({
       ...createMovementDto,
       userId: userId,
       createdBy: this.authUser.id,
-      movementType: MovementTypeEnum.DEPOSIT_ADDED,
-      clubPack: this.authUser.clubPack
-    })
-    
-    return newMovement.save()
+      movementType: MovementTypeEnum.DEPOSIT_ADDED
+    });
+  
+    return newMovement.save();
   }
   
   async manualRemove(userId: string, removeMovementDto: RemoveManualMovementDto): Promise<Movement> {
-    await this.checkIfEnough(userId, removeMovementDto.amountChange, removeMovementDto.semesterId)
+    const user = await this.userModel.findById(userId).exec();
+  
+    if (!user) {
+      throw new HttpException('Can\'t find the requested user', 400);
+    }
+    
+    // await this.checkIfEnough(userId, removeMovementDto.amountChange, removeMovementDto.semesterId)
+    const totals = await this.calcTotalBrites(userId, removeMovementDto.semesterId);
+    
+    if(totals[0].packs[removeMovementDto.clubPack].totalUsable < removeMovementDto.amountChange){
+      throw new WithdrawalException("Importo superiore alla disponibilità dell'utente");
+    }
     
     const newMovement = new this.movementModel({
       ...removeMovementDto,
