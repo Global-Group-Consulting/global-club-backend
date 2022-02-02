@@ -1,5 +1,5 @@
 import { PaginatedResultDto } from '../../_basics/pagination-result.dto';
-import { User } from '../entities/user.entity';
+import { User } from '../schemas/user.schema';
 import { PaginatedFilterUserDto } from './paginated-filter-user.dto';
 
 export class PaginatedResultUserDto extends PaginatedResultDto {

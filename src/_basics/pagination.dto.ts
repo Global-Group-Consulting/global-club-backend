@@ -45,6 +45,17 @@ export class PaginatedFilterDto<T = any> {
   @Min(10)
   perPage?: number = 30;
   
+  @ApiProperty({
+    default: null,
+    description: "Allow to specify how many result we want to receive"
+  })
+  @IsOptional()
+  @Transform(({ value }) => +value)
+  @IsNumber()
+  @Max(100)
+  @Min(5)
+  limit?: number = null;
+  
   // @IsOptional()
   /*@Transform(({ value }) => (value instanceof Array) ? value : [value])
   @IsArray()

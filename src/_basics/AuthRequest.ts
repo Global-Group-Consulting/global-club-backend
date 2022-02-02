@@ -1,5 +1,5 @@
 import {Request} from "express"
-import { User } from "../users/entities/user.entity";
+import { User } from "../users/schemas/user.schema";
 import { UserAclRolesEnum } from '../users/enums/user.acl.roles.enum';
 
 export interface AuthUser {

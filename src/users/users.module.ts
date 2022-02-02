@@ -2,14 +2,14 @@ import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserBasic, UserBasicSchema } from './schemas/user-basic.schema';
+import { User, UserSchema } from './schemas/user.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       {
-        name: UserBasic.name,
-        schema: UserBasicSchema
+        name: User.name,
+        schema: UserSchema
       }
     ], "legacy")
   ],

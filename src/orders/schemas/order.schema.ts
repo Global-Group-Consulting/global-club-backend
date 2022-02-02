@@ -29,6 +29,9 @@ export class Order extends BasicSchema {
   @Prop({ enum: OrderStatusEnum, default: OrderStatusEnum.PENDING })
   public status: OrderStatusEnum
   
+  @Prop()
+  public notes: string
+  
   public _id: Types.ObjectId;
   public createdAt: Date;
   public updatedAt: Date;

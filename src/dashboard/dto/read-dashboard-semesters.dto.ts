@@ -1,5 +1,7 @@
 import { CalcTotalsDto } from '../../movements/dto/calc-totals.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsBoolean, IsBooleanString } from 'class-validator';
+import { ToBoolean } from '../../_basics/transformers/toBoolean';
 
 export class DashboardSemesterExpirations {
   @ApiProperty({

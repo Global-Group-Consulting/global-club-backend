@@ -2,7 +2,7 @@ import {ApiProperty} from "@nestjs/swagger";
 import {
   ArrayMinSize,
   IsArray,
-  IsNotEmpty, ValidateNested,
+  IsNotEmpty, IsOptional, ValidateNested,
 } from "class-validator";
 import {IsMongoIdArray} from "../../_basics/validators/IsMongoIdArray";
 import {CartProduct} from "../entities/cart-product.entity";
@@ -14,5 +14,8 @@ export class CreateOrderDto {
   @ArrayMinSize(1)
   @Type(() => CartProduct)
   @ValidateNested({each: true})
-  products: CartProduct[]
+  products: CartProduct[];
+  
+  @IsOptional()
+  notes: string;
 }

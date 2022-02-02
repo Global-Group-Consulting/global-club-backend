@@ -3,6 +3,7 @@ import { Type } from "class-transformer";
 import { Attachment } from "../../_schemas/attachment.schema";
 import { IsMongoIdArray } from "../../_basics/validators/IsMongoIdArray";
 import { ApiProperty } from '@nestjs/swagger';
+import { ToBoolean } from '../../_basics/transformers/toBoolean';
 
 export class CreateProductDto {
   @IsNotEmpty()
@@ -10,6 +11,9 @@ export class CreateProductDto {
   
   @IsNotEmpty()
   description: string;
+  
+  @IsOptional()
+  conditions: string;
   
   @Type(() => Number)
   @IsNotEmpty()
@@ -24,6 +28,7 @@ export class CreateProductDto {
   })
   @IsOptional()
   @IsBoolean()
+  @ToBoolean()
   hasQta?: boolean;
   
   @IsNotEmpty()
@@ -32,7 +37,7 @@ export class CreateProductDto {
   
   @IsNotEmpty()
   @IsObject()
-  @ValidateNested({ each: true })
+  // @ValidateNested({ each: true })
   @Type(() => Attachment)
   thumbnail: Attachment;
   

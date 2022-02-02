@@ -3,7 +3,7 @@ import { Model, QueryOptions } from 'mongoose';
 import { FilterMap, FilterOptions } from './FilterMap.dto';
 import { ConfigService } from '@nestjs/config';
 import { AuthRequest } from './AuthRequest';
-import { User } from '../users/entities/user.entity';
+import { User } from '../users/schemas/user.schema';
 import { UserAclRolesEnum } from '../users/enums/user.acl.roles.enum';
 
 export enum PaginationOrderEnum {
@@ -15,7 +15,8 @@ export interface PaginationOptions {
   page: number;
   perPage: number;
   sortBy: Record<string, number>[];
-  order: PaginationOrderEnum
+  order: PaginationOrderEnum,
+  limit?: number;
   filter?: any
 }
 
@@ -53,11 +54,11 @@ export abstract class BasicService {
       (value) => validRoles.includes(value))
   }
   
-  protected async findOrFail<T> (id: string): Promise<T> {
-    const item = await this.model.findById(id)
+  protected async findOrFail<T> (id: string, projection?: any, options?: any): Promise<T> {
+    const item = await this.model.findById(id, projection, options)
     
     if (!item) {
-      throw new FindException()
+      throw new FindException(null, 404)
     }
     
     return item
@@ -71,12 +72,18 @@ export abstract class BasicService {
   protected async findPaginated<T> (filter: Partial<T>,
     paginationOptions?: Partial<PaginationOptions>,
     projection?: any, options?: QueryOptions): Promise<PaginatedResult<T[]>> {
-    
+  
     const sortOptions: PaginationOptions = Object.assign({}, defaultPaginationOptions, paginationOptions);
-    
+  
+    let limit = sortOptions.perPage;
+  
+    if (paginationOptions.limit && paginationOptions.limit < sortOptions.perPage) {
+      limit = paginationOptions.limit
+    }
+  
     const opts: QueryOptions = {
       skip: sortOptions.page <= 1 ? 0 : sortOptions.page * sortOptions.perPage,
-      limit: sortOptions.perPage,
+      limit: limit,
       /* sort: sortOptions.sortBy.reduce((acc, curr) => {
          acc[curr] = sortOptions.order === "ASC" ? 1 : -1;
          
@@ -148,20 +155,25 @@ export abstract class BasicService {
     Object.keys(filtersMap).forEach(key => {
       let value = filters[key]
       let filterOptions: FilterOptions = filtersMap[key]
+      let filterKey = key
     
       if (value === undefined) {
         return
       }
-    
+  
       if (filterOptions.hasOwnProperty("castValue")) {
         value = filterOptions.castValue(value);
       }
-    
+  
       if (filterOptions.hasOwnProperty("query")) {
         value = filterOptions.query(value)
       }
-    
-      toReturn[key] = value
+  
+      if (filterOptions.hasOwnProperty("keyFormat")) {
+        filterKey = filterOptions.keyFormat(key);
+      }
+  
+      toReturn[filterKey] = value
     })
     
     return toReturn
