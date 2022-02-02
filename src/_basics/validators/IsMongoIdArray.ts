@@ -11,7 +11,11 @@ import {
 export class IsMongoIdArrayConstraint implements ValidatorConstraintInterface {
   validate(value: any[], args: ValidationArguments) {
     if (!value) {
-      return false;
+      return true;
+    }
+  
+    if (!(value instanceof Array)) {
+      return false
     }
   
     for (const str of value) {

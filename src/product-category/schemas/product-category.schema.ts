@@ -9,7 +9,7 @@ export type ProductCategoryDocument = ProductCategory & Document;
   timestamps: true,
   collection: "product_categories"
 })
-export class ProductCategory implements BasicSchema {
+export class ProductCategory extends BasicSchema {
   
   @Prop({required: true})
   title: string;

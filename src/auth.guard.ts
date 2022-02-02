@@ -1,8 +1,9 @@
-import {CanActivate, ExecutionContext, Injectable} from '@nestjs/common';
-import {Observable} from 'rxjs';
-import {User} from "./users/entities/user.entity";
-import {ConfigService} from "@nestjs/config";
-import {AuthUser} from "./_basics/AuthRequest";
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { User } from "./users/schemas/user.schema";
+import { ConfigService } from "@nestjs/config";
+import { AuthUser } from "./_basics/AuthRequest";
+import { UserAclRolesEnum } from './users/enums/user.acl.roles.enum';
 
 interface InputReqData {
   _auth_user: User;
@@ -15,9 +16,9 @@ export class AuthGuard implements CanActivate {
     "lastName": "Leica",
     "email": "florian.leica@gmail.com",
     "account_status": "active",
-    "created_at": "2020-10-03T09:24:52.054Z",
-    "updated_at": "2021-06-28T13:58:27.586Z",
-    "contractNumber": 12345,
+    "created_at": new Date("2020-10-03T09:24:52.054Z"),
+    "updated_at": new Date("2021-06-28T13:58:27.586Z"),
+    "contractNumber": "12345",
     "role": 1,
     "personType": 1,
     "birthCity": "Valbella di sotto",
@@ -25,7 +26,7 @@ export class AuthGuard implements CanActivate {
     "birthProvince": "ao",
     "businessName": "Azienda La mantovana",
     "docNumber": "AI787363",
-    "docType": 2,
+    "docType": "2",
     "fiscalCode": "MRSNSY76765AB76I",
     "gender": "m",
     "vatNumber": "0128675657234",
@@ -36,7 +37,7 @@ export class AuthGuard implements CanActivate {
     "lastChangedBy": "5fc412a93d36340022d494bb",
     "birthDate": "1989-09-06T00:00:00.000Z",
     "roles": [
-      "super_admin"
+      UserAclRolesEnum.SUPER_ADMIN
     ],
     "permissions": [
       "communications:*",
@@ -76,7 +77,7 @@ export class AuthGuard implements CanActivate {
       roles: []
     }
     
-    if (this.configService.get<string>("NODE_ENV") !== "development") {
+    // if (this.configService.get<string>("NODE_ENV") !== "development") {
       validationResult = this.validateRequest(reqData._auth_user, reqHeaders['client-secret'], reqHeaders['server-secret'])
   
       if (!validationResult) {
@@ -86,11 +87,11 @@ export class AuthGuard implements CanActivate {
       auth.user = reqData._auth_user
       auth.permissions = reqData._auth_user.permissions
       auth.roles = reqData._auth_user.roles
-    } else {
+    /*} else {
       auth.user = this.fakeUser as any;
       auth.permissions = this.fakeUser.permissions
       auth.roles = this.fakeUser.roles
-    }
+    }*/
     
     request.auth = auth
     

@@ -1,10 +1,9 @@
 import { Model } from 'mongoose'
-import { REQUEST } from '@nestjs/core'
 import { InjectModel } from '@nestjs/mongoose'
 import { Inject, Injectable } from '@nestjs/common'
 import { CreateCommunicationDto } from './dto/create-communication.dto'
 import { Communication, CommunicationDocument } from './schemas/communications.schema'
-import { User } from '../users/entities/user.entity'
+import { User } from '../users/schemas/user.schema'
 import { AuthRequest } from '../_basics/AuthRequest'
 import { FindException } from '../_exceptions/find.exception'
 import { AddMessageCommunicationDto } from './dto/add-message-communication.dto'
@@ -12,34 +11,47 @@ import { FilesService } from '../files/files.service'
 import { UpdateException } from '../_exceptions/update.exception'
 import { MessageTypeEnum } from './enums/message.type.enum'
 import { castToObjectId } from '../utilities/Formatters'
+import { PaginatedFilterCommunicationDto } from './dto/paginated-filter-communication.dto';
+import { BasicService, PaginatedResult } from '../_basics/BasicService';
+import { ConfigService } from '@nestjs/config';
+import { FindAllCommunicationsFilterMap } from './dto/filters/find-all-communications.filter';
+import { OrderStatusEnum } from '../orders/enums/order.status.enum';
 
 @Injectable()
-export class CommunicationsService {
+export class CommunicationsService extends BasicService {
+  model: Model<CommunicationDocument>
+  
   constructor (@InjectModel(Communication.name) private communicationModel: Model<CommunicationDocument>,
-    @Inject(REQUEST) private request: AuthRequest,
-    private filesService: FilesService) {
+               protected config: ConfigService,
+               private filesService: FilesService,
+               @Inject("REQUEST") protected request: AuthRequest) {
+    super();
+    this.model = communicationModel;
   }
   
   get authUser (): User {
     return this.request.auth.user
   }
   
-  async create (createCommunicationDto: CreateCommunicationDto) {
+  async create (createCommunicationDto: CreateCommunicationDto, messageType?: MessageTypeEnum) {
     const newCommunication = new this.communicationModel({
       ...createCommunicationDto,
       messages: [{
         sender: this.authUser,
         content: createCommunicationDto.message,
-        attachments: createCommunicationDto.attachments
+        attachments: createCommunicationDto.attachments,
+        type: messageType,
+        data: createCommunicationDto.messageData
       }],
       initiator: this.authUser
     })
-    
+  
     return newCommunication.save()
   }
   
-  findAll (): Promise<Communication[]> {
-    return this.communicationModel.find().exec()
+  findAll (queryData: PaginatedFilterCommunicationDto): Promise<PaginatedResult<Communication[]>> {
+    const query: any = this.prepareQuery(queryData.filter, FindAllCommunicationsFilterMap)
+    return this.findPaginated<Communication>(query, queryData)
   }
   
   findOne (id: string) {
@@ -63,6 +75,7 @@ export class CommunicationsService {
           sender: this.authUser,
           content: addMessageCommunicationDto.message,
           attachments: addMessageCommunicationDto.attachments,
+          data: addMessageCommunicationDto.messageData,
           type
         }
       }

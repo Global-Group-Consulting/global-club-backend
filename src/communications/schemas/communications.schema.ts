@@ -3,8 +3,8 @@ import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
 import {CommunicationClientEnum} from "../enums/communication.client.enum";
 import {UserBasic} from "../../users/entities/user.basic.entity";
 import {Message, MessageSchema} from "../schemas/messsage.schema";
-import {BasicSchema} from "../../_schemas/BasicSchema";
-import {UserBasicSchema} from "../../users/schemas/user-basic.schema";
+import { BasicSchema } from "../../_schemas/BasicSchema";
+import { UserSchema } from "../../users/schemas/user.schema";
 
 export type CommunicationDocument = Communication & Document;
 
@@ -26,13 +26,13 @@ export class Communication extends BasicSchema {
   @Prop({default: CommunicationClientEnum.CLUB})
   client: string
   
-  @Prop({type: UserBasicSchema, alias: "user"})
+  @Prop({ type: UserSchema, alias: "user" })
   initiator: UserBasic
   
-  @Prop({type: [UserBasicSchema]})
+  @Prop({ type: [UserSchema] })
   receivers: UserBasic[]
   
-  @Prop({type: [UserBasicSchema]})
+  @Prop({ type: [UserSchema] })
   watchers: UserBasic[]
   
   _id: Types.ObjectId;
