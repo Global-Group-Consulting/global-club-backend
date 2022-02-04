@@ -177,6 +177,9 @@ export class User {
   @Prop()
   verified_at: string;
   
+  @Prop()
+  apps: string[];
+  
   _id: Types.ObjectId;
   created_at: Date;
   updated_at: Date;
