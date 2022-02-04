@@ -10,12 +10,23 @@ import {UpdateException} from "../_exceptions/update.exception";
 import {RemoveException} from "../_exceptions/remove.exception";
 import {ProductsService} from "../products/products.service";
 import {Product, ProductDocument} from "../products/schemas/product.schema";
+import {FindAllProductsFilterMap} from "../products/dto/filters/find-all-products.filter";
+import {BasicService} from "../_basics/BasicService";
+import {ConfigService} from "@nestjs/config";
+import {AuthRequest} from "../_basics/AuthRequest";
+import {PaginatedFindAllProductCategoriesDto} from "./dto/paginated-find-all-product-categories.dto";
 
 @Injectable()
-export class ProductCategoryService {
+export class ProductCategoryService extends BasicService {
+  model: Model<ProductCategoryDocument>
+  
   constructor(@InjectModel(ProductCategory.name) private productCategoryModel: Model<ProductCategoryDocument>,
               @InjectModel(Product.name) private productModel: Model<ProductDocument>,
-              private filesService: FilesService) {
+              private filesService: FilesService, protected config: ConfigService,
+              @Inject("REQUEST") protected request: AuthRequest) {
+    super()
+    
+    this.model = productCategoryModel;
   }
   
   async create(createProductCategoryDto: CreateProductCategoryDto) {
@@ -24,8 +35,10 @@ export class ProductCategoryService {
     return await newProduct.save()
   }
   
-  findAll() {
-    return this.productCategoryModel.find().exec()
+  findAll(paginationData: PaginatedFindAllProductCategoriesDto) {
+    const query = this.prepareQuery((paginationData.filter ?? {}), FindAllProductsFilterMap)
+
+    return this.findPaginated<ProductCategory>(query, paginationData);
   }
   
   findOne(id: string) {

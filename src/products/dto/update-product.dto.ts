@@ -17,6 +17,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ToBoolean } from '../../_basics/transformers/toBoolean';
 import { PackEnum } from '../../packs/enums/pack.enum';
 import { ToArray } from '../../_basics/transformers/toArray';
+import {LocationEntity} from "../entities/location.entity";
 
 export class UpdateProductDto {
   @IsNotEmpty()
@@ -73,4 +74,9 @@ export class UpdateProductDto {
   @ValidateNested({ each: true })
   @Type(() => Attachment)
   images: Attachment[];
+  
+  @IsOptional()
+  @ValidateNested({each: true})
+  @Type(() => LocationEntity)
+  location: LocationEntity
 }

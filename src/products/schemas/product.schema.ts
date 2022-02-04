@@ -1,9 +1,10 @@
-import { Document, Schema as MongoSchema, Types } from "mongoose";
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { BasicSchema } from "../../_schemas/BasicSchema";
-import { Attachment, AttachmentSchema } from "../../_schemas/attachment.schema";
-import { ProductCategory, ProductCategorySchema } from "../../product-category/schemas/product-category.schema";
-import { PackEnum } from '../../packs/enums/pack.enum';
+import {Document, Schema as MongoSchema, Types} from "mongoose";
+import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
+import {BasicSchema} from "../../_schemas/BasicSchema";
+import {Attachment, AttachmentSchema} from "../../_schemas/attachment.schema";
+import {ProductCategory, ProductCategorySchema} from "../../product-category/schemas/product-category.schema";
+import {PackEnum} from '../../packs/enums/pack.enum';
+import {Location, LocationSchema} from "./location.schema";
 
 export type ProductDocument = Product & Document;
 
@@ -12,7 +13,7 @@ export type ProductDocument = Product & Document;
 })
 export class Product extends BasicSchema {
   
-  @Prop({ required: true })
+  @Prop({required: true})
   title: string;
   
   @Prop({ required: true })
@@ -45,14 +46,17 @@ export class Product extends BasicSchema {
   @Prop({ required: true, type: [MongoSchema.Types.ObjectId], ref: "ProductCategory" })
   categories: ProductCategory[] | string[];
   
-  @Prop({ type: AttachmentSchema })
+  @Prop({type: AttachmentSchema})
   thumbnail: Attachment;
   
-  @Prop({ type: [AttachmentSchema] })
+  @Prop({type: [AttachmentSchema]})
   images: Attachment[];
   
-  @Prop({ type: Array })
+  @Prop({type: Array})
   minPacks: PackEnum[];
+  
+  @Prop({required: true, type: LocationSchema})
+  location: Object
   
   _id: Types.ObjectId;
   createdAt: Date;

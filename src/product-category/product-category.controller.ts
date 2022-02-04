@@ -1,17 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ProductCategoryService } from './product-category.service';
-import { CreateProductCategoryDto } from './dto/create-product-category.dto';
-import { UpdateProductCategoryDto } from './dto/update-product-category.dto';
-import { ApiBasicAuth, ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { ReadDto } from "../_basics/read.dto";
-import { ProductCategory } from './schemas/product-category.schema';
+import {Controller, Get, Post, Body, Patch, Param, Delete, Query} from '@nestjs/common';
+import {ProductCategoryService} from './product-category.service';
+import {CreateProductCategoryDto} from './dto/create-product-category.dto';
+import {UpdateProductCategoryDto} from './dto/update-product-category.dto';
+import {ApiBasicAuth, ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import {ReadDto} from "../_basics/read.dto";
+import {ProductCategory} from './schemas/product-category.schema';
+import {PaginatedFindAllProductCategoriesDto} from "./dto/paginated-find-all-product-categories.dto";
+import {PaginatedResultProductCategoryDto} from "./dto/paginated-result-product-category.dto";
 
 @ApiBearerAuth()
 @ApiBasicAuth("client-key")
 @ApiTags("ProductCategories")
 @Controller('product-categories')
 export class ProductCategoryController {
-  constructor (private readonly productCategoryService: ProductCategoryService) {
+  constructor(private readonly productCategoryService: ProductCategoryService) {
   }
   
   @Post()
@@ -20,8 +22,8 @@ export class ProductCategoryController {
   }
   
   @Get()
-  findAll() {
-    return this.productCategoryService.findAll();
+  findAll(@Query() paginationQuery: PaginatedFindAllProductCategoriesDto): Promise<PaginatedResultProductCategoryDto> {
+    return this.productCategoryService.findAll(paginationQuery);
   }
   
   @Get(':id')

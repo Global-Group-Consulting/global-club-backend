@@ -1,9 +1,11 @@
-import { IsArray, IsBoolean, IsNotEmpty, IsObject, IsOptional, ValidateNested } from "class-validator";
-import { Type } from "class-transformer";
-import { Attachment } from "../../_schemas/attachment.schema";
-import { IsMongoIdArray } from "../../_basics/validators/IsMongoIdArray";
-import { ApiProperty } from '@nestjs/swagger';
-import { ToBoolean } from '../../_basics/transformers/toBoolean';
+import {IsArray, IsBoolean, IsNotEmpty, IsObject, IsOptional, ValidateNested} from "class-validator";
+import {Type} from "class-transformer";
+import {Attachment} from "../../_schemas/attachment.schema";
+import {IsMongoIdArray} from "../../_basics/validators/IsMongoIdArray";
+import {ApiProperty} from '@nestjs/swagger';
+import {ToBoolean} from '../../_basics/transformers/toBoolean';
+import {LocationEntity} from "../entities/location.entity";
+
 
 export class CreateProductDto {
   @IsNotEmpty()
@@ -46,4 +48,9 @@ export class CreateProductDto {
   @ValidateNested({each: true})
   @Type(() => Attachment)
   images: Attachment[];
+  
+  @IsNotEmpty()
+  @ValidateNested({each: true})
+  @Type(() => LocationEntity)
+  location: LocationEntity
 }
