@@ -35,6 +35,8 @@ export class UsersService extends BasicService {
     return await this.findPaginated<User>({
         ...query,
         gold: true,
+        // @ts-ignore
+        apps: "club"
       }, paginationDto,
       userBasicProjection
     )
@@ -43,7 +45,10 @@ export class UsersService extends BasicService {
   async groupBy (field: keyof User): Promise<ReadUserGroupsDto[]> {
       return this.userModel.aggregate<ReadUserGroupsDto>([
         {
-          $match: { gold: true }
+          $match: {
+            gold: true,
+            apps: "club"
+          }
         },
         {
           $group: {
