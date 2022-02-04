@@ -24,6 +24,8 @@ export class AxiosService {
   
   private reqInterceptor(axiosConfig: AxiosRequestConfig): AxiosRequestConfig {
     const reqHeaders: any = this.httpRequest.headers || {};
+  
+    axiosConfig.headers['client-key'] = reqHeaders["client-key"];
     
     // Set Authorization header only if there is a value to set
     if (reqHeaders.authorization) {
