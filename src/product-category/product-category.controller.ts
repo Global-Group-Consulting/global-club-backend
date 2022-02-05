@@ -17,7 +17,7 @@ export class ProductCategoryController {
   }
   
   @Post()
-  create (@Body() createProductCategoryDto: CreateProductCategoryDto) {
+  create(@Body() createProductCategoryDto: CreateProductCategoryDto) {
     return this.productCategoryService.create(createProductCategoryDto);
   }
   
@@ -26,13 +26,18 @@ export class ProductCategoryController {
     return this.productCategoryService.findAll(paginationQuery);
   }
   
+  @Get("/raw")
+  findAllRaw(): Promise<ProductCategory[]> {
+    return this.productCategoryService.findAllRaw();
+  }
+  
   @Get(':id')
-  findOne (@Param() params: ReadDto): Promise<ProductCategory> {
+  findOne(@Param() params: ReadDto): Promise<ProductCategory> {
     return this.productCategoryService.findOne(params.id);
   }
   
   @Patch(':id')
-  update (@Param() params: ReadDto, @Body() updateProductCategoryDto: UpdateProductCategoryDto): Promise<ProductCategory> {
+  update(@Param() params: ReadDto, @Body() updateProductCategoryDto: UpdateProductCategoryDto): Promise<ProductCategory> {
     return this.productCategoryService.update(params.id, updateProductCategoryDto);
   }
   

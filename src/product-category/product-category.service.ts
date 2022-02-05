@@ -41,6 +41,10 @@ export class ProductCategoryService extends BasicService {
     return this.findPaginated<ProductCategory>(query, paginationData);
   }
   
+  findAllRaw() {
+    return this.model.find({}).exec();
+  }
+  
   findOne(id: string) {
     return this.productCategoryModel.findById(id).exec()
   }
