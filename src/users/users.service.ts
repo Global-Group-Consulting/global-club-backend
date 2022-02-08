@@ -20,6 +20,7 @@ import {formatMoney} from "../utilities/Formatters";
 import {Attachment} from "../_schemas/attachment.schema";
 import {AxiosResponse} from "axios";
 import {FillClubContractDto} from "./dto/fill-club-contract.dto";
+import {UpdateException} from "../_exceptions/update.exception";
 
 @Injectable()
 export class UsersService extends BasicService {
@@ -131,7 +132,7 @@ export class UsersService extends BasicService {
   
     // Check if already exists a pending request
     if (userToUpdate.clubPackChangeOrder) {
-      // throw new UpdateException("Esiste già una richiesta di cambio pack in corso.")
+      throw new UpdateException("Esiste già una richiesta di cambio pack in corso.")
     }
   
     const userDeposit = await this.calcUserDeposit(id);
