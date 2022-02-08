@@ -62,17 +62,17 @@ export class CommunicationsService extends BasicService {
     return null
   }*/
   
-  async addMessage (id: string, addMessageCommunicationDto: AddMessageCommunicationDto, type?: MessageTypeEnum) {
+  async addMessage(id: string, addMessageCommunicationDto: AddMessageCommunicationDto, type?: MessageTypeEnum, noSender = false) {
     const communication = await this.communicationModel.findById(id).exec()
-    
+  
     if (!communication) {
       throw new UpdateException('Can\'t find the communication you are trying to edit')
     }
-    
+  
     const query = {
       '$push': {
         messages: {
-          sender: this.authUser,
+          sender: noSender ? null : this.authUser,
           content: addMessageCommunicationDto.message,
           attachments: addMessageCommunicationDto.attachments,
           data: addMessageCommunicationDto.messageData,

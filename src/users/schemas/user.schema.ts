@@ -1,8 +1,8 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document, Types } from 'mongoose';
-import { PackEnum } from '../../packs/enums/pack.enum';
-import { UserAclRolesEnum } from '../enums/user.acl.roles.enum';
-import { UserBasic } from '../entities/user.basic.entity';
+import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
+import {Document, Types} from 'mongoose';
+import {PackEnum} from '../../packs/enums/pack.enum';
+import {UserAclRolesEnum} from '../enums/user.acl.roles.enum';
+import {UserClubPackEntity} from "../entities/user.clubPack.entity";
 
 export type UserDocument = User & Document
 
@@ -28,7 +28,7 @@ export class User {
   birthCountry: string;
   
   @Prop()
-  birthDate: string;
+  birthDate: Date;
   
   @Prop()
   birthProvince: string;
@@ -61,13 +61,19 @@ export class User {
   clubPack: PackEnum;
   
   @Prop()
+  clubPackChangeOrder: Types.ObjectId;
+  
+  @Prop()
+  clubPackHistory: UserClubPackEntity[];
+  
+  @Prop()
   commissionsAssigned: string[];
   
   @Prop()
   contractBic: string;
   
   @Prop()
-  contractDate: string;
+  contractDate: Date;
   
   @Prop()
   contractIban: string;

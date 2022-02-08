@@ -1,39 +1,45 @@
-import { Model } from 'mongoose'
-import { REQUEST } from '@nestjs/core'
-import { InjectModel } from '@nestjs/mongoose'
-import { Inject, Injectable } from '@nestjs/common'
-import { CreateOrderDto } from './dto/create-order.dto'
-import { Order, OrderDocument } from './schemas/order.schema'
-import { Product, ProductDocument } from '../products/schemas/product.schema'
-import { AuthRequest } from '../_basics/AuthRequest'
-import { FindException } from '../_exceptions/find.exception'
-import { CommunicationsService } from '../communications/communications.service'
-import { CommunicationTypeEnum } from '../communications/enums/communication.type.enum'
-import { UpdateOrderStatusDto } from './dto/update-order-status.dto'
-import { BasicService, PaginatedResult } from '../_basics/BasicService'
-import { OrderStatusEnum } from './enums/order.status.enum'
-import { MessageTypeEnum } from '../communications/enums/message.type.enum'
-import { UpdateException } from '../_exceptions/update.exception'
-import { MovementsService } from '../movements/movements.service'
-import { Movement } from '../movements/schemas/movement.schema'
-import { OrderProduct } from './schemas/order-product'
-import { PaginatedFilterOrderDto } from './dto/paginated-filter-order.dto';
-import { FindAllOrdersFilterMap } from './dto/filters/find-all-orders.filter';
-import { ConfigService } from '@nestjs/config';
-import { UpdateOrderProductDto } from './dto/update-order-product.dto';
-import { castToObjectId } from '../utilities/Formatters';
-import { detailedDiff, diff } from 'deep-object-diff';
+import {Model} from 'mongoose'
+import {InjectModel} from '@nestjs/mongoose'
+import {Inject, Injectable} from '@nestjs/common'
+import {CreateOrderDto} from './dto/create-order.dto'
+import {Order, OrderDocument} from './schemas/order.schema'
+import {Product, ProductDocument} from '../products/schemas/product.schema'
+import {AuthRequest} from '../_basics/AuthRequest'
+import {FindException} from '../_exceptions/find.exception'
+import {CommunicationsService} from '../communications/communications.service'
+import {CommunicationTypeEnum} from '../communications/enums/communication.type.enum'
+import {UpdateOrderStatusDto} from './dto/update-order-status.dto'
+import {BasicService, PaginatedResult} from '../_basics/BasicService'
+import {OrderStatusEnum} from './enums/order.status.enum'
+import {MessageTypeEnum} from '../communications/enums/message.type.enum'
+import {UpdateException} from '../_exceptions/update.exception'
+import {MovementsService} from '../movements/movements.service'
+import {Movement} from '../movements/schemas/movement.schema'
+import {OrderProduct} from './schemas/order-product'
+import {PaginatedFilterOrderDto} from './dto/paginated-filter-order.dto';
+import {FindAllOrdersFilterMap} from './dto/filters/find-all-orders.filter';
+import {ConfigService} from '@nestjs/config';
+import {UpdateOrderProductDto} from './dto/update-order-product.dto';
+import {castToObjectId} from '../utilities/Formatters';
+import {diff} from 'deep-object-diff';
+import {PackEnum} from "../packs/enums/pack.enum";
+import {EventEmitter2} from "@nestjs/event-emitter";
+import {OrderPackChangeCompletedEvent} from "./events/OrderPackChangeCompletedEvent";
+import {OrderCompletedEvent} from "./events/OrderCompletedEvent";
+import {OrderCancelledEvent} from "./events/OrderCancelledEvent";
+import {Attachment} from "../_schemas/attachment.schema";
 
 @Injectable()
 export class OrdersService extends BasicService {
   model: Model<OrderDocument>
   
-  constructor (
+  constructor(
     @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
     private communicationService: CommunicationsService,
     private movementsService: MovementsService,
     protected config: ConfigService,
+    private eventEmitter: EventEmitter2,
     @Inject("REQUEST") protected request: AuthRequest
   ) {
     super()
@@ -128,9 +134,71 @@ export class OrdersService extends BasicService {
     }
   }
   
-  findAll (paginationDto: PaginatedFilterOrderDto): Promise<PaginatedResult<Order[]>> {
-    const query: any = this.prepareQuery(paginationDto.filter, FindAllOrdersFilterMap)
+  async createPackChangeOrder(createOrderDto: CreateOrderDto, deposit: number, changeCost: number, contractFile: Attachment) {
+    const newData: any = {
+      ...createOrderDto,
+      user: this.authUser,
+      // indicates that the order changes the pack
+      packChangeOrder: true
+    }
+    
+    const product: Product = await this.productModel.where({
+      packChange: true,
+      packChangeTo: PackEnum.PREMIUM
+    }).findOne().exec();
+    
+    newData.products[0].id = product._id;
+    
+    // Temporary generates the order, but don't save it yet
+    const newOrder = new this.orderModel(newData)
+    
+    newOrder.amount = 0;
+    newOrder.packChangeCost = changeCost;
+    
+    // Generates the communication associated with this order.
+    const relatedCommunication = await this.communicationService.create({
+      type: CommunicationTypeEnum.ORDER,
+      title: `Ordine #${newOrder.id} del ${new Date().toLocaleString('it')}`,
+      message: "change pack order",
+      messageData: {
+        orderStatus: OrderStatusEnum.PENDING,
+        orderProducts: [{
+          qta: 1,
+          price: 0,
+          product: {
+            _id: product._id,
+            title: product.title
+          }
+        }],
+        packChange: {
+          totalDeposit: deposit,
+          packCost: changeCost
+        }
+      }
+    }, MessageTypeEnum.ORDER_CREATED)
+    
+    // Assign the communication id as a ref to the order
+    newOrder.communication = relatedCommunication.id
+    
+    // Add initial message that indicates to the user what must be done to proceed
+    await this.communicationService.addMessage(relatedCommunication.id, {
+      message: "Gentile cliente,<br>per proseguire il cambio del pack, la preghiamo di firmare il contratto allegato e di caricare una scansione del documento. La invitiamo inoltre ad effettuare il pagamento indicato nel contratto e di caricare anche la ricevuta di avvenuto pagamento.",
+      attachments: [contractFile],
+    }, MessageTypeEnum.MESSAGE, true)
+    
+    try {
+      return await newOrder.save()
+    } catch (e) {
+      // If there is an error I remove the created communication
+      await this.communicationService.remove(relatedCommunication.id)
+      
+      throw e
+    }
+  }
   
+  findAll(paginationDto: PaginatedFilterOrderDto): Promise<PaginatedResult<Order[]>> {
+    const query: any = this.prepareQuery(paginationDto.filter, FindAllOrdersFilterMap)
+    
     if (!this.userIsAdmin) {
       query["user.id"] = this.authUser.id.toString()
     }
@@ -210,17 +278,43 @@ export class OrdersService extends BasicService {
           orderStatus: updateOrderStatusDto.status
         }
       }, MessageTypeEnum.ORDER_STATUS_UPDATE)
-      
+  
       // store the new message id so if necessary can remove it later.
       newMessageId = communication.messages[communication.messages.length - 1]._id.toString()
   
       // If the order status is complete, generate the withdrawal movement
       if (order.status === OrderStatusEnum.COMPLETED) {
-        newMovement = await this.movementsService.use((order.user._id || order.user.id), {
-          amountChange: order.amount,
-          orderId: order._id,
-          notes: 'Completamento ordine #' + order._id.toString()
-        })
+        // generate movement only if the amount is > 0
+        if (order.amount) {
+          newMovement = await this.movementsService.use((order.user._id || order.user.id), {
+            amountChange: order.amount,
+            orderId: order._id,
+            notes: 'Completamento ordine #' + order._id.toString()
+          })
+        }
+    
+        // change the user pack eventually
+        if (order.packChangeOrder) {
+          this.eventEmitter.emit("order.packChange.completed", new OrderPackChangeCompletedEvent({
+            order,
+            userId: order.user._id,
+            newPack: (await this.productModel.findById(order.products[0].product) as ProductDocument).packChangeTo,
+            changeCost: order.packChangeCost
+          }));
+        }
+    
+        this.eventEmitter.emit("order.completed", new OrderCompletedEvent({
+          order,
+          userId: order.user._id
+        }));
+      }
+  
+      if (order.status === OrderStatusEnum.CANCELLED) {
+        this.eventEmitter.emit("order.cancelled", new OrderCancelledEvent({
+          order,
+          userId: order.user._id,
+          reason: updateOrderStatusDto.reason
+        }));
       }
   
       const result = await order.save();
@@ -294,11 +388,11 @@ export class OrdersService extends BasicService {
     }
   }
   
-  remove (id: string) {
+  remove(id: string) {
     return this.orderModel.findByIdAndDelete(id)
   }
   
-  private static calcOrderAmount (order: Order): number {
+  private static calcOrderAmount(order: Order): number {
     return order.products.reduce((acc, curr) => acc + (curr.price * curr.qta), 0)
   }
 }

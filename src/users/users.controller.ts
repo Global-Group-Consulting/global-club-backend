@@ -9,7 +9,8 @@ import { PaginatedResultUserDto } from './dto/paginated-result-user.dto';
 import { ReadDto } from '../_basics/read.dto';
 import { UserBasic } from './entities/user.basic.entity';
 import { ReadUserDto } from './dto/read-user.dto';
-import { User } from './schemas/user.schema';
+import {User} from './schemas/user.schema';
+import {UpdateUserPackDto} from "./dto/update-user-pack.dto";
 
 @ApiBearerAuth()
 @ApiBasicAuth("client-key")
@@ -43,15 +44,20 @@ export class UsersController {
     type: User
   })
   @Get(':id')
-  findOne (@Param() params: ReadDto, @Query() query: ReadUserDto): Promise<UserBasic | User> {
+  findOne(@Param() params: ReadDto, @Query() query: ReadUserDto): Promise<UserBasic | User> {
     return this.usersService.findOne(params.id, query);
   }
   
   @Patch(':id')
-  update (@Param() params: ReadDto, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param() params: ReadDto, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(params.id, updateUserDto);
   }
-
+  
+  @Patch(':id/pack')
+  updatePack(@Param() params: ReadDto, @Body() updateUserPackDto: UpdateUserPackDto) {
+    return this.usersService.updatePack(params.id, updateUserPackDto);
+  }
+  
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
