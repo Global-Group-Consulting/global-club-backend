@@ -19,7 +19,7 @@ import { PacksModule } from './packs/packs.module';
 import { NewsModule } from './news/news.module';
 import databaseConfig from './config/db.config';
 import httpConfig from './config/http.config';
-import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import {EventEmitterModule} from "@nestjs/event-emitter";
 
 @Module({
   imports: [
@@ -46,7 +46,7 @@ import { ClientProxyFactory, Transport } from '@nestjs/microservices';
       }),
       inject: [ConfigService],
     }),
-    
+  
     CommunicationsModule,
     DashboardModule,
     MovementsModule,
@@ -60,6 +60,11 @@ import { ClientProxyFactory, Transport } from '@nestjs/microservices';
     AclModule,
     PacksModule,
     //NewsModule,
+  
+    EventEmitterModule.forRoot({
+      global: true,
+      wildcard: true
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

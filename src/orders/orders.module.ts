@@ -23,7 +23,8 @@ import { MovementsModule } from '../movements/movements.module'
     MovementsModule
   ],
   controllers: [OrdersController],
-  providers: [OrdersService]
+  providers: [OrdersService],
+  exports: [OrdersService]
 })
 export class OrdersModule {
 }

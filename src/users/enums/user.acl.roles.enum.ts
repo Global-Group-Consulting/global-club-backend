@@ -4,5 +4,6 @@ export enum UserAclRolesEnum {
   CLIENTS_SERVICE = "clients_service",
   AGENT = "agent",
   CLIENT = "client",
+  CLUB_ADMIN = "admin_club",
 }
 

@@ -67,7 +67,12 @@ export class ProductsService extends BasicService {
   
   async findAll (paginationData: PaginatedFindAllProductDto): Promise<PaginatedResultProductDto> {
     const query = this.prepareQuery((paginationData.filter ?? {}), FindAllProductsFilterMap)
-    
+  
+    // For non admin, show only visible items
+    if (!this.userIsAdmin) {
+      query.visible = true;
+    }
+  
     return this.findPaginated<Product>(query, paginationData);
   }
   

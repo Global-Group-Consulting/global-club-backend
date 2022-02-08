@@ -20,6 +20,9 @@ export class Attachment {
   @IsNotEmpty()
   @Prop()
   mimetype: string;
+  
+  @Prop({default: "legacy"})
+  server: string;
 }
 
 export const AttachmentSchema = SchemaFactory.createForClass(Attachment)

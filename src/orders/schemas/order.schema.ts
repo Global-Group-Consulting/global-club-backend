@@ -23,14 +23,20 @@ export class Order extends BasicSchema {
   @Prop({ required: false, default: 0 })
   public amount: number
   
-  @Prop({ type: MongoSchema.Types.ObjectId, ref: "Communication" })
+  @Prop({type: MongoSchema.Types.ObjectId, ref: "Communication"})
   public communication: Communication
   
-  @Prop({ enum: OrderStatusEnum, default: OrderStatusEnum.PENDING })
+  @Prop({enum: OrderStatusEnum, default: OrderStatusEnum.PENDING})
   public status: OrderStatusEnum
   
   @Prop()
   public notes: string
+  
+  @Prop()
+  public packChangeOrder: boolean
+  
+  @Prop({default: 0})
+  public packChangeCost: number
   
   public _id: Types.ObjectId;
   public createdAt: Date;

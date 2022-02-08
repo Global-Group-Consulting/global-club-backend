@@ -1,10 +1,10 @@
-import { FindException } from "../_exceptions/find.exception";
-import { Model, QueryOptions } from 'mongoose';
-import { FilterMap, FilterOptions } from './FilterMap.dto';
-import { ConfigService } from '@nestjs/config';
-import { AuthRequest } from './AuthRequest';
-import { User } from '../users/schemas/user.schema';
-import { UserAclRolesEnum } from '../users/enums/user.acl.roles.enum';
+import {FindException} from "../_exceptions/find.exception";
+import {Model, QueryOptions} from 'mongoose';
+import {FilterMap, FilterOptions} from './FilterMap.dto';
+import {ConfigService} from '@nestjs/config';
+import {AuthRequest} from './AuthRequest';
+import {User} from '../users/schemas/user.schema';
+import {UserAclRolesEnum} from '../users/enums/user.acl.roles.enum';
 
 export enum PaginationOrderEnum {
   ASC = "ASC",
@@ -48,7 +48,7 @@ export abstract class BasicService {
   }
   
   get userIsAdmin (): boolean {
-    const validRoles = [UserAclRolesEnum.ADMIN, UserAclRolesEnum.SUPER_ADMIN]
+    const validRoles = [UserAclRolesEnum.ADMIN, UserAclRolesEnum.SUPER_ADMIN, UserAclRolesEnum.CLUB_ADMIN]
     
     return this.request.auth.roles.some(
       (value) => validRoles.includes(value))

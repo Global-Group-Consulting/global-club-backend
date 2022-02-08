@@ -28,6 +28,12 @@ export class Product extends BasicSchema {
   @Prop({})
   priceUndefined: boolean;
   
+  @Prop({})
+  packChange: boolean;
+  
+  @Prop({})
+  packChangeTo: PackEnum;
+  
   /**
    * Indicates if the product is quantifiable of not.
    */
@@ -55,7 +61,13 @@ export class Product extends BasicSchema {
   @Prop({type: Array})
   minPacks: PackEnum[];
   
-  @Prop({required: true, type: LocationSchema})
+  @Prop({
+    default: {
+      city: "",
+      province: "",
+      region: ""
+    }, type: LocationSchema
+  })
   location: Object
   
   _id: Types.ObjectId;

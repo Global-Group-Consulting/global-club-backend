@@ -7,7 +7,7 @@ import {
   IsEnum,
   IsNotEmpty,
   IsObject,
-  IsOptional,
+  IsOptional, IsString, ValidateIf,
   ValidateNested
 } from "class-validator";
 import { Type } from "class-transformer";
@@ -55,13 +55,26 @@ export class UpdateProductDto {
   @IsBoolean()
   visible?: boolean;
   
+  @ApiProperty({
+    description: "Indicates if the product is used to change the user pack."
+  })
+  @IsOptional()
+  @IsBoolean()
+  @ToBoolean()
+  packChange?: boolean;
+  
+  @ValidateIf(o => o.packChange)
+  @IsNotEmpty()
+  @IsString()
+  packChangeTo?: string;
+  
   @IsNotEmpty()
   @IsMongoIdArray()
   categories: string[];
   
   @IsOptional()
   @ToArray()
-  @IsEnum(PackEnum, { each: true })
+  @IsEnum(PackEnum, {each: true})
   minPacks: PackEnum[]
   
   @IsOptional()

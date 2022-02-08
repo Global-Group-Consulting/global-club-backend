@@ -162,3 +162,17 @@ export function castToFixedDecimal(value: string | number) {
   
   return +newValue.toFixed(2)
 }
+
+
+export function calcPackPremiumExpiration(): Date {
+  let toReturn = new Date();
+  
+  // next year. 12 months
+  const year = new Date().getFullYear() + 1;
+  const dateWithYear = new Date(new Date().setFullYear(year));
+  
+  // expires ad 23:59:59 of that day;
+  toReturn = new Date(dateWithYear.getFullYear(), dateWithYear.getMonth(), dateWithYear.getDate(), 23, 59, 59)
+  
+  return toReturn
+}
