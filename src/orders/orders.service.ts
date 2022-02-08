@@ -141,20 +141,24 @@ export class OrdersService extends BasicService {
       // indicates that the order changes the pack
       packChangeOrder: true
     }
-    
+  
+    // get the right product from the db
     const product: Product = await this.productModel.where({
       packChange: true,
       packChangeTo: PackEnum.PREMIUM
     }).findOne().exec();
-    
+  
+    if (!product) {
+      throw new UpdateException("No product available for this pack", 500);
+    }
+  
     newData.products[0].id = product._id;
-    
+  
     // Temporary generates the order, but don't save it yet
     const newOrder = new this.orderModel(newData)
-    
     newOrder.amount = 0;
     newOrder.packChangeCost = changeCost;
-    
+  
     // Generates the communication associated with this order.
     const relatedCommunication = await this.communicationService.create({
       type: CommunicationTypeEnum.ORDER,
