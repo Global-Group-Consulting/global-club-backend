@@ -23,6 +23,7 @@ import {FillClubContractDto} from "./dto/fill-club-contract.dto";
 
 @Injectable()
 export class UsersService extends BasicService {
+  model: any;
   
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>,
               private httpService: AxiosService,
@@ -127,15 +128,16 @@ export class UsersService extends BasicService {
    */
   async updatePack(id: string, updateUserPackDto: UpdateUserPackDto) {
     const userToUpdate: UserDocument = await this.findOrFail(id);
-    
+  
     // Check if already exists a pending request
     if (userToUpdate.clubPackChangeOrder) {
       // throw new UpdateException("Esiste già una richiesta di cambio pack in corso.")
     }
-    
+  
     const userDeposit = await this.calcUserDeposit(id);
     const changeCost = userDeposit * 5 / 100;
-    
+  
+    // Generate the contract file
     const contractFile = await this.generateClubContractPdf({
       ...userToUpdate.toObject(),
       "birthDate": userToUpdate.birthDate ? userToUpdate.birthDate.toISOString() : '',
@@ -143,32 +145,40 @@ export class UsersService extends BasicService {
       "currentYear": new Date().getFullYear(),
       "currentDate": new Date()
     });
-    
-    const newOrder = await this.orderService.createPackChangeOrder({
-      notes: `Cambio pack da ${userToUpdate.clubPack} a <strong>Premium</strong>.<br>
+  
+    try {
+      // Generate the new order with relative communication
+      const newOrder = await this.orderService.createPackChangeOrder({
+        notes: `Cambio pack da ${userToUpdate.clubPack} a <strong>Premium</strong>.<br>
               Costo: 5% del deposito<br>
               Deposito: € ${formatMoney(userDeposit)}<br>
               Costo cambio: € ${formatMoney(changeCost)}`,
-      products: [
-        {
-          id: "clubPack",
-          qta: 1,
-          price: 0
-        }
-      ]
-    }, userDeposit, changeCost, contractFile);
+        products: [
+          {
+            id: "clubPack",
+            qta: 1,
+            price: 0
+          }
+        ]
+      }, userDeposit, changeCost, contractFile);
     
-    userToUpdate.clubPackChangeOrder = newOrder._id;
-    await userToUpdate.save()
+      // Store the order id in user data
+      userToUpdate.clubPackChangeOrder = newOrder._id;
+      await userToUpdate.save()
     
-    return newOrder
+      // return the order just created
+      return newOrder
+    } catch (er) {
+      // If there is an error, must remove the generated contract file
+      await this.removeClubContractPdf(contractFile.id);
+    }
   }
   
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
   
-  async generateClubContractPdf(data: FillClubContractDto): Promise<Attachment> {
+  private async generateClubContractPdf(data: FillClubContractDto): Promise<Attachment> {
     if (data.referenceAgent) {
       const refAgent: UserDocument = await this.model.findById(data.referenceAgent);
       
@@ -181,11 +191,14 @@ export class UsersService extends BasicService {
     })
     
     return resp.data;
-    // return this.orderService.addClubPackInitialMessage(order, [file.data])
-    // }catch(er){
-    //   console.error(er);
-    // }
   }
   
-  model: any;
+  private async removeClubContractPdf(id: string) {
+    try {
+      await this.httpService.delete(this.config.get<string>("http.filesServerUrl") + "/" + id,)
+    } catch (er) {
+      // If fails, it doesn't matter becuase this is called when the packChange fails.
+      console.log(er)
+    }
+  }
 }
