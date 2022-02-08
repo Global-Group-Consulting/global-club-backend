@@ -1,4 +1,13 @@
-import {IsArray, IsBoolean, IsNotEmpty, IsObject, IsOptional, ValidateNested} from "class-validator";
+import {
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsObject,
+  IsOptional,
+  IsString,
+  ValidateIf,
+  ValidateNested
+} from "class-validator";
 import {Type} from "class-transformer";
 import {Attachment} from "../../_schemas/attachment.schema";
 import {IsMongoIdArray} from "../../_basics/validators/IsMongoIdArray";
@@ -32,6 +41,19 @@ export class CreateProductDto {
   @IsBoolean()
   @ToBoolean()
   hasQta?: boolean;
+  
+  @ApiProperty({
+    description: "Indicates if the product is used to change the user pack."
+  })
+  @IsOptional()
+  @IsBoolean()
+  @ToBoolean()
+  packChange?: boolean;
+  
+  @ValidateIf(o => o.packChange)
+  @IsNotEmpty()
+  @IsString()
+  packChangeTo?: string;
   
   @IsNotEmpty()
   @IsMongoIdArray()

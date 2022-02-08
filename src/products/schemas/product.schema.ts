@@ -28,6 +28,12 @@ export class Product extends BasicSchema {
   @Prop({})
   priceUndefined: boolean;
   
+  @Prop({})
+  packChange: boolean;
+  
+  @Prop({})
+  packChangeTo: PackEnum;
+  
   /**
    * Indicates if the product is quantifiable of not.
    */
