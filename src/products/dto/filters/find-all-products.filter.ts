@@ -1,14 +1,15 @@
-import { FilterMap } from '../../../_basics/FilterMap.dto';
-import { FindAllOrdersFilter } from '../../../orders/dto/filters/find-all-orders.filter';
-import { Product } from '../../schemas/product.schema';
-import { toString } from '../../../_basics/transformers/toString';
-import { toRegExp } from '../../../_basics/transformers/toRegExp';
-import { castToObjectId } from '../../../utilities/Formatters';
-import { toObjectIdArray } from '../../../_basics/transformers/toObjectIdArray';
-import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsMongoId, IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
-import { ToArray } from '../../../_basics/transformers/toArray';
-import { IsMongoIdArray } from '../../../_basics/validators/IsMongoIdArray';
+import {FilterMap} from '../../../_basics/FilterMap.dto';
+import {FindAllOrdersFilter} from '../../../orders/dto/filters/find-all-orders.filter';
+import {Product} from '../../schemas/product.schema';
+import {toString} from '../../../_basics/transformers/toString';
+import {toRegExp} from '../../../_basics/transformers/toRegExp';
+import {castToObjectId} from '../../../utilities/Formatters';
+import {toObjectIdArray} from '../../../_basics/transformers/toObjectIdArray';
+import {ApiProperty} from '@nestjs/swagger';
+import {IsArray, IsMongoId, IsNotEmpty, IsObject, IsOptional, IsString} from 'class-validator';
+import {ToArray} from '../../../_basics/transformers/toArray';
+import {IsMongoIdArray} from '../../../_basics/validators/IsMongoIdArray';
+import {toBoolean} from "../../../_basics/transformers/toBoolean";
 
 export class FindAllProductsFilter implements Partial<Product> {
   @ApiProperty({
@@ -33,8 +34,10 @@ export class FindAllProductsFilter implements Partial<Product> {
   })
   @IsOptional()
   @ToArray()
-  @IsMongoId({ each: true })
+  @IsMongoId({each: true})
   categories?: string[];
+  
+  visible?: boolean
 }
 
 export const FindAllProductsFilterMap: FilterMap<FindAllProductsFilter> = {
@@ -49,4 +52,7 @@ export const FindAllProductsFilterMap: FilterMap<FindAllProductsFilter> = {
   categories: {
     castValue: toObjectIdArray
   },
+  visible: {
+    castValue: toBoolean
+  }
 }
