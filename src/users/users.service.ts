@@ -2,7 +2,7 @@ import {HttpException, Inject, Injectable} from '@nestjs/common';
 import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {InjectModel} from '@nestjs/mongoose';
-import {User} from './schemas/user.schema';
+import {User, UserDocument} from './schemas/user.schema';
 import {Model} from 'mongoose';
 import {BasicService, PaginatedResult} from '../_basics/BasicService';
 import {ReadUserGroupsDto} from './dto/read-user-groups.dto';
@@ -10,7 +10,6 @@ import {PaginatedFilterUserDto} from './dto/paginated-filter-user.dto';
 import {FindAllUserFilterMap} from './dto/filters/find-all-user.filter';
 import {ConfigService} from '@nestjs/config';
 import {AuthRequest} from 'src/_basics/AuthRequest';
-import {UserDocument} from './schemas/user.schema';
 import {UserBasic, userBasicProjection} from './entities/user.basic.entity';
 import {ReadUserDto} from './dto/read-user.dto';
 import {UpdateUserPackDto} from "./dto/update-user-pack.dto";
@@ -21,6 +20,7 @@ import {Attachment} from "../_schemas/attachment.schema";
 import {AxiosResponse} from "axios";
 import {FillClubContractDto} from "./dto/fill-club-contract.dto";
 import {UpdateException} from "../_exceptions/update.exception";
+import {PackEnum} from "../packs/enums/pack.enum";
 
 @Injectable()
 export class UsersService extends BasicService {
@@ -129,6 +129,10 @@ export class UsersService extends BasicService {
    */
   async updatePack(id: string, updateUserPackDto: UpdateUserPackDto) {
     const userToUpdate: UserDocument = await this.findOrFail(id);
+  
+    if (userToUpdate.clubPack === PackEnum.PREMIUM) {
+      throw new UpdateException("Il pack è già premium");
+    }
   
     // Check if already exists a pending request
     if (userToUpdate.clubPackChangeOrder) {
