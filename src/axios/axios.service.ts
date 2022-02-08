@@ -40,8 +40,8 @@ export class AxiosService {
   }*/
   
   private errInterceptor(error) {
-    error.message = error.response?.data?.error?.message
-    
+    error.message = error.response?.data?.error?.message || error.response?.data?.message
+  
     return Promise.reject(error);
   }
   
