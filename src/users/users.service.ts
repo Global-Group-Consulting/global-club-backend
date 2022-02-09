@@ -171,8 +171,8 @@ export class UsersService extends BasicService {
       userToUpdate.clubPackChangeOrder = newOrder._id;
       await userToUpdate.save()
     
-      // return the order just created
-      return newOrder
+      // return the updated user
+      return userToUpdate
     } catch (er) {
       // If there is an error, must remove the generated contract file
       await this.removeClubContractPdf(contractFile.id);
