@@ -259,6 +259,7 @@ export class OrdersService extends BasicService {
   
   async updateStatus (id: string, updateOrderStatusDto: UpdateOrderStatusDto): Promise<Order> {
     const order = await this.findOrFail<OrderDocument>(id)
+    const initialState = order.status;
     let newMovement: Movement[]
     let newMessageId: string
     
@@ -313,7 +314,7 @@ export class OrdersService extends BasicService {
         }));
       }
   
-      if (order.status === OrderStatusEnum.CANCELLED) {
+      if (order.status === OrderStatusEnum.CANCELLED)  {
         this.eventEmitter.emit("order.cancelled", new OrderCancelledEvent({
           order,
           userId: order.user._id,
@@ -328,13 +329,19 @@ export class OrdersService extends BasicService {
     } catch (er) {
       // In case of error while applying the changes to the order,
       // remove the created message and eventually the created movement
-      
+  
       if (newMessageId) {
         await this.communicationService.removeMessage(newMessageId)
       }
   
       if (newMovement) {
         await this.movementsService.cancel(newMovement)
+      }
+  
+      // Restore order status
+      if (order.status !== initialState) {
+        order.status = initialState;
+        await order.save()
       }
   
       throw er
