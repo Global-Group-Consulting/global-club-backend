@@ -1,23 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Query } from '@nestjs/common';
-import { MovementsService } from './movements.service';
-import { CreateManualMovementDto } from './dto/create-manual-movement.dto';
-import { ApiBasicAuth, ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { Movement } from "./schemas/movement.schema";
-import { ReadDto } from "../_basics/read.dto";
-import { RemoveManualMovementDto } from "./dto/remove-manual-movement.dto";
-import { UseMovementDto } from "./dto/use-movement.dto";
-import { CalcTotalsDto } from "./dto/calc-totals.dto";
-import { PaginatedFilterMovementDto } from './dto/paginated-filter-movement.dto';
-import { PaginatedResult } from '../_basics/BasicService';
-import { PaginatedResultMovementDto } from './dto/paginated-result-movement.dto';
-import { CheckIfEnoughDto } from './dto/check-if-enough.dto';
+import {Controller, Get, Post, Body, Patch, Param, Delete, Req, Query, SetMetadata, UseGuards} from '@nestjs/common';
+import {MovementsService} from './movements.service';
+import {CreateManualMovementDto} from './dto/create-manual-movement.dto';
+import {ApiBasicAuth, ApiBearerAuth, ApiOperation, ApiTags} from "@nestjs/swagger";
+import {Movement} from "./schemas/movement.schema";
+import {ReadDto} from "../_basics/read.dto";
+import {RemoveManualMovementDto} from "./dto/remove-manual-movement.dto";
+import {UseMovementDto} from "./dto/use-movement.dto";
+import {CalcTotalsDto} from "./dto/calc-totals.dto";
+import {PaginatedFilterMovementDto} from './dto/paginated-filter-movement.dto';
+import {PaginatedResultMovementDto} from './dto/paginated-result-movement.dto';
+import {CheckIfEnoughDto} from './dto/check-if-enough.dto';
+import {JobGuard} from "../job.guard";
+import {MovementsJob} from "./jobs/movements.job";
+import {JobMovementRecapitalizeDto} from "./dto/job-movement-recapitalize.dto";
 
 @ApiBearerAuth()
 @ApiBasicAuth("client-key")
 @ApiTags("Movements")
 @Controller('movements')
 export class MovementsController {
-  constructor (private readonly movementsService: MovementsService) {
+  constructor(private readonly movementsService: MovementsService, private readonly movementsJob: MovementsJob) {
+  }
+  
+  @UseGuards(JobGuard)
+  @Post("/jobs/recapitalize")
+  recapitalize(@Body() body: JobMovementRecapitalizeDto) {
+    return this.movementsJob.recapitalize(body)
   }
   
   /**
@@ -78,4 +86,6 @@ export class MovementsController {
   manualRemove(@Param() params: ReadDto, @Body() removeMovementDto: RemoveManualMovementDto) {
     return this.movementsService.manualRemove(params.id, removeMovementDto);
   }
+  
+  
 }

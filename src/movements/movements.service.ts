@@ -1,48 +1,51 @@
-import { Model } from 'mongoose';
-import { HttpException, Inject, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Movement, MovementDocument } from './schemas/movement.schema'
-import { AuthRequest } from '../_basics/AuthRequest'
-import { UseMovementDto } from './dto/use-movement.dto'
-import { CreateManualMovementDto } from './dto/create-manual-movement.dto'
-import { RemoveManualMovementDto } from './dto/remove-manual-movement.dto'
-import { MovementTypeEnum, MovementTypeInList, MovementTypeOutList } from './enums/movement.type.enum'
-import { castToFixedDecimal, castToObjectId } from '../utilities/Formatters'
+import {Model} from 'mongoose';
+import {HttpException, Inject, Injectable} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {Movement, MovementDocument} from './schemas/movement.schema'
+import {AuthRequest} from '../_basics/AuthRequest'
+import {UseMovementDto} from './dto/use-movement.dto'
+import {CreateManualMovementDto} from './dto/create-manual-movement.dto'
+import {RemoveManualMovementDto} from './dto/remove-manual-movement.dto'
+import {MovementTypeEnum, MovementTypeInList, MovementTypeOutList} from './enums/movement.type.enum'
+import {castToFixedDecimal, castToObjectId} from '../utilities/Formatters'
 import {
   CalcTotalPackDetails,
   CalcTotalPackDetailsSupTotals,
   CalcTotalsDto,
   CalcTotalsGroup
 } from './dto/calc-totals.dto'
-import { WithdrawalException } from './exceptions/withdrawal.exception'
-import { UpdateException } from '../_exceptions/update.exception'
-import { BasicService } from '../_basics/BasicService';
-import { ConfigService } from '@nestjs/config';
-import { calcBritesUsage } from './utils/movements.utils';
-import { PackEnum } from '../packs/enums/pack.enum';
-import { FindAllMovementsFilterMap } from './dto/filters/find-all-movements.filter';
-import { PaginatedFilterMovementDto } from './dto/paginated-filter-movement.dto';
-import { PaginatedResultMovementDto } from './dto/paginated-result-movement.dto';
-import { User, UserDocument } from '../users/schemas/user.schema';
+import {WithdrawalException} from './exceptions/withdrawal.exception'
+import {UpdateException} from '../_exceptions/update.exception'
+import {BasicService} from '../_basics/BasicService';
+import {ConfigService} from '@nestjs/config';
+import {calcBritesUsage} from './utils/movements.utils';
+import {PackEnum} from '../packs/enums/pack.enum';
+import {FindAllMovementsFilterMap} from './dto/filters/find-all-movements.filter';
+import {PaginatedFilterMovementDto} from './dto/paginated-filter-movement.dto';
+import {PaginatedResultMovementDto} from './dto/paginated-result-movement.dto';
+import {User, UserDocument} from '../users/schemas/user.schema';
+import {QueueService} from "../queue/queue.service";
+import {JobMovementRecapitalizeDto} from "./dto/job-movement-recapitalize.dto";
+import {RecapitalizationDto} from "./dto/recapitalization.dto";
 
 @Injectable()
 export class MovementsService extends BasicService {
   model: Model<MovementDocument>
   
-  constructor (@InjectModel(Movement.name) private movementModel: Model<MovementDocument>,
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
-    protected config: ConfigService,
-    @Inject('REQUEST') protected request: AuthRequest) {
+  constructor(@InjectModel(Movement.name) private movementModel: Model<MovementDocument>,
+              @InjectModel(User.name) private userModel: Model<UserDocument>,
+              protected config: ConfigService,
+              @Inject('REQUEST') protected request: AuthRequest) {
     super()
     
     this.model = movementModel
   }
   
-  async findAll (userId: string, queryData: PaginatedFilterMovementDto): Promise<PaginatedResultMovementDto> {
+  async findAll(userId: string, queryData: PaginatedFilterMovementDto): Promise<PaginatedResultMovementDto> {
     const query: any = this.prepareQuery({
       ...queryData.filter,
     }, FindAllMovementsFilterMap)
-  
+    
     query.userId = castToObjectId(userId);
     
     return this.findPaginated<Movement>(query, queryData)
@@ -481,7 +484,7 @@ export class MovementsService extends BasicService {
       
         acc += value.totalUsable
       })
-    
+  
       return acc;
     }, 0)
   
@@ -490,5 +493,23 @@ export class MovementsService extends BasicService {
     }
   
     return filteredSemesters
+  }
+  
+  async recapitalization(data: RecapitalizationDto) {
+    const user = await this.userModel.findById(data.userId).exec();
+    
+    if (!user) {
+      throw new HttpException('Can\'t find the requested user', 400);
+    }
+  
+    
+    const newMovement = new this.movementModel({
+      ...data,
+      notes: "Ricapitalizzazione",
+      clubPack: user.clubPack,
+      movementType: MovementTypeEnum.INTEREST_RECAPITALIZED
+    });
+    
+    return newMovement.save();
   }
 }
