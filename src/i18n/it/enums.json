@@ -1,0 +1,8 @@
+{
+  "OrderStatusEnum": {
+    "pending": "In attesa",
+    "inProgress": "In lavorazione",
+    "completed": "Completato",
+    "cancelled": "Annullato"
+  }
+}
