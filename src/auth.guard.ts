@@ -1,9 +1,10 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { User } from "./users/schemas/user.schema";
-import { ConfigService } from "@nestjs/config";
-import { AuthUser } from "./_basics/AuthRequest";
-import { UserAclRolesEnum } from './users/enums/user.acl.roles.enum';
+import {CanActivate, ExecutionContext, Inject, Injectable} from '@nestjs/common';
+import {Observable} from 'rxjs';
+import {User} from "./users/schemas/user.schema";
+import {ConfigService} from "@nestjs/config";
+import {AuthUser} from "./_basics/AuthRequest";
+import {UserAclRolesEnum} from './users/enums/user.acl.roles.enum';
+import {Reflector} from "@nestjs/core";
 
 interface InputReqData {
   _auth_user: User;
@@ -24,21 +25,25 @@ export class AuthGuard implements CanActivate {
       permissions: [],
       roles: []
     }
-    
-      validationResult = this.validateRequest(reqData._auth_user, reqHeaders['client-secret'], reqHeaders['server-secret'])
   
-      if (!validationResult) {
-        return false
-      }
+    if (request.url === "/" || request.url.match(/\/\w+\/\w+\/jobs/)) {
+      return true;
+    }
   
-      auth.user = reqData._auth_user
-      auth.permissions = reqData._auth_user.permissions
-      auth.roles = reqData._auth_user.roles
-    
+    validationResult = this.validateRequest(reqData._auth_user, reqHeaders['client-secret'], reqHeaders['server-secret'])
+  
+    if (!validationResult) {
+      return false
+    }
+  
+    auth.user = reqData._auth_user
+    auth.permissions = reqData._auth_user.permissions
+    auth.roles = reqData._auth_user.roles
+  
     request.auth = auth
-    
+  
     delete request.body._auth_user
-    
+  
     return validationResult
   }
   
