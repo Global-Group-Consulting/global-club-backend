@@ -1,8 +1,6 @@
-import {DynamicModule, Global, Module, Provider} from '@nestjs/common';
+import {Global, Module} from '@nestjs/common';
 import {QueueService} from './queue.service';
 import {ConfigService} from "@nestjs/config";
-import {HttpModule} from "@nestjs/axios";
-import {getSharedConfigToken} from "@nestjs/bull";
 
 export const LARAVEL_QUEUE = 'LARAVEL_QUEUE';
 
