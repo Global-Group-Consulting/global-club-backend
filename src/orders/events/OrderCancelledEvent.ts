@@ -1,13 +1,11 @@
-import {Order} from "../schemas/order.schema";
+import {OrderStatusEvent} from "./OrderStatusEvent";
 
-export class OrderCancelledEvent{
-  order: Order;
-  userId: string;
+export class OrderCancelledEvent extends OrderStatusEvent{
   reason: string;
   
-  constructor(data: OrderCancelledEvent) {
-    this.order = data.order;
-    this.userId = data.userId;
+  constructor(data: OrderCancelledEvent & OrderStatusEvent) {
+    super(data);
+    
     this.reason = data.reason;
   }
 }
