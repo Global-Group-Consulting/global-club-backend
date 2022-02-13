@@ -21,10 +21,6 @@ export default registerAs("queue", () => ({
     password: process.env.QUEUE_PASSWORD,
     database: process.env.QUEUE_DATABASE,
     ssl: ssl()
-    // ssl: {
-    // rejectUnauthorized: true,
-    // ca: fs.readFileSync(__dirname + '/../../db-ca-certificate.crt'),
-    // }
   },
   queueName: process.env.QUEUE_NAME
 } as LaravelQueueConfig))
