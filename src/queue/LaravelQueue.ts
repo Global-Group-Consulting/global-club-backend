@@ -1,4 +1,4 @@
-import {createConnection, Connection, escape as mySqlEscape} from 'mysql';
+import {createConnection, Connection, escape as mySqlEscape, ConnectionConfig} from 'mysql';
 import {now, random} from "lodash";
 import {serialize, Class} from 'php-serialization'
 
@@ -45,12 +45,7 @@ export class JobOptions {
 }
 
 export interface LaravelQueueConfig {
-  db: {
-    host: string;
-    user: string;
-    password: string;
-    database: string;
-  },
+  db: ConnectionConfig,
   queueName: string;
 }
 
