@@ -20,7 +20,7 @@ export class Order extends BasicSchema {
   @Prop({ type: [orderProductSchema] })
   public products: OrderProduct[];
   
-  @Prop({ required: false, default: 0 })
+  @Prop({required: false, default: 0})
   public amount: number
   
   @Prop({type: MongoSchema.Types.ObjectId, ref: "Communication"})
@@ -28,6 +28,9 @@ export class Order extends BasicSchema {
   
   @Prop({enum: OrderStatusEnum, default: OrderStatusEnum.PENDING})
   public status: OrderStatusEnum
+  
+  @Prop()
+  public cancelReason: string;
   
   @Prop()
   public notes: string

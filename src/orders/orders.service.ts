@@ -25,9 +25,10 @@ import {diff} from 'deep-object-diff';
 import {PackEnum} from "../packs/enums/pack.enum";
 import {EventEmitter2} from "@nestjs/event-emitter";
 import {OrderPackChangeCompletedEvent} from "./events/OrderPackChangeCompletedEvent";
-import {OrderCompletedEvent} from "./events/OrderCompletedEvent";
 import {OrderCancelledEvent} from "./events/OrderCancelledEvent";
 import {Attachment} from "../_schemas/attachment.schema";
+import {OrderStatusEvent} from "./events/OrderStatusEvent";
+
 
 @Injectable()
 export class OrdersService extends BasicService {
@@ -39,7 +40,7 @@ export class OrdersService extends BasicService {
     private communicationService: CommunicationsService,
     private movementsService: MovementsService,
     protected config: ConfigService,
-    private eventEmitter: EventEmitter2,
+    protected eventEmitter: EventEmitter2,
     @Inject("REQUEST") protected request: AuthRequest
   ) {
     super()
@@ -206,7 +207,7 @@ export class OrdersService extends BasicService {
     if (!this.userIsAdmin) {
       query["user.id"] = this.authUser.id.toString()
     }
-    
+  
     return this.findPaginated<Order>(query, paginationDto, {
       "user.permissions": 0
     }, {
@@ -258,15 +259,18 @@ export class OrdersService extends BasicService {
   }*/
   
   async updateStatus (id: string, updateOrderStatusDto: UpdateOrderStatusDto): Promise<Order> {
-    const order = await this.findOrFail<OrderDocument>(id)
+    const order: OrderDocument = await this.findOrFail<OrderDocument>(id, null, {
+      populate: ['products.product', 'communication'],
+    })
+    const initialState = order.status;
     let newMovement: Movement[]
     let newMessageId: string
-    
+  
     // Avoid resetting the same status
     if (order.status === updateOrderStatusDto.status) {
       throw new UpdateException('This order already has the same status')
     }
-    
+  
     // Avoid changing status for a complete order.
     if (order.status === OrderStatusEnum.COMPLETED) {
       throw new UpdateException('This order is completed so the status can\'t be changed')
@@ -286,6 +290,14 @@ export class OrdersService extends BasicService {
       // store the new message id so if necessary can remove it later.
       newMessageId = communication.messages[communication.messages.length - 1]._id.toString()
   
+      if (order.status === OrderStatusEnum.IN_PROGRESS) {
+        this.eventEmitter.emit("order.status.inProgress", new OrderStatusEvent({
+          order,
+          userId: order.user._id,
+          newStatus: order.status
+        }));
+      }
+  
       // If the order status is complete, generate the withdrawal movement
       if (order.status === OrderStatusEnum.COMPLETED) {
         // generate movement only if the amount is > 0
@@ -299,24 +311,30 @@ export class OrdersService extends BasicService {
     
         // change the user pack eventually
         if (order.packChangeOrder) {
+          const newPack = await this.productModel.findById(order.products[0].product) as ProductDocument;
+          
           this.eventEmitter.emit("order.packChange.completed", new OrderPackChangeCompletedEvent({
             order,
             userId: order.user._id,
-            newPack: (await this.productModel.findById(order.products[0].product) as ProductDocument).packChangeTo,
-            changeCost: order.packChangeCost
+            newPack: newPack.packChangeTo,
+            changeCost: order.packChangeCost,
           }));
         }
     
-        this.eventEmitter.emit("order.completed", new OrderCompletedEvent({
+        this.eventEmitter.emit("order.status.completed", new OrderStatusEvent({
           order,
-          userId: order.user._id
+          userId: order.user._id,
+          newStatus: order.status
         }));
       }
   
       if (order.status === OrderStatusEnum.CANCELLED) {
-        this.eventEmitter.emit("order.cancelled", new OrderCancelledEvent({
+        order.cancelReason = updateOrderStatusDto.reason;
+        
+        this.eventEmitter.emit("order.status.cancelled", new OrderCancelledEvent({
           order,
           userId: order.user._id,
+          newStatus: order.status,
           reason: updateOrderStatusDto.reason
         }));
       }
@@ -328,13 +346,20 @@ export class OrdersService extends BasicService {
     } catch (er) {
       // In case of error while applying the changes to the order,
       // remove the created message and eventually the created movement
-      
+  
       if (newMessageId) {
         await this.communicationService.removeMessage(newMessageId)
       }
   
       if (newMovement) {
         await this.movementsService.cancel(newMovement)
+      }
+  
+      // Restore order status
+      if (order.status !== initialState) {
+        order.status = initialState;
+        order.cancelReason = "";
+        await order.save()
       }
   
       throw er

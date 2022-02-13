@@ -9,7 +9,7 @@ import { User } from '../../users/schemas/user.schema';
   timestamps: true
 })
 export class Message extends Document {
-  @Prop({ type: User, required: true })
+  @Prop({ type: User })
   sender: UserBasic
   
   @Prop({ type: [AttachmentSchema] })
