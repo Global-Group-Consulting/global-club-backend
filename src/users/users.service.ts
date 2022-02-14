@@ -21,6 +21,7 @@ import {AxiosResponse} from "axios";
 import {FillClubContractDto} from "./dto/fill-club-contract.dto";
 import {UpdateException} from "../_exceptions/update.exception";
 import {PackEnum} from "../packs/enums/pack.enum";
+import {throwError} from "rxjs";
 
 @Injectable()
 export class UsersService extends BasicService {
@@ -176,6 +177,8 @@ export class UsersService extends BasicService {
     } catch (er) {
       // If there is an error, must remove the generated contract file
       await this.removeClubContractPdf(contractFile.id);
+      
+      throw er;
     }
   }
   
