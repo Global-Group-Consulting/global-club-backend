@@ -142,17 +142,18 @@ export class UsersService extends BasicService {
   
     const userDeposit = await this.calcUserDeposit(id);
     const changeCost = userDeposit * 5 / 100;
-  
-    // Generate the contract file
-    const contractFile = await this.generateClubContractPdf({
-      ...userToUpdate.toObject(),
-      "birthDate": userToUpdate.birthDate ? userToUpdate.birthDate.toISOString() : '',
-      "packCost": changeCost,
-      "currentYear": new Date().getFullYear(),
-      "currentDate": new Date()
-    });
+    let contractFile: Attachment | null = null;
   
     try {
+      // Generate the contract file
+      contractFile = await this.generateClubContractPdf({
+        ...userToUpdate.toObject(),
+        "birthDate": userToUpdate.birthDate ? userToUpdate.birthDate.toISOString() : '',
+        "packCost": changeCost,
+        "currentYear": new Date().getFullYear(),
+        "currentDate": new Date()
+      });
+  
       // Generate the new order with relative communication
       const newOrder = await this.orderService.createPackChangeOrder({
         notes: `Cambio pack da ${userToUpdate.clubPack} a <strong>Premium</strong>.<br>
@@ -175,9 +176,11 @@ export class UsersService extends BasicService {
       // return the updated user
       return userToUpdate
     } catch (er) {
-      // If there is an error, must remove the generated contract file
-      await this.removeClubContractPdf(contractFile.id);
-      
+      if (contractFile) {
+        // If there is an error, must remove the generated contract file
+        await this.removeClubContractPdf(contractFile.id);
+      }
+  
       throw er;
     }
   }

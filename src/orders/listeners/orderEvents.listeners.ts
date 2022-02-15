@@ -35,8 +35,35 @@ export class OrderEventsListeners {
         cancelReason: order.cancelReason,
         siteUrl: process.env.MAIL_SITE_URL,
         productLink: process.env.MAIL_SITE_URL + "/products",
-        orderLink: process.env.MAIL_SITE_URL + "/orders/" + order._id
+        orderLink: process.env.MAIL_SITE_URL + "/order/" + order._id
       }
     });
+  }
+  
+  @OnEvent("order.status.completed")
+  async handleOrderStatusCompletedEvent(payload: OrderStatusEvent) {
+    // first get the repayment products
+    const repaymentProducts = payload.order.products.filter(orderProduct => orderProduct.repayment)
+    
+    if (repaymentProducts.length) {
+      let amountToRepay = repaymentProducts.reduce((acc, curr) => {
+        return acc + (curr.price * curr.qta)
+      }, 0)
+      
+      if (amountToRepay) {
+        // Convert to euro
+        amountToRepay = amountToRepay / 2
+      }
+      
+      const notes = `Rimborso ordine <a href="${process.env.MAIL_SITE_URL}/order/${payload.order._id}">#${payload.order._id}</a>`;
+      
+      await this.queue.dispatchRepayment({
+        // importo aggiunto nel deposito come RIMBORSO - non genera provvigioni
+        amount: amountToRepay,
+        userId: payload.userId,
+        notes
+      })
+    }
+    
   }
 }

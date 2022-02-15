@@ -387,6 +387,9 @@ export class OrdersService extends BasicService {
     if (updateOrderProductDto.hasOwnProperty("price")) {
       order.products[prodIndex].price = updateOrderProductDto.price
     }
+    if (updateOrderProductDto.hasOwnProperty("repayment")) {
+      order.products[prodIndex].repayment = updateOrderProductDto.repayment
+    }
   
     order.amount = OrdersService.calcOrderAmount(order);
   

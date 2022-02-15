@@ -20,6 +20,9 @@ export class OrderProduct extends Document {
    */
   @Prop()
   price: number
+  
+  @Prop({default: false})
+  repayment: boolean;
 }
 
 export const orderProductSchema = SchemaFactory.createForClass(OrderProduct);

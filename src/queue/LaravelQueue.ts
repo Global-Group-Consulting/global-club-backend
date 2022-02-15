@@ -2,7 +2,7 @@ import {createConnection, Connection, escape as mySqlEscape, ConnectionConfig} f
 import {now, random} from "lodash";
 import {serialize, Class} from 'php-serialization'
 
-export type AvailableJobNames = "SendEmail";
+export type AvailableJobNames = "SendEmail" | "TriggerRepayment";
 
 export class AvailableJob {
   id: number;
