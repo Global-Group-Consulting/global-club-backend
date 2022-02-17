@@ -2,7 +2,7 @@ import {createConnection, Connection, escape as mySqlEscape, ConnectionConfig} f
 import {now, random} from "lodash";
 import {serialize, Class} from 'php-serialization'
 
-export type AvailableJobNames = "SendEmail" | "TriggerRepayment";
+export type AvailableJobNames = "SendEmail" | "TriggerRepayment" | "TriggerBriteRecapitalization";
 
 export class AvailableJob {
   id: number;
@@ -115,19 +115,20 @@ export class LaravelQueue {
   
   async pushTo(jobName: AvailableJobNames, payload?: any, options?: JobOptions) {
     await this.connectionReady;
-    
+  
+    const encodedPayload = new Buffer(JSON.stringify(payload)).toString('base64');
     const job = await this.getJob(jobName);
-    const data = this.prepareData(job, payload, options);
-    
+    const data = this.prepareData(job, encodedPayload, options);
+  
     const sql = `INSERT INTO jobs (queue, payload, attempts, available_at, created_at)
                  VALUES ('${data.queue}',
                          ${mySqlEscape(data.payload)},
                          ${data.attempts},
                          ${data.available_at},
                          ${data.created_at})`;
-    
+  
     return await this.query(sql);
-    
+  
     // console.log(data.payload);
   }
   
