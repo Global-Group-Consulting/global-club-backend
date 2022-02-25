@@ -1,11 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { OrderStatusEnum } from '../../enums/order.status.enum';
-import { IsEnum, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
-import { FilterMap } from '../../../_basics/FilterMap.dto';
-import { toString } from '../../../_basics/transformers/toString';
-import { toStringArray } from '../../../_basics/transformers/toStringArray';
-import { ToArray } from '../../../_basics/transformers/toArray';
-import { toObjectId } from '../../../_basics/transformers/toObjectId';
+import {ApiProperty} from '@nestjs/swagger';
+import {OrderStatusEnum} from '../../enums/order.status.enum';
+import {IsEnum, IsNotEmpty, IsOptional, ValidateNested} from 'class-validator';
+import {FilterMap} from '../../../_basics/FilterMap.dto';
+import {toString} from '../../../_basics/transformers/toString';
+import {toStringArray} from '../../../_basics/transformers/toStringArray';
+import {ToArray} from '../../../_basics/transformers/toArray';
+import {castToObjectId} from "../../../utilities/Formatters";
 
 export class FindAllOrdersFilter {
   @ApiProperty({
@@ -17,7 +17,7 @@ export class FindAllOrdersFilter {
   })
   @IsOptional()
   @ToArray()
-  @IsEnum(OrderStatusEnum, { each: true })
+  @IsEnum(OrderStatusEnum, {each: true})
   status?: OrderStatusEnum[]
   
   @ApiProperty({
@@ -25,17 +25,39 @@ export class FindAllOrdersFilter {
     required: false
   })
   @IsOptional()
+  "userId"?: string
+  
+  @ApiProperty({
+    name: "filter[user]",
+    required: false
+  })
+  @IsOptional()
   "user"?: string
+  
+  @ApiProperty({
+    name: "filter[id]",
+    required: false
+  })
+  @IsOptional()
+  "id"?: string
 }
 
 export const FindAllOrdersFilterMap: FilterMap<FindAllOrdersFilter> = {
   status: {
     castValue: toStringArray,
   },
-  "user": {
+  "userId": {
     // Serve aggiungere una funzione che permetta di cambiare anche il nome della chiave in quanto deve essere "user.id"
     keyFormat: () => "user.id"
     // castValue: toObjectId,
     // query: value => ({ "id": value })
+  },
+  "user": {
+    castValue: toString,
+    query: value => ({"$regex": value.replace(/ /g, "|"), "$options": "i"})
+  },
+  "id": {
+    castValue: castToObjectId,
+    keyFormat: value => "_" + value
   }
 }

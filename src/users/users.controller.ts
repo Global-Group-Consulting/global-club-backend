@@ -25,13 +25,18 @@ export class UsersController {
   }
   
   @Get()
-  findAll (@Query() paginationDto: PaginatedFilterUserDto): Promise<PaginatedResultUserDto> {
+  findAll(@Query() paginationDto: PaginatedFilterUserDto): Promise<PaginatedResultUserDto> {
     return this.usersService.findAll(paginationDto);
   }
   
   @Get("/groups")
-  readGroups (): Promise<ReadUserGroupsDto[]> {
+  readGroups(): Promise<ReadUserGroupsDto[]> {
     return this.usersService.groupBy("role");
+  }
+  
+  @Get("/filterOptionsList")
+  filterOptionsList(@Query() {value}: any): Promise<ReadUserGroupsDto[]> {
+    return this.usersService.findForOptionsList(value);
   }
   
   @ApiResponse({

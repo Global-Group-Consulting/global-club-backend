@@ -55,7 +55,7 @@ export class OrderEventsListeners {
         amountToRepay = amountToRepay / 2
       }
       
-      const notes = `Rimborso ordine <a href="${process.env.MAIL_SITE_URL}/order/${payload.order._id}">#${payload.order._id}</a>`;
+      const notes = `Rimborso ordine <a href="${process.env.MAIL_SITE_URL}/order/${payload.order._id}" target="_blank">#${payload.order._id}</a>`;
       
       await this.queue.dispatchRepayment({
         // importo aggiunto nel deposito come RIMBORSO - non genera provvigioni
