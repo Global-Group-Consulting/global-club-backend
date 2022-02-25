@@ -98,27 +98,6 @@ export abstract class BasicService {
     }
   
     const filters = { ...filter };
-  
-    /*  if (paginationOptions.filter) {
-        paginationOptions.filter.forEach(filter => {
-          const blocks = filter.split(":");
-          const key: string = blocks[0].trim();
-          const originalValue: string = blocks[1].trim();
-          let value: any = originalValue;
-          
-          if (originalValue.startsWith("+")) {
-            value = +originalValue.replace("+", "")
-          }
-          
-          // if prop already exists, ignore it
-          if (!key || !value || filters.hasOwnProperty(key)) {
-            return
-          }
-          
-          filters[key] = value
-        })
-      }
-      */
     
     const data: T[] = await this.model.find(filters, projection, opts).exec()
     const count = await this.model.find(filters, projection, Object.assign({}, opts, {
