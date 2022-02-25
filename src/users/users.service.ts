@@ -21,6 +21,7 @@ import {AxiosResponse} from "axios";
 import {FillClubContractDto} from "./dto/fill-club-contract.dto";
 import {UpdateException} from "../_exceptions/update.exception";
 import {PackEnum} from "../packs/enums/pack.enum";
+import {UserAclRolesEnum} from "./enums/user.acl.roles.enum";
 
 @Injectable()
 export class UsersService extends BasicService {
@@ -40,7 +41,16 @@ export class UsersService extends BasicService {
   }
   
   async findAll(paginationDto: PaginatedFilterUserDto): Promise<PaginatedResult<User[]>> {
-    const query = this.prepareQuery((paginationDto.filter ?? {}), FindAllUserFilterMap)
+    const query: any = this.prepareQuery((paginationDto.filter ?? {}), FindAllUserFilterMap)
+  
+    if (query.user) {
+      query.$or = [
+        {"firstName": query.user},
+        {"lastName": query.user},
+      ]
+    
+      delete query.user
+    }
     
     return await this.findPaginated<User>({
         ...query,
@@ -52,21 +62,49 @@ export class UsersService extends BasicService {
     )
   }
   
-  async groupBy (field: keyof User): Promise<ReadUserGroupsDto[]> {
-      return this.userModel.aggregate<ReadUserGroupsDto>([
-        {
-          $match: {
-            gold: true,
-            apps: "club"
-          }
-        },
-        {
-          $group: {
-            _id: "$" + field,
-            count: { $sum: 1 }
-          }
+  async findForOptionsList(value: string) {
+    if (!value || value.trim().length <= 2) {
+      return []
+    }
+    
+    const toSearch = value.split(" ")
+    
+    const projection = {firstName: 1, lastName: 1};
+    const filter = {
+      roles: {
+        $in: [UserAclRolesEnum.AGENT, UserAclRolesEnum.CLIENT]
+      },
+      $or: [
+        {firstName: new RegExp(toSearch.join("|"), "i")},
+        {lastName: new RegExp(toSearch.join("|"), "i")}
+      ]
+    }
+    
+    const data = await this.model.find(filter, projection,
+      {
+        limit: 50,
+      }).sort({firstName: 1, lastName: 1})
+    
+    return data.map(el => {
+      return el.firstName.trim() + " " + el.lastName.trim()
+    });
+  }
+  
+  async groupBy(field: keyof User): Promise<ReadUserGroupsDto[]> {
+    return this.userModel.aggregate<ReadUserGroupsDto>([
+      {
+        $match: {
+          gold: true,
+          apps: "club"
         }
-      ]).exec()
+      },
+      {
+        $group: {
+          _id: "$" + field,
+          count: {$sum: 1}
+        }
+      }
+    ]).exec()
   }
   
   async findOne(id: string, query?: ReadUserDto): Promise<UserBasic | User> {
@@ -141,17 +179,18 @@ export class UsersService extends BasicService {
   
     const userDeposit = await this.calcUserDeposit(id);
     const changeCost = userDeposit * 5 / 100;
-  
-    // Generate the contract file
-    const contractFile = await this.generateClubContractPdf({
-      ...userToUpdate.toObject(),
-      "birthDate": userToUpdate.birthDate ? userToUpdate.birthDate.toISOString() : '',
-      "packCost": changeCost,
-      "currentYear": new Date().getFullYear(),
-      "currentDate": new Date()
-    });
+    let contractFile: Attachment | null = null;
   
     try {
+      // Generate the contract file
+      contractFile = await this.generateClubContractPdf({
+        ...userToUpdate.toObject(),
+        "birthDate": userToUpdate.birthDate ? userToUpdate.birthDate.toISOString() : '',
+        "packCost": changeCost,
+        "currentYear": new Date().getFullYear(),
+        "currentDate": new Date()
+      });
+  
       // Generate the new order with relative communication
       const newOrder = await this.orderService.createPackChangeOrder({
         notes: `Cambio pack da ${userToUpdate.clubPack} a <strong>Premium</strong>.<br>
@@ -174,8 +213,12 @@ export class UsersService extends BasicService {
       // return the updated user
       return userToUpdate
     } catch (er) {
-      // If there is an error, must remove the generated contract file
-      await this.removeClubContractPdf(contractFile.id);
+      if (contractFile) {
+        // If there is an error, must remove the generated contract file
+        await this.removeClubContractPdf(contractFile.id);
+      }
+  
+      throw er;
     }
   }
   

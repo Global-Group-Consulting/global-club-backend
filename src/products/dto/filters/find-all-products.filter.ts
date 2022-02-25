@@ -9,7 +9,7 @@ import {ApiProperty} from '@nestjs/swagger';
 import {IsArray, IsMongoId, IsNotEmpty, IsObject, IsOptional, IsString} from 'class-validator';
 import {ToArray} from '../../../_basics/transformers/toArray';
 import {IsMongoIdArray} from '../../../_basics/validators/IsMongoIdArray';
-import {toBoolean} from "../../../_basics/transformers/toBoolean";
+import {ToBoolean, toBoolean} from "../../../_basics/transformers/toBoolean";
 
 export class FindAllProductsFilter implements Partial<Product> {
   @ApiProperty({
@@ -38,6 +38,10 @@ export class FindAllProductsFilter implements Partial<Product> {
   categories?: string[];
   
   visible?: boolean
+  
+  @IsOptional()
+  @ToBoolean()
+  priceUndefined?: boolean
 }
 
 export const FindAllProductsFilterMap: FilterMap<FindAllProductsFilter> = {
@@ -50,9 +54,13 @@ export const FindAllProductsFilterMap: FilterMap<FindAllProductsFilter> = {
     query: toRegExp
   },
   categories: {
-    castValue: toObjectIdArray
+    castValue: toObjectIdArray,
+    query: value => ({$in: value})
   },
   visible: {
+    castValue: toBoolean
+  },
+  priceUndefined: {
     castValue: toBoolean
   }
 }

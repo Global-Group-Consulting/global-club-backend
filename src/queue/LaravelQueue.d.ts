@@ -1,4 +1,5 @@
-export declare type AvailableJobNames = "SendEmail";
+import { ConnectionConfig } from 'mysql';
+export declare type AvailableJobNames = "SendEmail" | "TriggerRepayment" | "TriggerBriteRecapitalization";
 export declare class AvailableJob {
     id: number;
     title: string;
@@ -35,12 +36,7 @@ export declare class JobOptions {
     delay?: number;
 }
 export interface LaravelQueueConfig {
-    db: {
-        host: string;
-        user: string;
-        password: string;
-        database: string;
-    };
+    db: ConnectionConfig;
     queueName: string;
 }
 export declare class LaravelQueue {

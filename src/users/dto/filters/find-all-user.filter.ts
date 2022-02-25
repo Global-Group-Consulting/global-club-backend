@@ -6,6 +6,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { castToNumber } from '../../../utilities/Formatters';
 import { IsNumber, IsNumberString, IsOptional } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
+import {PackEnum} from "../../../packs/enums/pack.enum";
 
 export class FindAllUserFilter implements Partial<User> {
   @ApiProperty({
@@ -40,6 +41,20 @@ export class FindAllUserFilter implements Partial<User> {
   @IsOptional()
   @Type(() => Number)
   role?: number
+  
+  @ApiProperty({
+    name: "filter[user]",
+    required: false
+  })
+  @IsOptional()
+  user?: string
+  
+  @ApiProperty({
+    name: "filter[clubPack]",
+    required: false
+  })
+  @IsOptional()
+  clubPack?: PackEnum
 }
 
 export const FindAllUserFilterMap: FilterMap<FindAllUserFilter> = {
@@ -57,6 +72,13 @@ export const FindAllUserFilterMap: FilterMap<FindAllUserFilter> = {
   },
   role: {
     castValue: castToNumber
+  },
+  "user": {
+    castValue: toString,
+    query: value => ({"$regex": value.replace(/ /g, "|"), "$options": "i"})
+  },
+  clubPack: {
+    castValue: toString
   },
 }
 

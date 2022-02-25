@@ -1,6 +1,7 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {AvailableJobNames, LaravelQueue, LaravelQueueConfig} from "./LaravelQueue";
 import {SendEmailDto} from "./dto/send-email.dto";
+import {RepaymentDto} from "./dto/repayment.dto";
 
 @Injectable()
 export class QueueService {
@@ -16,7 +17,7 @@ export class QueueService {
     return this.queue.pushTo("SendEmail", payload);
   }
   
-  /*dispatch(jobName: AvailableJobNames, payload: any) {
-    return this.queue.pushTo(jobName, payload);
-  }*/
+  dispatchRepayment(payload: RepaymentDto) {
+    return this.queue.pushTo("TriggerRepayment", payload)
+  }
 }

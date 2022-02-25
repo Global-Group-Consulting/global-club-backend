@@ -24,8 +24,6 @@ import {FindAllMovementsFilterMap} from './dto/filters/find-all-movements.filter
 import {PaginatedFilterMovementDto} from './dto/paginated-filter-movement.dto';
 import {PaginatedResultMovementDto} from './dto/paginated-result-movement.dto';
 import {User, UserDocument} from '../users/schemas/user.schema';
-import {QueueService} from "../queue/queue.service";
-import {JobMovementRecapitalizeDto} from "./dto/job-movement-recapitalize.dto";
 import {RecapitalizationDto} from "./dto/recapitalization.dto";
 
 @Injectable()
@@ -506,7 +504,7 @@ export class MovementsService extends BasicService {
     const newMovement = new this.movementModel({
       ...data,
       notes: "Ricapitalizzazione",
-      clubPack: user.clubPack,
+      clubPack: user.clubPack ?? PackEnum.UNSUBSCRIBED,
       movementType: MovementTypeEnum.INTEREST_RECAPITALIZED
     });
     
