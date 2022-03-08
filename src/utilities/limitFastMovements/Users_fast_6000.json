@@ -1,0 +1,4285 @@
+[{
+  "_id": {
+    "user": {
+      "$oid": "5fc4a30ca5a62400217a2e33"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1666.6911897600003,
+  "sumUsed": 0,
+  "sumRemaining": 1666.6911897600003
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4a525a5a62400217a2e3f"
+    },
+    "year": 2021,
+    "month": 4
+  },
+  "num": 1,
+  "sumEarned": 4188.55,
+  "sumUsed": 0,
+  "sumRemaining": 4188.55
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4a525a5a62400217a2e3f"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 4356.0928,
+  "sumUsed": 0,
+  "sumRemaining": 4356.0928
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4a803a5a62400217a2e52"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 1009.8821552128001,
+  "sumUsed": 0,
+  "sumRemaining": 1009.8821552128001
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4a803a5a62400217a2e52"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 1050.277441421312,
+  "sumUsed": 0,
+  "sumRemaining": 1050.277441421312
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4a803a5a62400217a2e52"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 1092.2885390781646,
+  "sumUsed": 0,
+  "sumRemaining": 1092.2885390781646
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4c537a5a62400217a2ef0"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1375.7664,
+  "sumUsed": 0,
+  "sumRemaining": 1375.7664
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4ce0da5a62400217a2f0a"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 3910.570048,
+  "sumUsed": 0,
+  "sumRemaining": 3910.570048
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4eb1fa5a62400217a2f38"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 1644.96,
+  "sumUsed": 0,
+  "sumRemaining": 1644.96
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4eb1fa5a62400217a2f38"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1710.7572,
+  "sumUsed": 0,
+  "sumRemaining": 1710.7572
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4eb1fa5a62400217a2f38"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 4423.187488,
+  "sumUsed": 0,
+  "sumRemaining": 4423.187488
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4eb1fa5a62400217a2f38"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 1850.3549875200001,
+  "sumUsed": 0,
+  "sumRemaining": 1850.3549875200001
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4eb1fa5a62400217a2f38"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 1924.3691870208002,
+  "sumUsed": 0,
+  "sumRemaining": 1924.3691870208002
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4eb1fa5a62400217a2f38"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 2001.343954501632,
+  "sumUsed": 0,
+  "sumRemaining": 2001.343954501632
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4eb1fa5a62400217a2f38"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 2081.397712681697,
+  "sumUsed": 0,
+  "sumRemaining": 2081.397712681697
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4eb1fa5a62400217a2f38"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 2164.653621188965,
+  "sumUsed": 0,
+  "sumRemaining": 2164.653621188965
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4eb1fa5a62400217a2f38"
+    },
+    "year": 2022,
+    "month": 1
+  },
+  "num": 1,
+  "sumEarned": 2251.2397660365236,
+  "sumUsed": 0,
+  "sumRemaining": 2251.2397660365236
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4ef0aa5a62400217a2f3c"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 1093.41,
+  "sumUsed": 0,
+  "sumRemaining": 1093.41
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4ef0aa5a62400217a2f3c"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1137.1432,
+  "sumUsed": 0,
+  "sumRemaining": 1137.1432
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4ef0aa5a62400217a2f3c"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 1,
+  "sumEarned": 1182.6289279999999,
+  "sumUsed": 0,
+  "sumRemaining": 1182.6289279999999
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4ef0aa5a62400217a2f3c"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 1229.9340851199997,
+  "sumUsed": 0,
+  "sumRemaining": 1229.9340851199997
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4ef0aa5a62400217a2f3c"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 1532.2,
+  "sumUsed": 0,
+  "sumRemaining": 1532.2
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4ef0aa5a62400217a2f3c"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 2,
+  "sumEarned": 6411.4832,
+  "sumUsed": 0,
+  "sumRemaining": 6411.4832
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4ef0aa5a62400217a2f3c"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 1657.222528,
+  "sumUsed": 0,
+  "sumRemaining": 1657.222528
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4ef0aa5a62400217a2f3c"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 1723.5114291199998,
+  "sumUsed": 0,
+  "sumRemaining": 1723.5114291199998
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4f063a5a62400217a2f40"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2935.124064,
+  "sumUsed": 0,
+  "sumRemaining": 2935.124064
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4f063a5a62400217a2f40"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 2,
+  "sumEarned": 1356.7472,
+  "sumUsed": 0,
+  "sumRemaining": 1356.7472
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4f271a5a62400217a2f45"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 1398.19,
+  "sumUsed": 0,
+  "sumRemaining": 1398.19
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4f271a5a62400217a2f45"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1454.1224000000002,
+  "sumUsed": 0,
+  "sumRemaining": 1454.1224000000002
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4f271a5a62400217a2f45"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 1512.7787878400004,
+  "sumUsed": 0,
+  "sumRemaining": 1512.7787878400004
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4f271a5a62400217a2f45"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 1826.35,
+  "sumUsed": 0,
+  "sumRemaining": 1826.35
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4f271a5a62400217a2f45"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 2,
+  "sumEarned": 6324.4076,
+  "sumUsed": 0,
+  "sumRemaining": 6324.4076
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4f69ba5a62400217a2f4d"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 16662.01,
+  "sumUsed": 0,
+  "sumRemaining": 16662.01
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4f69ba5a62400217a2f4d"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 23328.492800000004,
+  "sumUsed": 0,
+  "sumRemaining": 23328.492800000004
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4f69ba5a62400217a2f4d"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 1,
+  "sumEarned": 15981.630000000001,
+  "sumUsed": 0,
+  "sumRemaining": 15981.630000000001
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4f69ba5a62400217a2f4d"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 16620.897999999997,
+  "sumUsed": 0,
+  "sumRemaining": 16620.897999999997
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4f69ba5a62400217a2f4d"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 15285.733919999999,
+  "sumUsed": 0,
+  "sumRemaining": 15285.733919999999
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4f69ba5a62400217a2f4d"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 25897.1632768,
+  "sumUsed": 0,
+  "sumRemaining": 25897.1632768
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4f69ba5a62400217a2f4d"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 21933.049807872,
+  "sumUsed": 0,
+  "sumRemaining": 21933.049807872
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4f69ba5a62400217a2f4d"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 21810.37180018688,
+  "sumUsed": 0,
+  "sumRemaining": 21810.37180018688
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4f69ba5a62400217a2f4d"
+    },
+    "year": 2022,
+    "month": 1
+  },
+  "num": 1,
+  "sumEarned": 13682.786672194357,
+  "sumUsed": 0,
+  "sumRemaining": 13682.786672194357
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4fa19a5a62400217a2f55"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 2,
+  "sumEarned": 3993.84,
+  "sumUsed": 7511,
+  "sumRemaining": -3517.16
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4fa19a5a62400217a2f55"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 4153.5956,
+  "sumUsed": 0,
+  "sumRemaining": 4153.5956
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4fa19a5a62400217a2f55"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 4319.739424,
+  "sumUsed": 0,
+  "sumRemaining": 4319.739424
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc4fa19a5a62400217a2f55"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 4492.52900096,
+  "sumUsed": 0,
+  "sumRemaining": 4492.52900096
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc5feb3c9edb900217d8444"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 1072.5300000000007,
+  "sumUsed": 0,
+  "sumRemaining": 1072.5300000000007
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc5feb3c9edb900217d8444"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 10127.43,
+  "sumUsed": 0,
+  "sumRemaining": 10127.43
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc5feb3c9edb900217d8444"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 5544.530000000001,
+  "sumUsed": 5200,
+  "sumRemaining": 344.53000000000065
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc5feb3c9edb900217d8444"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 3,
+  "sumEarned": 4158.31,
+  "sumUsed": 960,
+  "sumRemaining": 3198.3100000000004
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc5feb3c9edb900217d8444"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 3,
+  "sumEarned": 6348.6408,
+  "sumUsed": 960,
+  "sumRemaining": 5388.6408
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc5feb3c9edb900217d8444"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 8148.4166848511995,
+  "sumUsed": 0,
+  "sumRemaining": 8148.4166848511995
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc5ff9bc9edb900217d8448"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 9933.3044,
+  "sumUsed": 0,
+  "sumRemaining": 9933.3044
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc5ff9bc9edb900217d8448"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2330.636576000001,
+  "sumUsed": 4831,
+  "sumRemaining": -2500.363423999999
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc5ff9bc9edb900217d8448"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 3,
+  "sumEarned": 3923.86203904,
+  "sumUsed": 960,
+  "sumRemaining": 2963.86203904
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc5ff9bc9edb900217d8448"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 3,
+  "sumEarned": 6080.816520601599,
+  "sumUsed": 960,
+  "sumRemaining": 5120.816520601599
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc60994c9edb900217d8458"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 5327.032,
+  "sumUsed": 0,
+  "sumRemaining": 5327.032
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc60ab4c9edb900217d845c"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 2196.7406720000004,
+  "sumUsed": 0,
+  "sumRemaining": 2196.7406720000004
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc60ab4c9edb900217d845c"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 2284.6102988800003,
+  "sumUsed": 0,
+  "sumRemaining": 2284.6102988800003
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc60ab4c9edb900217d845c"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 2375.9947108352003,
+  "sumUsed": 0,
+  "sumRemaining": 2375.9947108352003
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc61413c9edb900217d8474"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2136.322976,
+  "sumUsed": 0,
+  "sumRemaining": 2136.322976
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc628e2c9edb900217d84a9"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 9271.5,
+  "sumUsed": 0,
+  "sumRemaining": 9271.5
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc62c0fc9edb900217d84b3"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 2,
+  "sumEarned": 1000.0015947994239,
+  "sumUsed": 300,
+  "sumRemaining": 700.0015947994239
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc6326cc9edb900217d84c7"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 1863.96,
+  "sumUsed": 0,
+  "sumRemaining": 1863.96
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc6326cc9edb900217d84c7"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1938.522,
+  "sumUsed": 0,
+  "sumRemaining": 1938.522
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc6326cc9edb900217d84c7"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 1,
+  "sumEarned": 2016.0628799999997,
+  "sumUsed": 0,
+  "sumRemaining": 2016.0628799999997
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc6326cc9edb900217d84c7"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 2100.5736110079997,
+  "sumUsed": 0,
+  "sumRemaining": 2100.5736110079997
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc6326cc9edb900217d84c7"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 2,
+  "sumEarned": 2184.5965554483196,
+  "sumUsed": 200,
+  "sumRemaining": 1984.5965554483196
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc6326cc9edb900217d84c7"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 2,
+  "sumEarned": 2271.9804176662524,
+  "sumUsed": 100,
+  "sumRemaining": 2171.9804176662524
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc63645c9edb900217d84d3"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 27952.267600000003,
+  "sumUsed": 0,
+  "sumRemaining": 27952.267600000003
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc63645c9edb900217d84d3"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 7952.2676,
+  "sumUsed": 22868,
+  "sumRemaining": -14915.7324
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc65d9ec9edb900217d8517"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 4413.1025500000005,
+  "sumUsed": 0,
+  "sumRemaining": 4413.1025500000005
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc65eddc9edb900217d851b"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1885.05184,
+  "sumUsed": 0,
+  "sumRemaining": 1885.05184
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc66007c9edb900217d851f"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 4730.406675,
+  "sumUsed": 0,
+  "sumRemaining": 4730.406675
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc77174f8a7790021a716fd"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 1056.0680736686077,
+  "sumUsed": 0,
+  "sumRemaining": 1056.0680736686077
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc77174f8a7790021a716fd"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 1498.3107966153518,
+  "sumUsed": 0,
+  "sumRemaining": 1498.3107966153518
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc77174f8a7790021a716fd"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 1558.243228479966,
+  "sumUsed": 0,
+  "sumRemaining": 1558.243228479966
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc77174f8a7790021a716fd"
+    },
+    "year": 2022,
+    "month": 1
+  },
+  "num": 1,
+  "sumEarned": 1620.5729576191648,
+  "sumUsed": 0,
+  "sumRemaining": 1620.5729576191648
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc7875ff8a7790021a7172a"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 3,
+  "sumEarned": 3775.1816561664,
+  "sumUsed": 300,
+  "sumRemaining": 3475.1816561664
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc793fcf8a7790021a71733"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 2166.7504384000003,
+  "sumUsed": 0,
+  "sumRemaining": 2166.7504384000003
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc793fcf8a7790021a71733"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 1003.420455936,
+  "sumUsed": 0,
+  "sumRemaining": 1003.420455936
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc7a6f0c2df820021c9490f"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2001.9128,
+  "sumUsed": 0,
+  "sumRemaining": 2001.9128
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc7b842c2df820021c9492b"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2666.076136,
+  "sumUsed": 0,
+  "sumRemaining": 2666.076136
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc7bb24c2df820021c94933"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 3012,
+  "sumUsed": 0,
+  "sumRemaining": 3012
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc7bb24c2df820021c94933"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2991.426474,
+  "sumUsed": 0,
+  "sumRemaining": 2991.426474
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc7bb24c2df820021c94933"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 2,
+  "sumEarned": 1037.8482682199997,
+  "sumUsed": 300,
+  "sumRemaining": 737.8482682199997
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc7bb24c2df820021c94933"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 5,
+  "sumEarned": 1068.9837162666,
+  "sumUsed": 1800,
+  "sumRemaining": -731.0162837334001
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc7bb24c2df820021c94933"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 2468.070970339464,
+  "sumUsed": 0,
+  "sumRemaining": 2468.070970339464
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc7ca57c2df820021c94959"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 3349.448128,
+  "sumUsed": 0,
+  "sumRemaining": 3349.448128
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc88c3dd9c4e80021cb2143"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1459.5313820000001,
+  "sumUsed": 0,
+  "sumRemaining": 1459.5313820000001
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc88d8cd9c4e80021cb2147"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1884.318336,
+  "sumUsed": 0,
+  "sumRemaining": 1884.318336
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc88f19d9c4e80021cb214c"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1811.07328,
+  "sumUsed": 0,
+  "sumRemaining": 1811.07328
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8907fd9c4e80021cb2150"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2281.997504,
+  "sumUsed": 0,
+  "sumRemaining": 2281.997504
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc89533d9c4e80021cb2160"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1154.017472,
+  "sumUsed": 0,
+  "sumRemaining": 1154.017472
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc89ec3d9c4e80021cb2172"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1494.320224,
+  "sumUsed": 0,
+  "sumRemaining": 1494.320224
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8a3abd9c4e80021cb2182"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1611.455264,
+  "sumUsed": 0,
+  "sumRemaining": 1611.455264
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8a6a4d9c4e80021cb218b"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1286.2102399999999,
+  "sumUsed": 0,
+  "sumRemaining": 1286.2102399999999
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8bc3bd9c4e80021cb21b8"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1492.645504,
+  "sumUsed": 0,
+  "sumRemaining": 1492.645504
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8bf30d9c4e80021cb21c0"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1307.8788823200002,
+  "sumUsed": 0,
+  "sumRemaining": 1307.8788823200002
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8c2fad9c4e80021cb21c8"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 1676.3975999999998,
+  "sumUsed": 0,
+  "sumRemaining": 1676.3975999999998
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8c2fad9c4e80021cb21c8"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1726.6895279999999,
+  "sumUsed": 0,
+  "sumRemaining": 1726.6895279999999
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8c2fad9c4e80021cb21c8"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 3615.49021384,
+  "sumUsed": 0,
+  "sumRemaining": 3615.49021384
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8c2fad9c4e80021cb21c8"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 1831.8449202552,
+  "sumUsed": 0,
+  "sumRemaining": 1831.8449202552
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8c2fad9c4e80021cb21c8"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 1886.800267862856,
+  "sumUsed": 0,
+  "sumRemaining": 1886.800267862856
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8c2fad9c4e80021cb21c8"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 1943.4042758987414,
+  "sumUsed": 0,
+  "sumRemaining": 1943.4042758987414
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8c2fad9c4e80021cb21c8"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 2001.7064041757037,
+  "sumUsed": 0,
+  "sumRemaining": 2001.7064041757037
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8c2fad9c4e80021cb21c8"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 2061.7575963009745,
+  "sumUsed": 0,
+  "sumRemaining": 2061.7575963009745
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8c992d9c4e80021cb21d9"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1216.81159716,
+  "sumUsed": 0,
+  "sumRemaining": 1216.81159716
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8cc24d9c4e80021cb21e1"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1364.03093004,
+  "sumUsed": 0,
+  "sumRemaining": 1364.03093004
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8ce3fd9c4e80021cb21e5"
+    },
+    "year": 2021,
+    "month": 4
+  },
+  "num": 1,
+  "sumEarned": 1280.85,
+  "sumUsed": 0,
+  "sumRemaining": 1280.85
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8ce3fd9c4e80021cb21e5"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 1395.3093,
+  "sumUsed": 0,
+  "sumRemaining": 1395.3093
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8ce3fd9c4e80021cb21e5"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1592.959179,
+  "sumUsed": 0,
+  "sumRemaining": 1592.959179
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8ce3fd9c4e80021cb21e5"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 3452.57005437,
+  "sumUsed": 0,
+  "sumRemaining": 3452.57005437
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8ce3fd9c4e80021cb21e5"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 3,
+  "sumEarned": 1773.2171560011,
+  "sumUsed": 950,
+  "sumRemaining": 823.2171560011
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8ce3fd9c4e80021cb21e5"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 3,
+  "sumEarned": 1826.4136706811328,
+  "sumUsed": 950,
+  "sumRemaining": 876.4136706811328
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8ce3fd9c4e80021cb21e5"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 2,
+  "sumEarned": 1881.206080801567,
+  "sumUsed": 950,
+  "sumRemaining": 931.2060808015669
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8ce3fd9c4e80021cb21e5"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 4,
+  "sumEarned": 1937.6422632256138,
+  "sumUsed": 1900,
+  "sumRemaining": 37.64226322561376
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8ce3fd9c4e80021cb21e5"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 1995.7715311223822,
+  "sumUsed": 0,
+  "sumRemaining": 1995.7715311223822
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8cf41d9c4e80021cb21e9"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1122.57974522,
+  "sumUsed": 0,
+  "sumRemaining": 1122.57974522
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8d959d9c4e80021cb21fd"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 5185.496,
+  "sumUsed": 0,
+  "sumRemaining": 5185.496
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8dc83d9c4e80021cb2209"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1144.112032,
+  "sumUsed": 0,
+  "sumRemaining": 1144.112032
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8dfe6d9c4e80021cb2215"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1577.619072,
+  "sumUsed": 0,
+  "sumRemaining": 1577.619072
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8e0d9d9c4e80021cb2219"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2791.763968,
+  "sumUsed": 0,
+  "sumRemaining": 2791.763968
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8e9f5d9c4e80021cb222d"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 1503.99,
+  "sumUsed": 0,
+  "sumRemaining": 1503.99
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8e9f5d9c4e80021cb222d"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1564.1528,
+  "sumUsed": 0,
+  "sumRemaining": 1564.1528
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8e9f5d9c4e80021cb222d"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 3058.7189120000003,
+  "sumUsed": 0,
+  "sumRemaining": 3058.7189120000003
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8e9f5d9c4e80021cb222d"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 1631.78766848,
+  "sumUsed": 0,
+  "sumRemaining": 1631.78766848
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8e9f5d9c4e80021cb222d"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 1704.9415422279678,
+  "sumUsed": 0,
+  "sumRemaining": 1704.9415422279678
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8e9f5d9c4e80021cb222d"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 1784.0647720737704,
+  "sumUsed": 0,
+  "sumRemaining": 1784.0647720737704
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8eaf6d9c4e80021cb2231"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1474.880864,
+  "sumUsed": 0,
+  "sumRemaining": 1474.880864
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc8faffd9c4e80021cb2252"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2710.116352,
+  "sumUsed": 0,
+  "sumRemaining": 2710.116352
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc90372d9c4e80021cb2256"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2638.69392,
+  "sumUsed": 0,
+  "sumRemaining": 2638.69392
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc91f154a594a00211ea8f7"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1359.23136,
+  "sumUsed": 0,
+  "sumRemaining": 1359.23136
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc920124a594a00211ea8fc"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 1701.15,
+  "sumUsed": 0,
+  "sumRemaining": 1701.15
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc920124a594a00211ea8fc"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1769.1988000000001,
+  "sumUsed": 0,
+  "sumRemaining": 1769.1988000000001
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc920124a594a00211ea8fc"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 4369.966752,
+  "sumUsed": 0,
+  "sumRemaining": 4369.966752
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc920124a594a00211ea8fc"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 1913.56542208,
+  "sumUsed": 0,
+  "sumRemaining": 1913.56542208
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc920124a594a00211ea8fc"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 1990.1080389632,
+  "sumUsed": 0,
+  "sumRemaining": 1990.1080389632
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc920124a594a00211ea8fc"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 2069.712360521728,
+  "sumUsed": 0,
+  "sumRemaining": 2069.712360521728
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc921ba4a594a00211ea902"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2864.667584,
+  "sumUsed": 0,
+  "sumRemaining": 2864.667584
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc924234a594a00211ea90e"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2754.190496,
+  "sumUsed": 0,
+  "sumRemaining": 2754.190496
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc928864a594a00211ea91b"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 4079.503776,
+  "sumUsed": 0,
+  "sumRemaining": 4079.503776
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc93c694a594a00211ea94b"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 6791.18,
+  "sumUsed": 0,
+  "sumRemaining": 6791.18
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc93c694a594a00211ea94b"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 7062.822800000001,
+  "sumUsed": 0,
+  "sumRemaining": 7062.822800000001
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc93c694a594a00211ea94b"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 7345.335712,
+  "sumUsed": 7854,
+  "sumRemaining": -508.66428799999994
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc93c694a594a00211ea94b"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 7639.14914048,
+  "sumUsed": 0,
+  "sumRemaining": 7639.14914048
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc93c694a594a00211ea94b"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 8577.9643060992,
+  "sumUsed": 0,
+  "sumRemaining": 8577.9643060992
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc93c694a594a00211ea94b"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 8921.082878343168,
+  "sumUsed": 0,
+  "sumRemaining": 8921.082878343168
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc93c694a594a00211ea94b"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 9277.926193476897,
+  "sumUsed": 0,
+  "sumRemaining": 9277.926193476897
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc93c694a594a00211ea94b"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 9649.043241215972,
+  "sumUsed": 0,
+  "sumRemaining": 9649.043241215972
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc93c694a594a00211ea94b"
+    },
+    "year": 2022,
+    "month": 1
+  },
+  "num": 1,
+  "sumEarned": 10035.00497086461,
+  "sumUsed": 0,
+  "sumRemaining": 10035.00497086461
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc93f134a594a00211ea957"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 2958.98,
+  "sumUsed": 0,
+  "sumRemaining": 2958.98
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc93f134a594a00211ea957"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 3077.3383999999996,
+  "sumUsed": 0,
+  "sumRemaining": 3077.3383999999996
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc93f134a594a00211ea957"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 1,
+  "sumEarned": 3200.4319359999995,
+  "sumUsed": 0,
+  "sumRemaining": 3200.4319359999995
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc93f134a594a00211ea957"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 3328.4492134399993,
+  "sumUsed": 0,
+  "sumRemaining": 3328.4492134399993
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc93f134a594a00211ea957"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 3461.5871819775994,
+  "sumUsed": 0,
+  "sumRemaining": 3461.5871819775994
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc93f134a594a00211ea957"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 3600.0506692567033,
+  "sumUsed": 0,
+  "sumRemaining": 3600.0506692567033
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc93f134a594a00211ea957"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 3744.0526960269713,
+  "sumUsed": 0,
+  "sumRemaining": 3744.0526960269713
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc93f134a594a00211ea957"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 3893.81480386805,
+  "sumUsed": 0,
+  "sumRemaining": 3893.81480386805
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9400f4a594a00211ea95c"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 2,
+  "sumEarned": 1156.3777337343997,
+  "sumUsed": 71,
+  "sumRemaining": 1085.3777337343997
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9400f4a594a00211ea95c"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 1202.632843083776,
+  "sumUsed": 0,
+  "sumRemaining": 1202.632843083776
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9400f4a594a00211ea95c"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 2,
+  "sumEarned": 1250.7381568071269,
+  "sumUsed": 200,
+  "sumRemaining": 1050.7381568071269
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9400f4a594a00211ea95c"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 1300.7676830794119,
+  "sumUsed": 0,
+  "sumRemaining": 1300.7676830794119
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc94be54a594a00211ea979"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2799.6661759999997,
+  "sumUsed": 0,
+  "sumRemaining": 2799.6661759999997
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc94be54a594a00211ea979"
+    },
+    "year": 2022,
+    "month": 1
+  },
+  "num": 1,
+  "sumEarned": 1532.5790564843219,
+  "sumUsed": 0,
+  "sumRemaining": 1532.5790564843219
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc94cd34a594a00211ea97e"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2269.090784,
+  "sumUsed": 0,
+  "sumRemaining": 2269.090784
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc94df64a594a00211ea983"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 1971.5,
+  "sumUsed": 0,
+  "sumRemaining": 1971.5
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc94df64a594a00211ea983"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 2050.3604,
+  "sumUsed": 0,
+  "sumRemaining": 2050.3604
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc94df64a594a00211ea983"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 4110.374816,
+  "sumUsed": 0,
+  "sumRemaining": 4110.374816
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc94df64a594a00211ea983"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 3,
+  "sumEarned": 2217.66980864,
+  "sumUsed": 1154,
+  "sumRemaining": 1063.6698086400002
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc94eec4a594a00211ea988"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 1025.3220669685759,
+  "sumUsed": 0,
+  "sumRemaining": 1025.3220669685759
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc94eec4a594a00211ea988"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 1066.334949647319,
+  "sumUsed": 0,
+  "sumRemaining": 1066.334949647319
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9509b4a594a00211ea98e"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1765.376416,
+  "sumUsed": 0,
+  "sumRemaining": 1765.376416
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc95f344a594a00211ea9b6"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1725.4085100800003,
+  "sumUsed": 0,
+  "sumRemaining": 1725.4085100800003
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc969a24a594a00211ea9da"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 3,
+  "sumEarned": 2059.495936,
+  "sumUsed": 0,
+  "sumRemaining": 2059.495936
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9e0cd1292050021460d71"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1559.5219200000001,
+  "sumUsed": 0,
+  "sumRemaining": 1559.5219200000001
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9e2761292050021460d76"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 1513.07,
+  "sumUsed": 0,
+  "sumRemaining": 1513.07
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9e2761292050021460d76"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1573.5976,
+  "sumUsed": 0,
+  "sumRemaining": 1573.5976
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9e2761292050021460d76"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 4549.541504000001,
+  "sumUsed": 0,
+  "sumRemaining": 4549.541504000001
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9e2761292050021460d76"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 3,
+  "sumEarned": 1702.00316416,
+  "sumUsed": 707,
+  "sumRemaining": 995.0031641600001
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9e2761292050021460d76"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 6,
+  "sumEarned": 1770.0832907264003,
+  "sumUsed": 1913,
+  "sumRemaining": -142.91670927359974
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9e2761292050021460d76"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 3,
+  "sumEarned": 1840.886622355456,
+  "sumUsed": 849,
+  "sumRemaining": 991.886622355456
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9e2761292050021460d76"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 4,
+  "sumEarned": 1914.5220872496743,
+  "sumUsed": 1096,
+  "sumRemaining": 818.5220872496743
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9e2761292050021460d76"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 1991.1029707396613,
+  "sumUsed": 0,
+  "sumRemaining": 1991.1029707396613
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9e42d1292050021460d7b"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1538.6884479999999,
+  "sumUsed": 0,
+  "sumRemaining": 1538.6884479999999
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9e42d1292050021460d7b"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 1293.9286253568,
+  "sumUsed": 0,
+  "sumRemaining": 1293.9286253568
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9f0281292050021460daf"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 2051.4,
+  "sumUsed": 0,
+  "sumRemaining": 2051.4
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9f0281292050021460daf"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 2133.4576,
+  "sumUsed": 0,
+  "sumRemaining": 2133.4576
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9f0281292050021460daf"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 1,
+  "sumEarned": 2218.795904,
+  "sumUsed": 0,
+  "sumRemaining": 2218.795904
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9f0281292050021460daf"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 2307.54774016,
+  "sumUsed": 0,
+  "sumRemaining": 2307.54774016
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9f2f31292050021460dbc"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 4511.911136,
+  "sumUsed": 0,
+  "sumRemaining": 4511.911136
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9f2f31292050021460dbc"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 1077.3475814399999,
+  "sumUsed": 0,
+  "sumRemaining": 1077.3475814399999
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9f2f31292050021460dbc"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 3,
+  "sumEarned": 1125.259144085504,
+  "sumUsed": 861,
+  "sumRemaining": 264.259144085504
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9f2f31292050021460dbc"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 3,
+  "sumEarned": 1170.2695098489241,
+  "sumUsed": 972,
+  "sumRemaining": 198.26950984892414
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9f2f31292050021460dbc"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 1217.0802902428811,
+  "sumUsed": 0,
+  "sumRemaining": 1217.0802902428811
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fc9f51b1292050021460dcc"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 1760.7301375263603,
+  "sumUsed": 0,
+  "sumRemaining": 1760.7301375263603
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca26063787e50021c1466f"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1372.093664,
+  "sumUsed": 0,
+  "sumRemaining": 1372.093664
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca27093787e50021c14674"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1427.399488,
+  "sumUsed": 0,
+  "sumRemaining": 1427.399488
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca27093787e50021c14674"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 2,
+  "sumEarned": 1029.034841669632,
+  "sumUsed": 300,
+  "sumRemaining": 729.034841669632
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca28e03787e50021c1467e"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1050.2072,
+  "sumUsed": 0,
+  "sumRemaining": 1050.2072
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca28e03787e50021c1467e"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1130.215488,
+  "sumUsed": 0,
+  "sumRemaining": 1130.215488
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca2a613787e50021c14683"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2379.900704,
+  "sumUsed": 0,
+  "sumRemaining": 2379.900704
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca38a82fbea50021d04752"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1209.712032,
+  "sumUsed": 0,
+  "sumRemaining": 1209.712032
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca3a292fbea50021d0475b"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1228.889056,
+  "sumUsed": 0,
+  "sumRemaining": 1228.889056
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca3a292fbea50021d0475b"
+    },
+    "year": 2022,
+    "month": 1
+  },
+  "num": 1,
+  "sumEarned": 1125.447356708444,
+  "sumUsed": 0,
+  "sumRemaining": 1125.447356708444
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca3bf72fbea50021d04765"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2590.736608,
+  "sumUsed": 0,
+  "sumRemaining": 2590.736608
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca3d3a2fbea50021d0476a"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1674.0935359999999,
+  "sumUsed": 0,
+  "sumRemaining": 1674.0935359999999
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca3e4a2fbea50021d0476f"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1393.0936,
+  "sumUsed": 0,
+  "sumRemaining": 1393.0936
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca3f432fbea50021d04774"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2114.289248,
+  "sumUsed": 0,
+  "sumRemaining": 2114.289248
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca40e52fbea50021d04779"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1922.29824,
+  "sumUsed": 0,
+  "sumRemaining": 1922.29824
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca441d2fbea50021d04783"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 1605.72,
+  "sumUsed": 0,
+  "sumRemaining": 1605.72
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca441d2fbea50021d04783"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1669.9456,
+  "sumUsed": 0,
+  "sumRemaining": 1669.9456
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca441d2fbea50021d04783"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 4460.743424,
+  "sumUsed": 0,
+  "sumRemaining": 4460.743424
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca441d2fbea50021d04783"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 1806.21316096,
+  "sumUsed": 0,
+  "sumRemaining": 1806.21316096
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca45282fbea50021d04788"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1471.7483200000001,
+  "sumUsed": 0,
+  "sumRemaining": 1471.7483200000001
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca464c2fbea50021d04792"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1471.7483200000001,
+  "sumUsed": 0,
+  "sumRemaining": 1471.7483200000001
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fca47902fbea50021d04798"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1406.979904,
+  "sumUsed": 0,
+  "sumRemaining": 1406.979904
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd1433ec356430021c5330a"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 1,
+  "sumEarned": 1750.8756160000003,
+  "sumUsed": 0,
+  "sumRemaining": 1750.8756160000003
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd1433ec356430021c5330a"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 2,
+  "sumEarned": 2432.576948916224,
+  "sumUsed": 0,
+  "sumRemaining": 2432.576948916224
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd14660c356430021c5331a"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 1031.09,
+  "sumUsed": 0,
+  "sumRemaining": 1031.09
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd14660c356430021c5331a"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1072.3312,
+  "sumUsed": 0,
+  "sumRemaining": 1072.3312
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd14660c356430021c5331a"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 3482.224448,
+  "sumUsed": 0,
+  "sumRemaining": 3482.224448
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd14660c356430021c5331a"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 2,
+  "sumEarned": 1159.83342592,
+  "sumUsed": 675,
+  "sumRemaining": 484.8334259200001
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd14660c356430021c5331a"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 2,
+  "sumEarned": 1206.2267629568,
+  "sumUsed": 800,
+  "sumRemaining": 406.22676295680003
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd14660c356430021c5331a"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 2,
+  "sumEarned": 1254.475833475072,
+  "sumUsed": 1118,
+  "sumRemaining": 136.47583347507202
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd14660c356430021c5331a"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 3,
+  "sumEarned": 1304.654866814075,
+  "sumUsed": 400,
+  "sumRemaining": 904.6548668140749
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd14660c356430021c5331a"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 1356.841061486638,
+  "sumUsed": 0,
+  "sumRemaining": 1356.841061486638
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd1485dc356430021c53324"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1156.750368,
+  "sumUsed": 0,
+  "sumRemaining": 1156.750368
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd1494dc356430021c5332a"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1156.750368,
+  "sumUsed": 0,
+  "sumRemaining": 1156.750368
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd14a3dc356430021c5332f"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2315.500736,
+  "sumUsed": 0,
+  "sumRemaining": 2315.500736
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd14c33c356430021c53339"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1156.750368,
+  "sumUsed": 0,
+  "sumRemaining": 1156.750368
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd1e215a5dde8002185e9b8"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 3379.36,
+  "sumUsed": 0,
+  "sumRemaining": 3379.36
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd1e215a5dde8002185e9b8"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 3514.5324,
+  "sumUsed": 0,
+  "sumRemaining": 3514.5324
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd1e215a5dde8002185e9b8"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 3775.113696,
+  "sumUsed": 894,
+  "sumRemaining": 2881.113696
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd1e215a5dde8002185e9b8"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 3926.1182438399996,
+  "sumUsed": 0,
+  "sumRemaining": 3926.1182438399996
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd1e215a5dde8002185e9b8"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 4,
+  "sumEarned": 4083.1629735936,
+  "sumUsed": 816,
+  "sumRemaining": 3267.1629735936
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd1e215a5dde8002185e9b8"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 2,
+  "sumEarned": 4246.489492537344,
+  "sumUsed": 300,
+  "sumRemaining": 3946.4894925373437
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd1e215a5dde8002185e9b8"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 2,
+  "sumEarned": 4416.349072238837,
+  "sumUsed": 750,
+  "sumRemaining": 3666.349072238837
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd1e215a5dde8002185e9b8"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 4593.003035128391,
+  "sumUsed": 0,
+  "sumRemaining": 4593.003035128391
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd1e68ba5dde8002185e9c7"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2433.659712,
+  "sumUsed": 0,
+  "sumRemaining": 2433.659712
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd1eee7a5dde8002185e9d7"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1206.08043114,
+  "sumUsed": 0,
+  "sumRemaining": 1206.08043114
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd1f054a5dde8002185e9dc"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2029.92459023,
+  "sumUsed": 0,
+  "sumRemaining": 2029.92459023
+},{
+  "_id": {
+    "user": {
+      "$oid": "5fd1f38aa5dde8002185e9eb"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1779.922272,
+  "sumUsed": 0,
+  "sumRemaining": 1779.922272
+},{
+  "_id": {
+    "user": {
+      "$oid": "6048b675ed942c0021afc405"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1366.205344,
+  "sumUsed": 0,
+  "sumRemaining": 1366.205344
+},{
+  "_id": {
+    "user": {
+      "$oid": "6048ff80ed942c0021afc445"
+    },
+    "year": 2022,
+    "month": 1
+  },
+  "num": 1,
+  "sumEarned": 1002.0706377004129,
+  "sumUsed": 0,
+  "sumRemaining": 1002.0706377004129
+},{
+  "_id": {
+    "user": {
+      "$oid": "604a041cfbc1030020c9dd8b"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 1552.74,
+  "sumUsed": 0,
+  "sumRemaining": 1552.74
+},{
+  "_id": {
+    "user": {
+      "$oid": "604a041cfbc1030020c9dd8b"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1614.8544000000002,
+  "sumUsed": 0,
+  "sumRemaining": 1614.8544000000002
+},{
+  "_id": {
+    "user": {
+      "$oid": "604a041cfbc1030020c9dd8b"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 4511.448576,
+  "sumUsed": 0,
+  "sumRemaining": 4511.448576
+},{
+  "_id": {
+    "user": {
+      "$oid": "604a041cfbc1030020c9dd8b"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 3,
+  "sumEarned": 1918.62651904,
+  "sumUsed": 300,
+  "sumRemaining": 1618.62651904
+},{
+  "_id": {
+    "user": {
+      "$oid": "604a051dfbc1030020c9dd8e"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1881.278016,
+  "sumUsed": 0,
+  "sumRemaining": 1881.278016
+},{
+  "_id": {
+    "user": {
+      "$oid": "604a051dfbc1030020c9dd8e"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 2,
+  "sumEarned": 1070.44913664,
+  "sumUsed": 300,
+  "sumRemaining": 770.44913664
+},{
+  "_id": {
+    "user": {
+      "$oid": "604a051dfbc1030020c9dd8e"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 2,
+  "sumEarned": 1113.2671021055999,
+  "sumUsed": 300,
+  "sumRemaining": 813.2671021055999
+},{
+  "_id": {
+    "user": {
+      "$oid": "604a0760fbc1030020c9dd94"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1985.649472,
+  "sumUsed": 0,
+  "sumRemaining": 1985.649472
+},{
+  "_id": {
+    "user": {
+      "$oid": "604a085bfbc1030020c9dd97"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1361.545088,
+  "sumUsed": 0,
+  "sumRemaining": 1361.545088
+},{
+  "_id": {
+    "user": {
+      "$oid": "604a085bfbc1030020c9dd97"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 2,
+  "sumEarned": 1316.40689152,
+  "sumUsed": 300,
+  "sumRemaining": 1016.40689152
+},{
+  "_id": {
+    "user": {
+      "$oid": "604a0ba1fbc1030020c9dd9d"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 2219.12,
+  "sumUsed": 0,
+  "sumRemaining": 2219.12
+},{
+  "_id": {
+    "user": {
+      "$oid": "604a0ba1fbc1030020c9dd9d"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 2307.8836,
+  "sumUsed": 0,
+  "sumRemaining": 2307.8836
+},{
+  "_id": {
+    "user": {
+      "$oid": "604a0ba1fbc1030020c9dd9d"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 1,
+  "sumEarned": 2400.198944,
+  "sumUsed": 0,
+  "sumRemaining": 2400.198944
+},{
+  "_id": {
+    "user": {
+      "$oid": "604a0ba1fbc1030020c9dd9d"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 2,
+  "sumEarned": 6774.206901760001,
+  "sumUsed": 0,
+  "sumRemaining": 6774.206901760001
+},{
+  "_id": {
+    "user": {
+      "$oid": "604a0ba1fbc1030020c9dd9d"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 2596.0551778304,
+  "sumUsed": 0,
+  "sumRemaining": 2596.0551778304
+},{
+  "_id": {
+    "user": {
+      "$oid": "604a0ba1fbc1030020c9dd9d"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 2699.8973849436165,
+  "sumUsed": 0,
+  "sumRemaining": 2699.8973849436165
+},{
+  "_id": {
+    "user": {
+      "$oid": "604b6b354d311700207d6119"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1905.5639999999999,
+  "sumUsed": 0,
+  "sumRemaining": 1905.5639999999999
+},{
+  "_id": {
+    "user": {
+      "$oid": "604b74784d311700207d611e"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 3,
+  "sumEarned": 1743.02809344,
+  "sumUsed": 300,
+  "sumRemaining": 1443.02809344
+},{
+  "_id": {
+    "user": {
+      "$oid": "604b75a84d311700207d6123"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1132.1144807299997,
+  "sumUsed": 0,
+  "sumRemaining": 1132.1144807299997
+},{
+  "_id": {
+    "user": {
+      "$oid": "604b77084d311700207d6126"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1015.392672,
+  "sumUsed": 0,
+  "sumRemaining": 1015.392672
+},{
+  "_id": {
+    "user": {
+      "$oid": "604baae64d311700207d6153"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2305.373728,
+  "sumUsed": 0,
+  "sumRemaining": 2305.373728
+},{
+  "_id": {
+    "user": {
+      "$oid": "604f33c969bc760020ee919f"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2797.315584,
+  "sumUsed": 0,
+  "sumRemaining": 2797.315584
+},{
+  "_id": {
+    "user": {
+      "$oid": "604f3bca69bc760020ee91a3"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1614,
+  "sumUsed": 0,
+  "sumRemaining": 1614
+},{
+  "_id": {
+    "user": {
+      "$oid": "604f73df69bc760020ee91dc"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1371.6859840000002,
+  "sumUsed": 0,
+  "sumRemaining": 1371.6859840000002
+},{
+  "_id": {
+    "user": {
+      "$oid": "604f73df69bc760020ee91dc"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 2,
+  "sumEarned": 1014.7134233600001,
+  "sumUsed": 300,
+  "sumRemaining": 714.7134233600001
+},{
+  "_id": {
+    "user": {
+      "$oid": "604f73df69bc760020ee91dc"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 4,
+  "sumEarned": 1055.3019602944,
+  "sumUsed": 960,
+  "sumRemaining": 95.30196029440003
+},{
+  "_id": {
+    "user": {
+      "$oid": "604f73df69bc760020ee91dc"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 2,
+  "sumEarned": 1097.514038706176,
+  "sumUsed": 300,
+  "sumRemaining": 797.514038706176
+},{
+  "_id": {
+    "user": {
+      "$oid": "604f73df69bc760020ee91dc"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 2,
+  "sumEarned": 1141.4146002544232,
+  "sumUsed": 300,
+  "sumRemaining": 841.4146002544232
+},{
+  "_id": {
+    "user": {
+      "$oid": "604f73df69bc760020ee91dc"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 1187.0711842646,
+  "sumUsed": 0,
+  "sumRemaining": 1187.0711842646
+},{
+  "_id": {
+    "user": {
+      "$oid": "6064763fe6076100207d29e5"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 1013.6673517567999,
+  "sumUsed": 0,
+  "sumRemaining": 1013.6673517567999
+},{
+  "_id": {
+    "user": {
+      "$oid": "6064763fe6076100207d29e5"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 1054.214045827072,
+  "sumUsed": 0,
+  "sumRemaining": 1054.214045827072
+},{
+  "_id": {
+    "user": {
+      "$oid": "60649671e6076100207d29fd"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 1693.95519488,
+  "sumUsed": 0,
+  "sumRemaining": 1693.95519488
+},{
+  "_id": {
+    "user": {
+      "$oid": "60649671e6076100207d29fd"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 1761.7134026752,
+  "sumUsed": 0,
+  "sumRemaining": 1761.7134026752
+},{
+  "_id": {
+    "user": {
+      "$oid": "60649671e6076100207d29fd"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 1832.181938782208,
+  "sumUsed": 0,
+  "sumRemaining": 1832.181938782208
+},{
+  "_id": {
+    "user": {
+      "$oid": "6065763cf2990200209793ae"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1029.5375999999999,
+  "sumUsed": 0,
+  "sumRemaining": 1029.5375999999999
+},{
+  "_id": {
+    "user": {
+      "$oid": "6065763cf2990200209793ae"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 2,
+  "sumEarned": 1073.54786816,
+  "sumUsed": 200,
+  "sumRemaining": 873.54786816
+},{
+  "_id": {
+    "user": {
+      "$oid": "6065763cf2990200209793ae"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 2,
+  "sumEarned": 1116.4897828864,
+  "sumUsed": 300,
+  "sumRemaining": 816.4897828864
+},{
+  "_id": {
+    "user": {
+      "$oid": "6065763cf2990200209793ae"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 3,
+  "sumEarned": 1161.149374201856,
+  "sumUsed": 400,
+  "sumRemaining": 761.1493742018561
+},{
+  "_id": {
+    "user": {
+      "$oid": "6065763cf2990200209793ae"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 3,
+  "sumEarned": 1207.5953491699304,
+  "sumUsed": 400,
+  "sumRemaining": 807.5953491699304
+},{
+  "_id": {
+    "user": {
+      "$oid": "6065763cf2990200209793ae"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 1255.8991631367276,
+  "sumUsed": 0,
+  "sumRemaining": 1255.8991631367276
+},{
+  "_id": {
+    "user": {
+      "$oid": "606b2dc67a2305002059ba34"
+    },
+    "year": 2021,
+    "month": 4
+  },
+  "num": 1,
+  "sumEarned": 2289.23,
+  "sumUsed": 0,
+  "sumRemaining": 2289.23
+},{
+  "_id": {
+    "user": {
+      "$oid": "606b2dc67a2305002059ba34"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 2380.7960000000003,
+  "sumUsed": 0,
+  "sumRemaining": 2380.7960000000003
+},{
+  "_id": {
+    "user": {
+      "$oid": "606b2dc67a2305002059ba34"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 2476.02784,
+  "sumUsed": 0,
+  "sumRemaining": 2476.02784
+},{
+  "_id": {
+    "user": {
+      "$oid": "606b2dc67a2305002059ba34"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 2575.0689536000004,
+  "sumUsed": 1146,
+  "sumRemaining": 1429.0689536000004
+},{
+  "_id": {
+    "user": {
+      "$oid": "606b2dc67a2305002059ba34"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 3,
+  "sumEarned": 2678.0717117440004,
+  "sumUsed": 830,
+  "sumRemaining": 1848.0717117440004
+},{
+  "_id": {
+    "user": {
+      "$oid": "606b2dc67a2305002059ba34"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 2,
+  "sumEarned": 2785.1945802137607,
+  "sumUsed": 750,
+  "sumRemaining": 2035.1945802137607
+},{
+  "_id": {
+    "user": {
+      "$oid": "606b2dc67a2305002059ba34"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 2896.602363422311,
+  "sumUsed": 0,
+  "sumRemaining": 2896.602363422311
+},{
+  "_id": {
+    "user": {
+      "$oid": "606b2dc67a2305002059ba34"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 3012.4664579592036,
+  "sumUsed": 0,
+  "sumRemaining": 3012.4664579592036
+},{
+  "_id": {
+    "user": {
+      "$oid": "607025999a661b00202ed714"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 3017.670368,
+  "sumUsed": 0,
+  "sumRemaining": 3017.670368
+},{
+  "_id": {
+    "user": {
+      "$oid": "607598210d79d50020e42c09"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1335.605728,
+  "sumUsed": 0,
+  "sumRemaining": 1335.605728
+},{
+  "_id": {
+    "user": {
+      "$oid": "60759a4b0d79d50020e42c0e"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 2,
+  "sumEarned": 1288.83641344,
+  "sumUsed": 0,
+  "sumRemaining": 1288.83641344
+},{
+  "_id": {
+    "user": {
+      "$oid": "6075a11d0d79d50020e42c39"
+    },
+    "year": 2021,
+    "month": 5
+  },
+  "num": 1,
+  "sumEarned": 1167.38,
+  "sumUsed": 0,
+  "sumRemaining": 1167.38
+},{
+  "_id": {
+    "user": {
+      "$oid": "6075a11d0d79d50020e42c39"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1214.0784,
+  "sumUsed": 0,
+  "sumRemaining": 1214.0784
+},{
+  "_id": {
+    "user": {
+      "$oid": "6075a11d0d79d50020e42c39"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 4881.641536,
+  "sumUsed": 0,
+  "sumRemaining": 4881.641536
+},{
+  "_id": {
+    "user": {
+      "$oid": "6075a11d0d79d50020e42c39"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 1313.1471974400001,
+  "sumUsed": 0,
+  "sumRemaining": 1313.1471974400001
+},{
+  "_id": {
+    "user": {
+      "$oid": "6075a11d0d79d50020e42c39"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 3,
+  "sumEarned": 1365.6730853376,
+  "sumUsed": 400,
+  "sumRemaining": 965.6730853376
+},{
+  "_id": {
+    "user": {
+      "$oid": "6075a11d0d79d50020e42c39"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 4,
+  "sumEarned": 1420.3000087511039,
+  "sumUsed": 1040,
+  "sumRemaining": 380.30000875110386
+},{
+  "_id": {
+    "user": {
+      "$oid": "6075a11d0d79d50020e42c39"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 3,
+  "sumEarned": 1477.112009101148,
+  "sumUsed": 540,
+  "sumRemaining": 937.112009101148
+},{
+  "_id": {
+    "user": {
+      "$oid": "6075a26a0d79d50020e42c3c"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 1153.787008,
+  "sumUsed": 0,
+  "sumRemaining": 1153.787008
+},{
+  "_id": {
+    "user": {
+      "$oid": "60901381de848a0020e66a60"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 1,
+  "sumEarned": 3458.8806399999994,
+  "sumUsed": 0,
+  "sumRemaining": 3458.8806399999994
+},{
+  "_id": {
+    "user": {
+      "$oid": "60901381de848a0020e66a60"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 2,
+  "sumEarned": 3597.2358655999997,
+  "sumUsed": 300,
+  "sumRemaining": 3297.2358655999997
+},{
+  "_id": {
+    "user": {
+      "$oid": "60901381de848a0020e66a60"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 2,
+  "sumEarned": 2741.1253002239996,
+  "sumUsed": 204,
+  "sumRemaining": 2537.1253002239996
+},{
+  "_id": {
+    "user": {
+      "$oid": "60901381de848a0020e66a60"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 3850.7703122329594,
+  "sumUsed": 0,
+  "sumRemaining": 3850.7703122329594
+},{
+  "_id": {
+    "user": {
+      "$oid": "60901381de848a0020e66a60"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 4004.801124722278,
+  "sumUsed": 0,
+  "sumRemaining": 4004.801124722278
+},{
+  "_id": {
+    "user": {
+      "$oid": "60901381de848a0020e66a60"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 4164.993169711169,
+  "sumUsed": 0,
+  "sumRemaining": 4164.993169711169
+},{
+  "_id": {
+    "user": {
+      "$oid": "609c12725136720020e77e98"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 2400.4596,
+  "sumUsed": 0,
+  "sumRemaining": 2400.4596
+},{
+  "_id": {
+    "user": {
+      "$oid": "609c12725136720020e77e98"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 1,
+  "sumEarned": 2496.477984,
+  "sumUsed": 0,
+  "sumRemaining": 2496.477984
+},{
+  "_id": {
+    "user": {
+      "$oid": "609c12725136720020e77e98"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 2596.33710336,
+  "sumUsed": 0,
+  "sumRemaining": 2596.33710336
+},{
+  "_id": {
+    "user": {
+      "$oid": "609c12725136720020e77e98"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 2700.1905874944,
+  "sumUsed": 0,
+  "sumRemaining": 2700.1905874944
+},{
+  "_id": {
+    "user": {
+      "$oid": "609c12725136720020e77e98"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 2808.1982109941764,
+  "sumUsed": 0,
+  "sumRemaining": 2808.1982109941764
+},{
+  "_id": {
+    "user": {
+      "$oid": "609c12725136720020e77e98"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 2920.526139433943,
+  "sumUsed": 0,
+  "sumRemaining": 2920.526139433943
+},{
+  "_id": {
+    "user": {
+      "$oid": "609c12725136720020e77e98"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 3037.3471850113015,
+  "sumUsed": 0,
+  "sumRemaining": 3037.3471850113015
+},{
+  "_id": {
+    "user": {
+      "$oid": "609cee8f5136720020e780a8"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 1016.0602306150399,
+  "sumUsed": 0,
+  "sumRemaining": 1016.0602306150399
+},{
+  "_id": {
+    "user": {
+      "$oid": "609cee8f5136720020e780a8"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 1456.7026398396417,
+  "sumUsed": 0,
+  "sumRemaining": 1456.7026398396417
+},{
+  "_id": {
+    "user": {
+      "$oid": "609cee8f5136720020e780a8"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 1514.9707454332272,
+  "sumUsed": 0,
+  "sumRemaining": 1514.9707454332272
+},{
+  "_id": {
+    "user": {
+      "$oid": "609cee8f5136720020e780a8"
+    },
+    "year": 2022,
+    "month": 1
+  },
+  "num": 1,
+  "sumEarned": 1575.5695752505562,
+  "sumUsed": 0,
+  "sumRemaining": 1575.5695752505562
+},{
+  "_id": {
+    "user": {
+      "$oid": "609cf4f15136720020e780b8"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1533.9632000000001,
+  "sumUsed": 0,
+  "sumRemaining": 1533.9632000000001
+},{
+  "_id": {
+    "user": {
+      "$oid": "609cf4f15136720020e780b8"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 1,
+  "sumEarned": 1595.3217280000001,
+  "sumUsed": 0,
+  "sumRemaining": 1595.3217280000001
+},{
+  "_id": {
+    "user": {
+      "$oid": "609cf4f15136720020e780b8"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 1659.13459712,
+  "sumUsed": 0,
+  "sumRemaining": 1659.13459712
+},{
+  "_id": {
+    "user": {
+      "$oid": "609cf4f15136720020e780b8"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 1725.4999810048,
+  "sumUsed": 0,
+  "sumRemaining": 1725.4999810048
+},{
+  "_id": {
+    "user": {
+      "$oid": "609cf4f15136720020e780b8"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 2,
+  "sumEarned": 1794.5199802449922,
+  "sumUsed": 300,
+  "sumRemaining": 1494.5199802449922
+},{
+  "_id": {
+    "user": {
+      "$oid": "609cf4f15136720020e780b8"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 1866.300779454792,
+  "sumUsed": 0,
+  "sumRemaining": 1866.300779454792
+},{
+  "_id": {
+    "user": {
+      "$oid": "609d23d45136720020e78126"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1021.0292000000001,
+  "sumUsed": 0,
+  "sumRemaining": 1021.0292000000001
+},{
+  "_id": {
+    "user": {
+      "$oid": "609d23d45136720020e78126"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 1,
+  "sumEarned": 1593.5663679999998,
+  "sumUsed": 0,
+  "sumRemaining": 1593.5663679999998
+},{
+  "_id": {
+    "user": {
+      "$oid": "609d23d45136720020e78126"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 1657.3090227199998,
+  "sumUsed": 0,
+  "sumRemaining": 1657.3090227199998
+},{
+  "_id": {
+    "user": {
+      "$oid": "609d23d45136720020e78126"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 1723.6013836287998,
+  "sumUsed": 0,
+  "sumRemaining": 1723.6013836287998
+},{
+  "_id": {
+    "user": {
+      "$oid": "609d23d45136720020e78126"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 1792.5454389739516,
+  "sumUsed": 0,
+  "sumRemaining": 1792.5454389739516
+},{
+  "_id": {
+    "user": {
+      "$oid": "609d23d45136720020e78126"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 1864.24725653291,
+  "sumUsed": 0,
+  "sumRemaining": 1864.24725653291
+},{
+  "_id": {
+    "user": {
+      "$oid": "609d2e5e5136720020e78155"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 1,
+  "sumEarned": 2079.4052,
+  "sumUsed": 0,
+  "sumRemaining": 2079.4052
+},{
+  "_id": {
+    "user": {
+      "$oid": "609d2e5e5136720020e78155"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 2162.5814080000005,
+  "sumUsed": 0,
+  "sumRemaining": 2162.5814080000005
+},{
+  "_id": {
+    "user": {
+      "$oid": "60ae493f43168f0020de1416"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 1,
+  "sumEarned": 2370,
+  "sumUsed": 0,
+  "sumRemaining": 2370
+},{
+  "_id": {
+    "user": {
+      "$oid": "60afd0bb491c8600208e46e3"
+    },
+    "year": 2022,
+    "month": 1
+  },
+  "num": 1,
+  "sumEarned": 1465.9793459051662,
+  "sumUsed": 0,
+  "sumRemaining": 1465.9793459051662
+},{
+  "_id": {
+    "user": {
+      "$oid": "60b4831d8039e80020a2a0eb"
+    },
+    "year": 2021,
+    "month": 6
+  },
+  "num": 1,
+  "sumEarned": 1117.66,
+  "sumUsed": 0,
+  "sumRemaining": 1117.66
+},{
+  "_id": {
+    "user": {
+      "$oid": "60b4831d8039e80020a2a0eb"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 2,
+  "sumEarned": 6033.1858,
+  "sumUsed": 0,
+  "sumRemaining": 6033.1858
+},{
+  "_id": {
+    "user": {
+      "$oid": "60b4831d8039e80020a2a0eb"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 2,
+  "sumEarned": 1344.9718739999998,
+  "sumUsed": 1000,
+  "sumRemaining": 344.97187399999984
+},{
+  "_id": {
+    "user": {
+      "$oid": "60b4831d8039e80020a2a0eb"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 3,
+  "sumEarned": 1385.32103022,
+  "sumUsed": 1000,
+  "sumRemaining": 385.32103022
+},{
+  "_id": {
+    "user": {
+      "$oid": "60b4831d8039e80020a2a0eb"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 3,
+  "sumEarned": 1902.5075481688002,
+  "sumUsed": 1000,
+  "sumRemaining": 902.5075481688002
+},{
+  "_id": {
+    "user": {
+      "$oid": "60b4831d8039e80020a2a0eb"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 2,
+  "sumEarned": 1978.6078500955523,
+  "sumUsed": 1000,
+  "sumRemaining": 978.6078500955523
+},{
+  "_id": {
+    "user": {
+      "$oid": "60b648ac9e3d410020674a50"
+    },
+    "year": 2021,
+    "month": 7
+  },
+  "num": 1,
+  "sumEarned": 1705.8584,
+  "sumUsed": 0,
+  "sumRemaining": 1705.8584
+},{
+  "_id": {
+    "user": {
+      "$oid": "60b648ac9e3d410020674a50"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 1774.0927359999998,
+  "sumUsed": 0,
+  "sumRemaining": 1774.0927359999998
+},{
+  "_id": {
+    "user": {
+      "$oid": "60b648ac9e3d410020674a50"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 1845.0564454399998,
+  "sumUsed": 0,
+  "sumRemaining": 1845.0564454399998
+},{
+  "_id": {
+    "user": {
+      "$oid": "60b648ac9e3d410020674a50"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 1918.8587032576,
+  "sumUsed": 0,
+  "sumRemaining": 1918.8587032576
+},{
+  "_id": {
+    "user": {
+      "$oid": "60b648ac9e3d410020674a50"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 1995.613051387904,
+  "sumUsed": 0,
+  "sumRemaining": 1995.613051387904
+},{
+  "_id": {
+    "user": {
+      "$oid": "60b648ac9e3d410020674a50"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 2075.43757344342,
+  "sumUsed": 0,
+  "sumRemaining": 2075.43757344342
+},{
+  "_id": {
+    "user": {
+      "$oid": "60c776716fc3c400216730f6"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 1224.162832,
+  "sumUsed": 0,
+  "sumRemaining": 1224.162832
+},{
+  "_id": {
+    "user": {
+      "$oid": "60c776716fc3c400216730f6"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 1273.12934528,
+  "sumUsed": 0,
+  "sumRemaining": 1273.12934528
+},{
+  "_id": {
+    "user": {
+      "$oid": "60c776716fc3c400216730f6"
+    },
+    "year": 2022,
+    "month": 1
+  },
+  "num": 1,
+  "sumEarned": 1489.3812625630037,
+  "sumUsed": 0,
+  "sumRemaining": 1489.3812625630037
+},{
+  "_id": {
+    "user": {
+      "$oid": "60dc7468a29ca20021122180"
+    },
+    "year": 2021,
+    "month": 8
+  },
+  "num": 1,
+  "sumEarned": 1861.2,
+  "sumUsed": 0,
+  "sumRemaining": 1861.2
+},{
+  "_id": {
+    "user": {
+      "$oid": "60dc7468a29ca20021122180"
+    },
+    "year": 2021,
+    "month": 9
+  },
+  "num": 1,
+  "sumEarned": 1935.648,
+  "sumUsed": 0,
+  "sumRemaining": 1935.648
+},{
+  "_id": {
+    "user": {
+      "$oid": "6116b1393a93030020bbb9f9"
+    },
+    "year": 2021,
+    "month": 10
+  },
+  "num": 1,
+  "sumEarned": 1040,
+  "sumUsed": 0,
+  "sumRemaining": 1040
+},{
+  "_id": {
+    "user": {
+      "$oid": "6116b1393a93030020bbb9f9"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 1106.6000000000001,
+  "sumUsed": 0,
+  "sumRemaining": 1106.6000000000001
+},{
+  "_id": {
+    "user": {
+      "$oid": "614b1ac3ba9cb20021f0594c"
+    },
+    "year": 2021,
+    "month": 11
+  },
+  "num": 1,
+  "sumEarned": 1014.91,
+  "sumUsed": 0,
+  "sumRemaining": 1014.91
+},{
+  "_id": {
+    "user": {
+      "$oid": "614b1ac3ba9cb20021f0594c"
+    },
+    "year": 2021,
+    "month": 12
+  },
+  "num": 1,
+  "sumEarned": 1055.5064,
+  "sumUsed": 0,
+  "sumRemaining": 1055.5064
+}]
