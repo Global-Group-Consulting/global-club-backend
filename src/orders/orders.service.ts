@@ -28,6 +28,7 @@ import {OrderPackChangeCompletedEvent} from "./events/OrderPackChangeCompletedEv
 import {OrderCancelledEvent} from "./events/OrderCancelledEvent";
 import {Attachment} from "../_schemas/attachment.schema";
 import {OrderStatusEvent} from "./events/OrderStatusEvent";
+import {forEach} from "lodash";
 
 
 @Injectable()
@@ -48,10 +49,10 @@ export class OrdersService extends BasicService {
     this.model = orderModel
   }
   
-  private async checkProductsExistence (productIds: string[]): Promise<ProductDocument[]> {
+  private async checkProductsExistence(productIds: string[]): Promise<ProductDocument[]> {
     // Count the found results
     const productsExists = await this.productModel
-      .where({ _id: { $in: productIds } })
+      .where({_id: {$in: productIds}})
       .exec()
     
     // If there is a difference between the found products and the order ones,
@@ -63,41 +64,41 @@ export class OrdersService extends BasicService {
     return productsExists
   }
   
-  async create (createOrderDto: CreateOrderDto) {
+  async create(createOrderDto: CreateOrderDto) {
     const newData: any = {
       ...createOrderDto,
       user: this.authUser
     }
-  
+    
     // Get the list of only ids
     const productIds: string[] = createOrderDto.products.reduce((acc, curr) => {
       acc.push(curr.id)
-    
+      
       return acc
     }, [])
-  
+    
     const productsExists: ProductDocument[] = await this.checkProductsExistence(productIds)
-  
+    
     let orderAmount = 0;
-  
+    
     // Map newData products to add for each one its actual price,
     // this to avoid problems if in the meanwhile the product price gets updated and the order is not yet completed.
     newData.products = newData.products.map((prod: OrderProduct) => {
       // The find method doesn't need any check because the productsExists already has been checked so the products
       // there are the same in newData.products
       prod.price = productsExists.find(p => p._id.toString() === prod.id).price
-    
+  
       // Update total amount for the order by calculating each product price * qta
       orderAmount += prod.price * prod.qta
   
       return prod
     })
-  
+    
     // Temporary generates the order, but don't save it yet
     const newOrder = new this.orderModel(newData)
-  
+    
     newOrder.amount = orderAmount;
-  
+    
     /* const messageProducts =
    */
     // Generates the communication associated with this order.
@@ -116,21 +117,21 @@ export class OrdersService extends BasicService {
               title: productsExists.find(prod => prod._id.toString() === el.product.toString()).title
             }
           });
-        
+  
           return acc
         }, [])
       }
     }, MessageTypeEnum.ORDER_CREATED)
-  
+    
     // Assign the communication id as a ref to the order
     newOrder.communication = relatedCommunication.id
-  
+    
     try {
       return await newOrder.save()
     } catch (e) {
       // If there is an error I remove the created communication
       await this.communicationService.remove(relatedCommunication.id)
-    
+      
       throw e
     }
   }
@@ -224,18 +225,18 @@ export class OrdersService extends BasicService {
     })
   }
   
-  async groupBy (field: keyof Order): Promise<any> {
+  async groupBy(field: keyof Order): Promise<any> {
     return this.orderModel.aggregate([
       {
         $group: {
           _id: "$" + field,
-          count: { $sum: 1 }
+          count: {$sum: 1}
         }
       }
     ]).exec()
   }
   
-  async findOne (id: string): Promise<Order> {
+  async findOne(id: string): Promise<Order> {
     const result = await this.orderModel
       .findById(
         id,
@@ -245,6 +246,19 @@ export class OrdersService extends BasicService {
         },
       )
       .exec()
+    
+    result.communication.messages.map(message => {
+      const belongsToAuthUser = message.sender._id.toString() === this.authUser._id.toString()
+      message.isRead = message.readings.find(el => el.userId === this.authUser._id);
+      
+      // check if a message does not belong to the auth user
+      // and if that message is unread.
+      if (!belongsToAuthUser && !message.isRead) {
+        result.communication.hasUnreadMessages = true;
+      }
+      
+      return message;
+    })
     
     return result
   }
@@ -267,19 +281,19 @@ export class OrdersService extends BasicService {
     return this.orderModel.findById(id).exec();
   }*/
   
-  async updateStatus (id: string, updateOrderStatusDto: UpdateOrderStatusDto): Promise<Order> {
+  async updateStatus(id: string, updateOrderStatusDto: UpdateOrderStatusDto): Promise<Order> {
     const order: OrderDocument = await this.findOrFail<OrderDocument>(id, null, {
       populate: ['products.product', 'communication'],
     })
     const initialState = order.status;
     let newMovement: Movement[]
     let newMessageId: string
-  
+    
     // Avoid resetting the same status
     if (order.status === updateOrderStatusDto.status) {
       throw new UpdateException('This order already has the same status')
     }
-  
+    
     // Avoid changing status for a complete order.
     if (order.status === OrderStatusEnum.COMPLETED) {
       throw new UpdateException('This order is completed so the status can\'t be changed')
@@ -317,7 +331,7 @@ export class OrdersService extends BasicService {
             notes: 'Completamento ordine #' + order._id.toString()
           })
         }
-    
+  
         // change the user pack eventually
         if (order.packChangeOrder) {
           const newPack = await this.productModel.findById(order.products[0].product) as ProductDocument;
@@ -329,7 +343,7 @@ export class OrdersService extends BasicService {
             changeCost: order.packChangeCost,
           }));
         }
-    
+  
         this.eventEmitter.emit("order.status.completed", new OrderStatusEvent({
           order,
           userId: order.user._id,
@@ -375,21 +389,21 @@ export class OrdersService extends BasicService {
     }
   }
   
-  async updateProduct (id: string, productId: string, updateOrderProductDto: UpdateOrderProductDto) {
+  async updateProduct(id: string, productId: string, updateOrderProductDto: UpdateOrderProductDto) {
     const orders: OrderDocument[] = await this.model.where({
       _id: castToObjectId(id),
       "products.product": castToObjectId(productId)
     }).exec()
-  
+    
     if (!orders || orders.length === 0) {
       throw new FindException('The order or product can\'t be found')
     }
-  
+    
     const order = orders[0];
     const prodIndex = order.products.findIndex(el => el.product.toString() === productId);
     const originalOrder = order.toJSON();
     const product: Product = await this.productModel.findById(originalOrder.products[prodIndex].product).exec()
-  
+    
     if (updateOrderProductDto.hasOwnProperty("qta")) {
       order.products[prodIndex].qta = updateOrderProductDto.qta
     }
@@ -399,11 +413,11 @@ export class OrdersService extends BasicService {
     if (updateOrderProductDto.hasOwnProperty("repayment")) {
       order.products[prodIndex].repayment = updateOrderProductDto.repayment
     }
-  
+    
     order.amount = OrdersService.calcOrderAmount(order);
-  
+    
     const prodDiff = diff(originalOrder.products[prodIndex], updateOrderProductDto)
-  
+    
     const newMessage = await this.communicationService.addMessage(order.communication as any, {
       message: "product updated",
       messageData: {
@@ -417,10 +431,10 @@ export class OrdersService extends BasicService {
         }
       }
     }, MessageTypeEnum.ORDER_PRODUCT_UPDATE)
-  
+    
     try {
       await order.save();
-    
+      
       return order.populate(['products.product', 'communication'])
     } catch (er) {
       if (newMessage) {

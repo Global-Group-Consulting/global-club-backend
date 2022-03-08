@@ -8,6 +8,8 @@ import {Communication} from "./schemas/communications.schema";
 import {AddMessageCommunicationDto} from "./dto/add-message-communication.dto";
 import { PaginatedFilterCommunicationDto } from './dto/paginated-filter-communication.dto';
 import { PaginatedResultCommunicationDto } from './dto/paginated-result-communication.dto';
+import {ReadMessageCommunicationDto} from "./dto/read-message-communication.dto";
+import {MessageRead} from "./schemas/messsage.read.schema";
 
 @ApiBearerAuth()
 @ApiBasicAuth("client-key")
@@ -45,6 +47,11 @@ export class CommunicationsController {
   @Put(':id')
   addMessage(@Param() params: ReadProductDto, @Body() addMessageCommunicationDto: AddMessageCommunicationDto): Promise<Communication> {
     return this.communicationsService.addMessage(params.id, addMessageCommunicationDto);
+  }
+  
+  @Patch(":id")
+  setMessageAsRead(@Param() params: ReadProductDto, @Body() readMessageCommunicationDto: ReadMessageCommunicationDto): Promise<MessageRead> {
+    return this.communicationsService.setMessageAsRead(params.id, readMessageCommunicationDto);
   }
   
   @Delete(':id')
