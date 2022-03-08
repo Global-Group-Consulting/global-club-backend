@@ -76,7 +76,9 @@ export class MovementsService extends BasicService {
     // await this.checkIfEnough(userId, removeMovementDto.amountChange, removeMovementDto.semesterId)
     const totals = await this.calcTotalBrites(userId, removeMovementDto.semesterId);
     
-    if(!totals || !totals[0].packs[removeMovementDto.clubPack] || totals[0][0].packs[removeMovementDto.clubPack].totalUsable < removeMovementDto.amountChange){
+    if(!totals
+      || (totals[0] && !totals[0].packs[removeMovementDto.clubPack])
+      || (totals[0][0] && totals[0][0].packs[removeMovementDto.clubPack].totalUsable < removeMovementDto.amountChange)){
       throw new WithdrawalException("Importo superiore alla disponibilità dell'utente");
     }
     
