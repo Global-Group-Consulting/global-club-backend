@@ -40,6 +40,9 @@ export class Communication extends BasicSchema {
   @Prop({ default: false })
   hasUnreadMessages: boolean
   
+  @Prop({ default: 0 })
+  unreadCount: number
+  
   _id: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;

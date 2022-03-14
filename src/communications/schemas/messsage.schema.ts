@@ -8,7 +8,7 @@ import {MessageRead, MessageReadSchema} from "./messsage.read.schema";
 
 @Schema({
   timestamps: true,
-  excludeIndexes: ["readings"]
+  excludeIndexes: ["readings"],
 })
 export class Message extends Document {
   @Prop({type: User})

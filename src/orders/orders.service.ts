@@ -67,14 +67,19 @@ export class OrdersService extends BasicService {
   }
   
   private checkUnreadMessages(communication: Communication) {
+    if (!communication) {
+      return;
+    }
+  
     communication.hasUnreadMessages = false;
-    
+    communication.unreadCount = 0
+  
     communication.messages.map(message => {
       let belongsToAuthUser = message.sender && message.sender._id.toString() === this.authUser._id.toString()
       message.isRead = message.readings.find(el => el.userId === this.authUser._id);
-      
+    
       const adminMessageTypes: MessageTypeEnum[] = [MessageTypeEnum.ORDER_CREATED, MessageTypeEnum.ORDER_STATUS_UPDATE, MessageTypeEnum.ORDER_PRODUCT_UPDATE]
-      
+    
       if (belongsToAuthUser) {
         message.isRead = {
           userId: this.authUser._id,
@@ -97,6 +102,7 @@ export class OrdersService extends BasicService {
       // and if that message is unread.
       if (!belongsToAuthUser && !message.isRead) {
         communication.hasUnreadMessages = true;
+        communication.unreadCount++;
       }
       
       return message;
@@ -269,8 +275,9 @@ export class OrdersService extends BasicService {
     paginatedData.data = paginatedData.data.map(order => {
       this.checkUnreadMessages(order.communication)
       
-      if (order.communication.hasUnreadMessages) {
-        order.hasUnreadMessages = true
+      if (order.communication && order.communication.hasUnreadMessages) {
+        order.hasUnreadMessages = true;
+        order.unreadCount = order.communication.unreadCount;
       }
       
       return order;
@@ -280,7 +287,7 @@ export class OrdersService extends BasicService {
   }
   
   async groupBy(field: keyof Order): Promise<any> {
-    const groupByField = {$group: {_id: "$" + field, count: {$sum: 1}}}
+    // const groupByField = {$group: {_id: "$" + field, count: {$sum: 1}}}
   
     const withUnread = [
       {'$unwind': {'path': '$messages'}},
@@ -290,8 +297,9 @@ export class OrdersService extends BasicService {
           "readings": {'$cond': ["$messages.readings.userId", "$messages.readings.userId", []]},
           "belongsToAuthUser": {
             '$or': [
-              {'$eq': ["$messages.sender._id", this.authUser._id]},
-              {'$in': ["$messages.type", this.userIsAdmin ? [] : ["order_created", "order_status_update", "order_product_update"]]},
+              {'$eq': ["$messages.sender.id", castToObjectId(this.authUser._id)]},
+              {'$eq': ["$messages.sender.id", this.authUser._id.toString()]},
+              {'$in': ["$messages.type", !this.userIsAdmin ? [] : ["order_created", "order_status_update", "order_product_update"]]},
             ]
           }
         }
@@ -300,7 +308,10 @@ export class OrdersService extends BasicService {
       {
         '$addFields': {
           "isRead": {
-            '$in': [this.authUser._id.toString(), "$readings"]
+            '$or': [
+              {'$in': [this.authUser._id.toString(), "$readings"]},
+              {'$eq': ["$belongsToAuthUser", true]}
+            ]
           },
         }
       },
@@ -317,7 +328,7 @@ export class OrdersService extends BasicService {
       {
         '$group': {
           '_id': '$_id',
-          'fieldN': {'$push': '$$ROOT'},
+          // 'fieldN': {'$push': '$$ROOT'},
           'totalCount': {'$sum': 1},
           'unreadCount': {'$sum': {'$cond': [{'$eq': ['$hasUnreadMessages', true]}, 1, 0]}}
         }
@@ -337,7 +348,7 @@ export class OrdersService extends BasicService {
       {
         '$group': {
           '_id': '$order.' + field,
-          'fieldN': {'$push': '$$ROOT'},
+          // 'fieldN': {'$push': '$$ROOT'},
           'count': {'$sum': 1},
           'unreadCount': {'$sum': '$unreadCount'}
         }

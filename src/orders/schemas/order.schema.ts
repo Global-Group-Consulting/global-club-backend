@@ -44,6 +44,9 @@ export class Order extends BasicSchema {
   @Prop({default: false})
   public hasUnreadMessages: boolean
   
+  @Prop({default: 0})
+  public unreadCount: number
+  
   public _id: Types.ObjectId;
   public createdAt: Date;
   public updatedAt: Date;
