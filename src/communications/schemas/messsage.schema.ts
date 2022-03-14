@@ -21,7 +21,7 @@ export class Message extends Document {
   content: string
   
   @Prop({default: MessageTypeEnum.MESSAGE, enum: MessageTypeEnum})
-  type: string
+  type: MessageTypeEnum
   
   @Prop({type: Object})
   data: object
