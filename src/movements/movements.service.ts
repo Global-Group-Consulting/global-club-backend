@@ -167,20 +167,25 @@ export class MovementsService extends BasicService {
       movementType: {
         "$in": MovementTypeOutList
       },
+      userId: castToObjectId(userId),
       clubPack: PackEnum.FAST
     }
-    
+  
     const movements = await this.movementModel.where(query).exec()
     const maxExpendable = 1000;
-    
+  
+    if (!movements || movements.length === 0) {
+      return maxExpendable
+    }
+  
     // Max 2 movements per month
     if (movements.length > 1) {
       return 0
     }
-    
+  
     return movements.reduce((acc, curr) => {
       acc -= curr.amountChange;
-      
+    
       if (acc < 0) {
         acc = 0;
       }
