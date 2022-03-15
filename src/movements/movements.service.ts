@@ -379,7 +379,7 @@ export class MovementsService extends BasicService {
         
           switch (pack) {
             case PackEnum.PREMIUM:
-            case "_none":
+            // case "_none":
               // Premium has no limits
               toReturn = totalRemaining
               break;
@@ -394,15 +394,15 @@ export class MovementsService extends BasicService {
             
               currMonthDate.setDate(1);
               currMonthDate.setHours(0, 0, 0, 0)
-            
+  
               // Get current month exits. There can me max 2 (perMonthMovementsLimit)
               const currMonthExits = el.movements.filter(el => MovementTypeOutList.includes(el.movementType) && el.createdAt > currMonthDate)
               const currMonthUsed = currMonthExits.reduce((acc, curr) => acc += curr.amountChange, 0)
-            
+  
               if (currMonthExits.length < perMonthExitsLimit && currMonthUsed < perMonthAmountLimit) {
                 toReturn += totalRemaining
               }
-            
+  
               break;
           }
         
