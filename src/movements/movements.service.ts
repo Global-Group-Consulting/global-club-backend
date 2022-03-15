@@ -372,7 +372,7 @@ export class MovementsService extends BasicService {
     
       const currentPack: CalcTotalPackDetails = {
         totalRemaining,
-        totalUsed: forcedZero ? 0 : castToFixedDecimal(totalUsed),
+        totalUsed: /*forcedZero ? 0 : */castToFixedDecimal(totalUsed),
         // Must check the pack type to understand how much is really usable.
         totalUsable: (() => {
           let toReturn = 0
