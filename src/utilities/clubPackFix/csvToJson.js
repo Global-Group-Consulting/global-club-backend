@@ -1,4 +1,5 @@
 /**
+ * https://www.convertcsv.com/csv-to-json.htm
  *
  * @type {{
  *    "Link": {
@@ -22,7 +23,7 @@
  *    "SEMESTRE 2": "Basic"
  * }[]}
  */
-const data = require("./data.json");
+const data = require("./lista.json");
 const fs = require("fs");
 const queries = {};
 const finalString = [
@@ -30,7 +31,7 @@ const finalString = [
 ]
 
 for (const user of data) {
-  const userUrl = user["Link"]["id"]
+  const userUrl = user["Link"]["ID"]
   const userId = userUrl.substring(userUrl.lastIndexOf("/") + 1).trim();
   const userName = user["Nome Cognome"];
   const months = [user["gennaio"], user["febbraio"], user["marzo"], user["aprile"], user["maggio"], user["giugno"], user["luglio"], user["agosto"], user["settembre"], user["ottobre"], user["novembre"], user["dicembre"]]
