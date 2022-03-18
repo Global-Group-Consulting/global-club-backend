@@ -55,7 +55,7 @@ for (const user of data) {
       pack = pack.toLowerCase();
     }
     
-    const filter = `"userId": ObjectId('${userId}'), "created_at": {$gte: ISODate('${startDate.toISOString()}'), $lt: ISODate('${endDate.toISOString()}')}`;
+    const filter = `"userId": ObjectId('${userId}'), "createdAt": {$gte: ISODate('${startDate.toISOString()}'), $lt: ISODate('${endDate.toISOString()}')}`;
     const set = `clubPack: "${pack}"`;
     
     finalString.push(`bulk.find( { ${filter} } ).update( { $set: { ${set} } } );`)
