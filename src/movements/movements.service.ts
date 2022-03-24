@@ -81,26 +81,42 @@ export class MovementsService extends BasicService {
       || (totals[0][0] && totals[0][0].packs[removeMovementDto.clubPack].totalUsable < removeMovementDto.amountChange)){
       throw new WithdrawalException("Importo superiore alla disponibilità dell'utente");
     }
-    
+  
     const newMovement = new this.movementModel({
       ...removeMovementDto,
       userId: userId,
       createdBy: this.authUser.id,
       movementType: MovementTypeEnum.DEPOSIT_REMOVED
     })
-    
+  
     return newMovement.save()
+  }
+  
+  async destroy(movementId: string) {
+    const movement: MovementDocument = await this.model.findById(movementId);
+    const deletableTypes = [MovementTypeEnum.DEPOSIT_ADDED, MovementTypeEnum.DEPOSIT_REMOVED];
+    
+    if (!movement) {
+      throw new HttpException('Can\'t find the requested movement', 404);
+    }
+    
+    // Can remove only manual movements, not automatic ones
+    if (!deletableTypes.includes(movement.movementType)) {
+      throw new HttpException('Can\'t remove this type of movement', 400);
+    }
+    
+    return movement.delete();
   }
   
   async use(userId: string, useMovementDto: UseMovementDto): Promise<Movement[]> {
     if (!userId) {
       throw new UpdateException('Missing userId')
     }
-  
+    
     if (!useMovementDto.amountChange) {
       throw new UpdateException("The amount must be higher than 1.")
     }
-  
+    
     const totalBySemesters = await this.checkIfEnough(userId, useMovementDto.amountChange)
     const movementsToCreate: Movement[] = []
   
