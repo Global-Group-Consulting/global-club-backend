@@ -72,10 +72,20 @@ export class MovementsController {
   /**
    * Allow to use the user brites.
    */
+  
   /* @ApiOperation({summary: "Use brites"})
   @Patch(":id") */
   use(@Body() useMovementDto: UseMovementDto, @Param() params: ReadDto): Promise<Movement[]> {
     return this.movementsService.use(params.id, useMovementDto);
+  }
+  
+  /**
+   * Manually delete a movement from db
+   */
+  @ApiOperation({summary: "Manually delete a movement from db"})
+  @Delete(':id/delete')
+  destroy(@Param() params: ReadDto) {
+    return this.movementsService.destroy(params.id);
   }
   
   /**
