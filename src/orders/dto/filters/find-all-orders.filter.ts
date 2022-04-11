@@ -5,7 +5,8 @@ import {FilterMap} from '../../../_basics/FilterMap.dto';
 import {toString} from '../../../_basics/transformers/toString';
 import {toStringArray} from '../../../_basics/transformers/toStringArray';
 import {ToArray} from '../../../_basics/transformers/toArray';
-import {castToObjectId} from "../../../utilities/Formatters";
+import { castToObjectId } from '../../../utilities/Formatters'
+import { toBoolean } from '../../../_basics/transformers/toBoolean'
 
 export class FindAllOrdersFilter {
   @ApiProperty({
@@ -32,14 +33,21 @@ export class FindAllOrdersFilter {
     required: false
   })
   @IsOptional()
-  "user"?: string
+  'user'?: string
   
   @ApiProperty({
-    name: "filter[id]",
+    name: 'filter[id]',
     required: false
   })
   @IsOptional()
-  "id"?: string
+  'id'?: string
+  
+  @ApiProperty({
+    name: 'filter[packChangeOrder]',
+    required: false
+  })
+  @IsOptional()
+  'packChangeOrder'?: string
 }
 
 export const FindAllOrdersFilterMap: FilterMap<FindAllOrdersFilter> = {
@@ -52,12 +60,15 @@ export const FindAllOrdersFilterMap: FilterMap<FindAllOrdersFilter> = {
     // castValue: toObjectId,
     // query: value => ({ "id": value })
   },
-  "user": {
+  'user': {
     castValue: toString,
-    query: value => ({"$regex": value.replace(/ /g, "|"), "$options": "i"})
+    query: value => ({ '$regex': value.replace(/ /g, '|'), '$options': 'i' })
   },
-  "id": {
+  'id': {
     castValue: castToObjectId,
-    keyFormat: value => "_" + value
+    keyFormat: value => '_' + value
+  },
+  'packChangeOrder': {
+    castValue: toBoolean
   }
 }
