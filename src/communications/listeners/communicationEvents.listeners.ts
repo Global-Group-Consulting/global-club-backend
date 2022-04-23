@@ -67,7 +67,7 @@ export class CommunicationEventsListeners {
           let receiverId = (receiver._id ?? receiver.id)
           
           if (typeof (receiver._id ?? receiver.id) !== "string"){
-            receiverId = receiverId.toString()
+            receiverId = receiverId.toString ? receiverId.toString() : receiverId
           }
           
           console.log(receiverId)
