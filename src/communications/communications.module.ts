@@ -4,6 +4,10 @@ import {CommunicationsService} from './communications.service';
 import {CommunicationsController} from './communications.controller';
 import {Communication, CommunicationsSchema} from "./schemas/communications.schema";
 import {FilesModule} from "../files/files.module";
+import { CommunicationEventsListeners } from './listeners/communicationEvents.listeners'
+import { Order, OrdersSchema } from '../orders/schemas/order.schema'
+import { UsersModule } from '../users/users.module'
+import { User, UserSchema } from '../users/schemas/user.schema'
 
 @Module({
   imports: [
@@ -11,12 +15,22 @@ import {FilesModule} from "../files/files.module";
       {
         name: Communication.name,
         schema: CommunicationsSchema
-      }
+      },
+      {
+        name: Order.name,
+        schema: OrdersSchema
+      },
     ], "club"),
-    FilesModule
+    MongooseModule.forFeature([
+      {
+        name: User.name,
+        schema: UserSchema
+      }
+    ], "legacy"),
+    FilesModule,
   ],
   controllers: [CommunicationsController],
-  providers: [CommunicationsService],
+  providers: [CommunicationsService, CommunicationEventsListeners],
   exports: [CommunicationsService]
 })
 export class CommunicationsModule {
