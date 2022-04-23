@@ -1,201 +1,204 @@
-import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
-import {Document, Types} from 'mongoose';
-import {PackEnum} from '../../packs/enums/pack.enum';
-import {UserAclRolesEnum} from '../enums/user.acl.roles.enum';
-import {UserClubPackEntity} from "../entities/user.clubPack.entity";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { Document, Types, Mixed } from 'mongoose'
+import { PackEnum } from '../../packs/enums/pack.enum'
+import { UserAclRolesEnum } from '../enums/user.acl.roles.enum'
+import { UserClubPackEntity } from '../entities/user.clubPack.entity'
 
 export type UserDocument = User & Document
 
 @Schema({
-  collection: "users",
+  collection: 'users'
 })
 export class User {
   @Prop({
-    alias: "_id"
+    alias: '_id'
   })
   id: string
   
   @Prop()
-  account_status: string;
+  account_status: string
   
   @Prop()
-  activated_at: string;
+  activated_at: string
   
   @Prop()
-  birthCity: string;
+  birthCity: string
   
   @Prop()
-  birthCountry: string;
+  birthCountry: string
   
   @Prop()
-  birthDate: Date;
+  birthDate: Date
   
   @Prop()
-  birthProvince: string;
+  birthProvince: string
   
   @Prop()
-  businessAddress: string;
+  businessAddress: string
   
   @Prop()
-  businessCity: string;
+  businessCity: string
   
   @Prop()
-  businessCountry: string;
+  businessCountry: string
   
   @Prop()
-  businessName: string;
+  businessName: string
   
   @Prop()
-  businessProvince: string;
+  businessProvince: string
   
   @Prop()
-  businessRegion: string;
+  businessRegion: string
   
   @Prop()
-  businessZip: string;
+  businessZip: string
   
   @Prop()
   clubCardNumber: string
   
   @Prop()
-  clubPack: PackEnum;
+  clubPack: PackEnum
   
   @Prop()
-  clubPackChangeOrder: Types.ObjectId;
+  clubPackChangeOrder: Types.ObjectId
   
   @Prop()
-  clubPackHistory: UserClubPackEntity[];
+  clubPackHistory: UserClubPackEntity[]
   
   @Prop()
-  commissionsAssigned: string[];
+  commissionsAssigned: string[]
   
   @Prop()
-  contractBic: string;
+  contractBic: string
   
   @Prop()
-  contractDate: Date;
+  contractDate: Date
   
   @Prop()
-  contractIban: string;
+  contractIban: string
   
   @Prop()
-  contractInitialInvestment: string;
+  contractInitialInvestment: string
   
   @Prop()
-  contractInitialInvestmentGold: string;
+  contractInitialInvestmentGold: string
   
   @Prop()
-  contractInitialPaymentMethod: string;
+  contractInitialPaymentMethod: string
   
   @Prop()
-  contractInitialPaymentMethodOther: string;
+  contractInitialPaymentMethodOther: string
   
   @Prop()
-  contractNumber: string;
+  contractNumber: string
   
   @Prop()
-  contractNumberLegacy: string;
+  contractNumberLegacy: string
   
   @Prop()
-  contractPercentage: number;
+  contractPercentage: number
   
   @Prop()
-  contractSignedAt: string;
+  contractSignedAt: string
   
   @Prop()
-  docExpiration: string;
+  docExpiration: string
   
   @Prop()
-  docNumber: string;
+  docNumber: string
   
   @Prop()
-  docType: string;
+  docType: string
   
   @Prop()
-  email: string;
+  email: string
   
   @Prop()
-  firstName: string;
+  firstName: string
   
   @Prop()
-  fiscalCode: string;
+  fiscalCode: string
   
   @Prop()
-  gender: string;
+  gender: string
   
   @Prop()
-  gold: boolean;
+  gold: boolean
   
   @Prop()
-  hasSubAgents: boolean;
+  hasSubAgents: boolean
   
   @Prop()
-  lastName: string;
+  lastName: string
   
   @Prop()
   lastChangedBy: string
   
   @Prop()
-  legalRepresentativeAddress: string;
+  legalRepresentativeAddress: string
   
   @Prop()
-  legalRepresentativeCity: string;
+  legalRepresentativeCity: string
   
   @Prop()
-  legalRepresentativeCountry: string;
+  legalRepresentativeCountry: string
   
   @Prop()
-  legalRepresentativeProvince: string;
+  legalRepresentativeProvince: string
   
   @Prop()
-  legalRepresentativeRegion: string;
+  legalRepresentativeRegion: string
   
   @Prop()
-  legalRepresentativeZip: string;
+  legalRepresentativeZip: string
   
   @Prop()
-  mobile: string;
+  mobile: string
   
   @Prop()
-  personType: number;
+  personType: number
   
   @Prop({ immutable: true })
-  permissions: string[];
+  permissions: string[]
   
   @Prop()
-  phone: string;
+  phone: string
   
   @Prop()
-  referenceAgent: string;
+  referenceAgent: string
   
   @Prop()
-  role: number;
+  role: number
   
   @Prop()
-  roles: UserAclRolesEnum[];
+  roles: UserAclRolesEnum[]
   
   @Prop()
-  superAdmin: boolean;
+  superAdmin: boolean
   
   @Prop()
-  vatNumber: string;
+  vatNumber: string
   
   @Prop()
-  verified_at: string;
+  verified_at: string
   
   @Prop()
-  apps: string[];
+  apps: string[]
   
-  _id: Types.ObjectId;
-  created_at: Date;
-  updated_at: Date;
+  @Prop({type: Object})
+  preferences: Mixed
+  
+  _id: Types.ObjectId
+  created_at: Date
+  updated_at: Date
   
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)
 
 export const userProjection = Object.keys(UserSchema.obj).reduce((acc, key) => {
-  acc[key] = 1;
+  acc[key] = 1
   
   return acc
 }, {})
