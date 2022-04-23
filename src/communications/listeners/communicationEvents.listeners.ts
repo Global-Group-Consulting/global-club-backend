@@ -66,7 +66,11 @@ export class CommunicationEventsListeners {
         receivers: receivers.map(receiver => {
           let receiverId = (receiver._id ?? receiver.id)
           
-          if (typeof (receiver._id ?? receiver.id) !== "string"){
+          if (!receiver) {
+            console.warn(receiver)
+          }
+          
+          if (receiverId && typeof receiverId !== 'string') {
             receiverId = receiverId.toString ? receiverId.toString() : receiverId
           }
           
