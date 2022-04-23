@@ -48,7 +48,6 @@ export class CommunicationEventsListeners {
     }
     
     const lastMessage = payload.communication.messages[payload.communication.messages.length - 1]
-    console.log(lastMessage, payload.communication.messages)
     
     await this.queue.dispatchNotification({
         type: NotificationTypeEnum.NEW_MESSAGE,
@@ -65,8 +64,9 @@ export class CommunicationEventsListeners {
         },
         platforms: [PlatformEnum.APP],
         receivers: receivers.map(receiver => {
+          console.log(receiver)
           return {
-            _id: receiver._id.toString(),
+            _id: (receiver._id ?? receiver.id).toString(),
             firstName: receiver.firstName,
             lastName: receiver.lastName,
             email: receiver.email
