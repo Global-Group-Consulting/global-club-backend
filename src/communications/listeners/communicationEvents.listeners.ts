@@ -66,7 +66,7 @@ export class CommunicationEventsListeners {
         receivers: receivers.map(receiver => {
           let receiverId = (receiver._id ?? receiver.id)
           
-          if (!receiver) {
+          if (!receiverId) {
             console.warn(receiver)
           }
           
