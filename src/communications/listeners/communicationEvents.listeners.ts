@@ -47,7 +47,7 @@ export class CommunicationEventsListeners {
       receivers.push(initiator)
     }
   
-    // console.log(receivers)
+    console.log(receivers)
     
     const lastMessage = payload.communication.messages[payload.communication.messages.length - 1]
     
