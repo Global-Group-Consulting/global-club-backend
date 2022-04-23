@@ -64,17 +64,8 @@ export class CommunicationEventsListeners {
         },
         platforms: [PlatformEnum.APP],
         receivers: receivers.map(receiver => {
-          let receiverId = (receiver._id ?? receiver.id)
+          let receiverId = receiver.toJSON()._id.toString()
           
-          if (!receiverId) {
-            console.warn(receiver)
-          }
-          
-          if (receiverId && typeof receiverId !== 'string') {
-            receiverId = receiverId.toString ? receiverId.toString() : receiverId
-          }
-          
-          console.log(receiverId)
           return {
             _id: receiverId,
             firstName: receiver.firstName,
