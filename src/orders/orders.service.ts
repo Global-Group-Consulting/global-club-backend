@@ -402,7 +402,7 @@ export class OrdersService extends BasicService {
     let newMovement: Movement[]
     let newMessageId: string
     
-    // Avoid resetting the same status
+    // Avoid re-setting the same status
     if (order.status === updateOrderStatusDto.status) {
       throw new UpdateException('This order already has the same status')
     }

@@ -22,6 +22,7 @@ import httpConfig from './config/http.config';
 import queueConfig from "./config/queue.config";
 import {I18nJsonParser, I18nModule} from "nestjs-i18n";
 import {join} from "path";
+import { FinderModule } from './finder/finder.module';
 
 @Module({
   imports: [
@@ -74,6 +75,7 @@ import {join} from "path";
     PacksModule,
     QueueModule,
     SystemLogsModule,
+    FinderModule,
   ],
   controllers: [AppController],
   providers: [AppService],
