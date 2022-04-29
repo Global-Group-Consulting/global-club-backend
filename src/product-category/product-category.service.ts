@@ -42,7 +42,7 @@ export class ProductCategoryService extends BasicService {
   }
   
   findAllRaw() {
-    return this.model.find({}).exec();
+    return this.model.find({}).sort({title: 1}).exec();
   }
   
   findOne(id: string) {
