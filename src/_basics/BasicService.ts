@@ -129,6 +129,7 @@ export abstract class BasicService {
   
     Object.keys(filtersMap).forEach(key => {
       let value = filters[key]
+      let originalValue = filters[key]
       let filterOptions: FilterOptions = filtersMap[key]
       let filterKey = key
     
@@ -138,6 +139,7 @@ export abstract class BasicService {
   
       if (filterOptions.hasOwnProperty("castValue")) {
         value = filterOptions.castValue(value);
+        originalValue = value;
       }
   
       if (filterOptions.hasOwnProperty("query")) {
@@ -145,7 +147,7 @@ export abstract class BasicService {
       }
   
       if (filterOptions.hasOwnProperty("keyFormat")) {
-        filterKey = filterOptions.keyFormat(key);
+        filterKey = filterOptions.keyFormat(key, originalValue)
       }
   
       toReturn[filterKey] = value
