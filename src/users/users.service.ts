@@ -113,7 +113,13 @@ export class UsersService extends BasicService {
       password: 0 // avoid returning user password
     } : userBasicProjection
     
-    return await this.userModel.findById(id, projection).exec()
+    const user = (await this.userModel.findById(id, projection).exec()).toJSON();
+    
+    if (user.referenceAgent) {
+      user["referenceAgentData"] = await this.userModel.findById(user.referenceAgent, userBasicProjection).exec() as any
+    }
+    
+    return user
   }
   
   async findAdmins () {

@@ -64,8 +64,10 @@ export class CommunicationEventsListeners {
         },
         platforms: [PlatformEnum.APP],
         receivers: receivers.map(receiver => {
+          let receiverId = receiver.toJSON()._id.toString()
+          
           return {
-            _id: receiver._id.toString(),
+            _id: receiverId,
             firstName: receiver.firstName,
             lastName: receiver.lastName,
             email: receiver.email

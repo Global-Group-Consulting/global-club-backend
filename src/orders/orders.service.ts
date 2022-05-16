@@ -1,85 +1,86 @@
-import {Model} from 'mongoose'
-import {InjectModel} from '@nestjs/mongoose'
-import {Inject, Injectable} from '@nestjs/common'
-import {CreateOrderDto} from './dto/create-order.dto'
-import {Order, OrderDocument} from './schemas/order.schema'
-import {Product, ProductDocument} from '../products/schemas/product.schema'
-import {AuthRequest} from '../_basics/AuthRequest'
-import {FindException} from '../_exceptions/find.exception'
-import {CommunicationsService} from '../communications/communications.service'
-import {CommunicationTypeEnum} from '../communications/enums/communication.type.enum'
-import {UpdateOrderStatusDto} from './dto/update-order-status.dto'
-import {BasicService, PaginatedResult} from '../_basics/BasicService'
-import {OrderStatusEnum} from './enums/order.status.enum'
-import {MessageTypeEnum} from '../communications/enums/message.type.enum'
-import {UpdateException} from '../_exceptions/update.exception'
-import {MovementsService} from '../movements/movements.service'
-import {Movement} from '../movements/schemas/movement.schema'
-import {OrderProduct} from './schemas/order-product'
-import {PaginatedFilterOrderDto} from './dto/paginated-filter-order.dto';
-import {FindAllOrdersFilterMap} from './dto/filters/find-all-orders.filter';
-import {ConfigService} from '@nestjs/config';
-import {UpdateOrderProductDto} from './dto/update-order-product.dto';
-import {castToObjectId} from '../utilities/Formatters';
-import {diff} from 'deep-object-diff';
-import {PackEnum} from "../packs/enums/pack.enum";
-import {EventEmitter2} from "@nestjs/event-emitter";
-import {OrderPackChangeCompletedEvent} from "./events/OrderPackChangeCompletedEvent";
-import {OrderCancelledEvent} from "./events/OrderCancelledEvent";
-import {Attachment} from "../_schemas/attachment.schema";
-import {OrderStatusEvent} from "./events/OrderStatusEvent";
-import {forEach} from "lodash";
-import {MessageRead} from "../communications/schemas/messsage.read.schema";
-import {Communication} from "../communications/schemas/communications.schema";
-
+import { Model, Schema } from 'mongoose'
+import { InjectModel } from '@nestjs/mongoose'
+import { Inject, Injectable } from '@nestjs/common'
+import { CreateOrderDto } from './dto/create-order.dto'
+import { Order, OrderDocument } from './schemas/order.schema'
+import { Product, ProductDocument } from '../products/schemas/product.schema'
+import { AuthRequest } from '../_basics/AuthRequest'
+import { FindException } from '../_exceptions/find.exception'
+import { CommunicationsService } from '../communications/communications.service'
+import { CommunicationTypeEnum } from '../communications/enums/communication.type.enum'
+import { UpdateOrderStatusDto } from './dto/update-order-status.dto'
+import { BasicService, PaginatedResult } from '../_basics/BasicService'
+import { OrderStatusEnum } from './enums/order.status.enum'
+import { MessageTypeEnum } from '../communications/enums/message.type.enum'
+import { UpdateException } from '../_exceptions/update.exception'
+import { MovementsService } from '../movements/movements.service'
+import { Movement } from '../movements/schemas/movement.schema'
+import { OrderProduct } from './schemas/order-product'
+import { PaginatedFilterOrderDto } from './dto/paginated-filter-order.dto'
+import { FindAllOrdersFilterMap } from './dto/filters/find-all-orders.filter'
+import { ConfigService } from '@nestjs/config'
+import { UpdateOrderProductDto } from './dto/update-order-product.dto'
+import { castToObjectId } from '../utilities/Formatters'
+import { diff } from 'deep-object-diff'
+import { PackEnum } from '../packs/enums/pack.enum'
+import { EventEmitter2 } from '@nestjs/event-emitter'
+import { OrderPackChangeCompletedEvent } from './events/OrderPackChangeCompletedEvent'
+import { OrderCancelledEvent } from './events/OrderCancelledEvent'
+import { Attachment } from '../_schemas/attachment.schema'
+import { OrderStatusEvent } from './events/OrderStatusEvent'
+import { forEach } from 'lodash'
+import { MessageRead } from '../communications/schemas/messsage.read.schema'
+import { Communication } from '../communications/schemas/communications.schema'
+import { CartProduct } from './entities/cart-product.entity'
+import { Types } from 'mongoose'
 
 @Injectable()
 export class OrdersService extends BasicService {
   model: Model<OrderDocument>
   
-  constructor(
+  constructor (
     @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
     private communicationService: CommunicationsService,
     private movementsService: MovementsService,
     protected config: ConfigService,
     protected eventEmitter: EventEmitter2,
-    @Inject("REQUEST") protected request: AuthRequest
+    @Inject('REQUEST') protected request: AuthRequest
   ) {
     super()
     
     this.model = orderModel
   }
   
-  private async checkProductsExistence(productIds: string[]): Promise<ProductDocument[]> {
+  private async checkProductsExistence (productIds: string[]): Promise<ProductDocument[]> {
     // Count the found results
     const productsExists = await this.productModel
-      .where({_id: {$in: productIds}})
+      .where({ _id: { $in: productIds } })
       .exec()
-  
+    
     // If there is a difference between the found products and the order ones,
     // indicates there is some error, so can't proceed
     if (productsExists.length !== productIds.length) {
       throw new FindException('One or more products can\'t be found')
     }
-  
+    
     return productsExists
   }
   
-  private checkUnreadMessages(communication: Communication) {
+  private checkUnreadMessages (communication: Communication) {
     if (!communication) {
-      return;
+      return
     }
-  
-    communication.hasUnreadMessages = false;
+    
+    communication.hasUnreadMessages = false
     communication.unreadCount = 0
-  
+    
     communication.messages.map(message => {
       let belongsToAuthUser = message.sender && message.sender._id.toString() === this.authUser._id.toString()
-      message.isRead = message.readings.find(el => el.userId === this.authUser._id);
-    
+      message.isRead = message.readings.find(el => el.userId === this.authUser._id)
+      
       const adminMessageTypes: MessageTypeEnum[] = [MessageTypeEnum.ORDER_CREATED, MessageTypeEnum.ORDER_STATUS_UPDATE, MessageTypeEnum.ORDER_PRODUCT_UPDATE]
-    
+      
       if (belongsToAuthUser) {
         message.isRead = {
           userId: this.authUser._id,
@@ -90,7 +91,7 @@ export class OrdersService extends BasicService {
       
       // Autogenerated messages has no sender, so must be handled differently
       if ((!message.sender || adminMessageTypes.includes(message.type)) && this.userIsAdmin) {
-        belongsToAuthUser = true;
+        belongsToAuthUser = true
         message.isRead = {
           userId: this.authUser._id,
           createdAt: new Date(),
@@ -101,15 +102,15 @@ export class OrdersService extends BasicService {
       // check if a message does not belong to the auth user
       // and if that message is unread.
       if (!belongsToAuthUser && !message.isRead) {
-        communication.hasUnreadMessages = true;
-        communication.unreadCount++;
+        communication.hasUnreadMessages = true
+        communication.unreadCount++
       }
       
-      return message;
+      return message
     })
   }
   
-  async create(createOrderDto: CreateOrderDto) {
+  async create (createOrderDto: CreateOrderDto) {
     const newData: any = {
       ...createOrderDto,
       user: this.authUser
@@ -124,7 +125,7 @@ export class OrdersService extends BasicService {
     
     const productsExists: ProductDocument[] = await this.checkProductsExistence(productIds)
     
-    let orderAmount = 0;
+    let orderAmount = 0
     
     // Map newData products to add for each one its actual price,
     // this to avoid problems if in the meanwhile the product price gets updated and the order is not yet completed.
@@ -132,17 +133,17 @@ export class OrdersService extends BasicService {
       // The find method doesn't need any check because the productsExists already has been checked so the products
       // there are the same in newData.products
       prod.price = productsExists.find(p => p._id.toString() === prod.id).price
-  
+      
       // Update total amount for the order by calculating each product price * qta
       orderAmount += prod.price * prod.qta
-  
+      
       return prod
     })
     
     // Temporary generates the order, but don't save it yet
     const newOrder = new this.orderModel(newData)
     
-    newOrder.amount = orderAmount;
+    newOrder.amount = orderAmount
     
     /* const messageProducts =
    */
@@ -150,7 +151,7 @@ export class OrdersService extends BasicService {
     const relatedCommunication = await this.communicationService.create({
       type: CommunicationTypeEnum.ORDER,
       title: `Ordine #${newOrder.id} del ${new Date().toLocaleString('it')}`,
-      message: "order created",
+      message: 'order created',
       messageData: {
         orderStatus: OrderStatusEnum.PENDING,
         orderProducts: newOrder.products.reduce((acc, el) => {
@@ -161,8 +162,8 @@ export class OrdersService extends BasicService {
               _id: castToObjectId(el.product),
               title: productsExists.find(prod => prod._id.toString() === el.product.toString()).title
             }
-          });
-  
+          })
+          
           return acc
         }, [])
       }
@@ -181,36 +182,112 @@ export class OrdersService extends BasicService {
     }
   }
   
-  async createPackChangeOrder(createOrderDto: CreateOrderDto, deposit: number, changeCost: number, contractFile: Attachment) {
+  async createMultipleOrders (createOrderDto: CreateOrderDto) {
+    // Get the list of only ids
+    const productIds: string[] = createOrderDto.products.reduce((acc, curr) => {
+      acc.push(curr.id)
+      
+      return acc
+    }, [])
+    
+    // check if all products exists
+    const productsExists: ProductDocument[] = await this.checkProductsExistence(productIds)
+    const createdOrders = []
+    const mainOrderId = new Types.ObjectId()
+    
+    await Promise.all(productIds.map(async (productId: string) => {
+      // get the current product CartProduct
+      const currentProduct = createOrderDto.products.find(p => p.id === productId)
+      
+      // get the current product ProductDocument
+      const realProduct = productsExists.find(p => p._id.toString() === productId)
+      
+      // store the actual price to avoid problems if in the meanwhile the product price gets updated
+      // and the order is not yet completed.
+      currentProduct.price = realProduct.price
+      
+      // Create the order data
+      const newData: any = {
+        products: [currentProduct],
+        notes: currentProduct.notes || createOrderDto.notes,
+        user: this.authUser,
+        amount: currentProduct.price * currentProduct.qta,
+        cartId: mainOrderId
+      }
+      
+      // Temporary generates the order, but don't save it yet
+      const newOrder = new this.orderModel(newData)
+      
+      // Generates the communication associated with this order.
+      const relatedCommunication = await this.communicationService.create({
+        type: CommunicationTypeEnum.ORDER,
+        title: `Ordine #${newOrder.id} del ${new Date().toLocaleString('it')}`,
+        message: 'order created',
+        messageData: {
+          orderStatus: OrderStatusEnum.PENDING,
+          orderProducts: newOrder.products.reduce((acc, el) => {
+            acc.push({
+              qta: el.qta,
+              price: el.price,
+              product: {
+                _id: castToObjectId(el.product),
+                title: productsExists.find(prod => prod._id.toString() === el.product.toString()).title
+              }
+            })
+            
+            return acc
+          }, [])
+        }
+      }, MessageTypeEnum.ORDER_CREATED)
+      
+      // Assign the communication id as a ref to the order
+      newOrder.communication = relatedCommunication.id
+      
+      try {
+        const savedOrder = await newOrder.save()
+        createdOrders.push(savedOrder)
+      } catch (e) {
+        // If there is an error I remove the created communication
+        await this.communicationService.remove(relatedCommunication.id)
+        
+        // TODO:: decide how to handle any error while creating more than one order.
+        // throw e
+      }
+    }))
+    
+    return createdOrders
+  }
+  
+  async createPackChangeOrder (createOrderDto: CreateOrderDto, deposit: number, changeCost: number, contractFile: Attachment) {
     const newData: any = {
       ...createOrderDto,
       user: this.authUser,
       // indicates that the order changes the pack
       packChangeOrder: true
     }
-  
+    
     // get the right product from the db
     const product: Product = await this.productModel.where({
       packChange: true,
       packChangeTo: PackEnum.PREMIUM
-    }).findOne().exec();
-  
+    }).findOne().exec()
+    
     if (!product) {
-      throw new UpdateException("No product available for this pack", 500);
+      throw new UpdateException('No product available for this pack', 500)
     }
-  
-    newData.products[0].id = product._id;
-  
+    
+    newData.products[0].id = product._id
+    
     // Temporary generates the order, but don't save it yet
     const newOrder = new this.orderModel(newData)
-    newOrder.amount = 0;
-    newOrder.packChangeCost = changeCost;
-  
+    newOrder.amount = 0
+    newOrder.packChangeCost = changeCost
+    
     // Generates the communication associated with this order.
     const relatedCommunication = await this.communicationService.create({
       type: CommunicationTypeEnum.ORDER,
       title: `Ordine #${newOrder.id} del ${new Date().toLocaleString('it')}`,
-      message: "change pack order",
+      message: 'change pack order',
       messageData: {
         orderStatus: OrderStatusEnum.PENDING,
         orderProducts: [{
@@ -233,8 +310,8 @@ export class OrdersService extends BasicService {
     
     // Add initial message that indicates to the user what must be done to proceed
     await this.communicationService.addMessage(relatedCommunication.id, {
-      message: "Gentile cliente,<br>per proseguire il cambio del pack, la preghiamo di firmare il contratto allegato e di caricare una scansione del documento. La invitiamo inoltre ad effettuare il pagamento indicato nel contratto e di caricare anche la ricevuta di avvenuto pagamento.",
-      attachments: [contractFile],
+      message: 'Gentile cliente,<br>per proseguire il cambio del pack, la preghiamo di firmare il contratto allegato e di caricare una scansione del documento. La invitiamo inoltre ad effettuare il pagamento indicato nel contratto e di caricare anche la ricevuta di avvenuto pagamento.',
+      attachments: [contractFile]
     }, MessageTypeEnum.MESSAGE, true)
     
     try {
@@ -247,59 +324,80 @@ export class OrdersService extends BasicService {
     }
   }
   
-  async findAll(paginationDto: PaginatedFilterOrderDto): Promise<PaginatedResult<Order[]>> {
+  async findAll (paginationDto: PaginatedFilterOrderDto): Promise<PaginatedResult<Order[]>> {
     const query: any = this.prepareQuery(paginationDto.filter, FindAllOrdersFilterMap)
     
     if (query.user) {
       query.$or = [
-        {"user.firstName": query.user},
-        {"user.lastName": query.user},
+        { 'user.firstName': query.user },
+        { 'user.lastName': query.user }
       ]
       
       delete query.user
     }
     
-    if (!this.userIsAdmin) {
-      query["user.id"] = this.authUser.id.toString()
+    if (query.prodCategory) {
+      if (query.prodCategory === 'packChange') {
+        query.packChangeOrder = true
+      } else {
+        /*
+        visto che non è possibile eseguire un filtro dopo aver popolato una query,
+        allora prima recupero i prodotti che hanno quella categoria
+        e poi faccio un filtro sugli ordini che hanno uno dei prodotti possibili
+         */
+        const catProducts = await this.productModel.find({
+          'categories': castToObjectId(query.prodCategory)
+        }).exec()
+        
+        query['products.product'] = {
+          $in: catProducts.reduce((acc, curr) => {
+            acc.push(curr._id)
+            return acc
+          }, [])
+        }
+      }
+      
+      delete query.prodCategory
     }
     
-    // TODO:: PRIMA DI RITORNARE I DATI, DEVO AGGIUNGERE IL FLAG PER INDICARE CHE L'ORDINE CONTIENE MESSAGGI NON LETTI
-    // TODO:: FORSE FARE UNA QUERY CHE RECUPERARE SE CI SONO MESSAGGI DOVE L'UTENTE NON è TRA I LETTORI...
+    if (!this.userIsAdmin) {
+      query['user.id'] = this.authUser.id.toString()
+    }
     
     const paginatedData = await this.findPaginated<Order>(query, paginationDto, {
-      "user.permissions": 0
+      'user.permissions': 0
     }, {
-      populate: ["products.product", "communication"]
+      populate: ['products.product', 'communication']
     })
     
     paginatedData.data = paginatedData.data.map(order => {
       this.checkUnreadMessages(order.communication)
       
       if (order.communication && order.communication.hasUnreadMessages) {
-        order.hasUnreadMessages = true;
-        order.unreadCount = order.communication.unreadCount;
+        order.hasUnreadMessages = true
+        order.unreadCount = order.communication.unreadCount
       }
       
-      return order;
+      return order
     })
     
-    return paginatedData;
+    return paginatedData
   }
   
-  async groupBy(field: keyof Order): Promise<any> {
+  async groupBy (field: keyof Order): Promise<any> {
     // const groupByField = {$group: {_id: "$" + field, count: {$sum: 1}}}
-  
+    
     const withUnread = [
-      {'$unwind': {'path': '$messages'}},
+      { '$unwind': { 'path': '$messages' } },
       // Add field with the readings. If not exists, add an empty array
       {
         '$addFields': {
-          "readings": {'$cond': ["$messages.readings.userId", "$messages.readings.userId", []]},
-          "belongsToAuthUser": {
+          'readings': { '$cond': ['$messages.readings.userId', '$messages.readings.userId', []] },
+          'belongsToAuthUser': {
             '$or': [
-              {'$eq': ["$messages.sender.id", castToObjectId(this.authUser._id)]},
-              {'$eq': ["$messages.sender.id", this.authUser._id.toString()]},
-              {'$in': ["$messages.type", !this.userIsAdmin ? [] : ["order_created", "order_status_update", "order_product_update"]]},
+              { '$eq': ['$messages.sender.id', castToObjectId(this.authUser._id)] },
+              { '$eq': ['$messages.sender.id', this.authUser._id.toString()] },
+              { '$in': ['$messages.type', !this.userIsAdmin ? [] : ['order_created', 'order_status_update', 'order_product_update']] }
             ]
           }
         }
@@ -307,20 +405,20 @@ export class OrdersService extends BasicService {
       // Adds field for adding "hasUnreadMessages"
       {
         '$addFields': {
-          "isRead": {
+          'isRead': {
             '$or': [
-              {'$in': [this.authUser._id.toString(), "$readings"]},
-              {'$eq': ["$belongsToAuthUser", true]}
+              { '$in': [this.authUser._id.toString(), '$readings'] },
+              { '$eq': ['$belongsToAuthUser', true] }
             ]
-          },
+          }
         }
       },
       {
         '$addFields': {
-          "hasUnreadMessages": {
+          'hasUnreadMessages': {
             '$and': [
-              {'$eq': ["$belongsToAuthUser", false]},
-              {'$eq': ["$isRead", false]}
+              { '$eq': ['$belongsToAuthUser', false] },
+              { '$eq': ['$isRead', false] }
             ]
           }
         }
@@ -329,11 +427,11 @@ export class OrdersService extends BasicService {
         '$group': {
           '_id': '$_id',
           // 'fieldN': {'$push': '$$ROOT'},
-          'totalCount': {'$sum': 1},
-          'unreadCount': {'$sum': {'$cond': [{'$eq': ['$hasUnreadMessages', true]}, 1, 0]}}
+          'totalCount': { '$sum': 1 },
+          'unreadCount': { '$sum': { '$cond': [{ '$eq': ['$hasUnreadMessages', true] }, 1, 0] } }
         }
       },
-      {'$sort': {'unreadCount': -1}},
+      { '$sort': { 'unreadCount': -1 } },
       // Lookup with orders
       {
         '$lookup': {
@@ -343,36 +441,36 @@ export class OrdersService extends BasicService {
           'as': 'order'
         }
       },
-      {'$unwind': {'path': '$order'}},
+      { '$unwind': { 'path': '$order' } },
       // group by specific field
       {
         '$group': {
           '_id': '$order.' + field,
           // 'fieldN': {'$push': '$$ROOT'},
-          'count': {'$sum': 1},
-          'unreadCount': {'$sum': '$unreadCount'}
+          'count': { '$sum': 1 },
+          'unreadCount': { '$sum': '$unreadCount' }
         }
       }
-    ];
-  
+    ]
+    
     return this.communicationService.model.aggregate(withUnread).exec()
   }
   
-  async findOne(id: string): Promise<Order> {
+  async findOne (id: string): Promise<Order> {
     const result = await this.orderModel
       .findById(
         id,
         {},
         {
-          populate: ['products.product', 'communication'],
-        },
+          populate: ['products.product', 'communication']
+        }
       )
       .exec()
-
+    
     // TODO:: sembra che la funzione non vada bene perchè c'è il messaggio #12 che non è letto
     // TODO:: usare anche in questo casi una aggregation più avanzata.
     this.checkUnreadMessages(result.communication)
-  
+    
     return result
   }
   
@@ -394,11 +492,11 @@ export class OrdersService extends BasicService {
     return this.orderModel.findById(id).exec();
   }*/
   
-  async updateStatus(id: string, updateOrderStatusDto: UpdateOrderStatusDto): Promise<Order> {
+  async updateStatus (id: string, updateOrderStatusDto: UpdateOrderStatusDto): Promise<Order> {
     const order: OrderDocument = await this.findOrFail<OrderDocument>(id, null, {
-      populate: ['products.product', 'communication'],
+      populate: ['products.product', 'communication']
     })
-    const initialState = order.status;
+    const initialState = order.status
     let newMovement: Movement[]
     let newMessageId: string
     
@@ -417,23 +515,23 @@ export class OrdersService extends BasicService {
     try {
       // Adds a message inside the communication for each state change
       const communication = await this.communicationService.addMessage(order.communication as any, {
-        message: "status changed",
+        message: 'status changed',
         messageData: {
           orderStatus: updateOrderStatusDto.status
         }
       }, MessageTypeEnum.ORDER_STATUS_UPDATE)
-  
+      
       // store the new message id so if necessary can remove it later.
       newMessageId = communication.messages[communication.messages.length - 1]._id.toString()
-  
+      
       if (order.status === OrderStatusEnum.IN_PROGRESS) {
-        this.eventEmitter.emit("order.status.inProgress", new OrderStatusEvent({
+        this.eventEmitter.emit('order.status.inProgress', new OrderStatusEvent({
           order,
           userId: order.user._id,
           newStatus: order.status
-        }));
+        }))
       }
-  
+      
       // If the order status is complete, generate the withdrawal movement
       if (order.status === OrderStatusEnum.COMPLETED) {
         // generate movement only if the amount is > 0
@@ -444,95 +542,95 @@ export class OrdersService extends BasicService {
             notes: 'Completamento ordine #' + order._id.toString()
           })
         }
-  
+        
         // change the user pack eventually
         if (order.packChangeOrder) {
-          const newPack = await this.productModel.findById(order.products[0].product) as ProductDocument;
+          const newPack = await this.productModel.findById(order.products[0].product) as ProductDocument
           
-          this.eventEmitter.emit("order.packChange.completed", new OrderPackChangeCompletedEvent({
+          this.eventEmitter.emit('order.packChange.completed', new OrderPackChangeCompletedEvent({
             order,
             userId: order.user._id,
             newPack: newPack.packChangeTo,
-            changeCost: order.packChangeCost,
-          }));
+            changeCost: order.packChangeCost
+          }))
         }
-  
-        this.eventEmitter.emit("order.status.completed", new OrderStatusEvent({
+        
+        this.eventEmitter.emit('order.status.completed', new OrderStatusEvent({
           order,
           userId: order.user._id,
           newStatus: order.status
-        }));
+        }))
       }
-  
+      
       if (order.status === OrderStatusEnum.CANCELLED) {
-        order.cancelReason = updateOrderStatusDto.reason;
+        order.cancelReason = updateOrderStatusDto.reason
         
-        this.eventEmitter.emit("order.status.cancelled", new OrderCancelledEvent({
+        this.eventEmitter.emit('order.status.cancelled', new OrderCancelledEvent({
           order,
           userId: order.user._id,
           newStatus: order.status,
           reason: updateOrderStatusDto.reason
-        }));
+        }))
       }
-  
-      const result = await order.save();
+      
+      const result = await order.save()
       await communication.save()
-  
-      return result.populate("communication")
+      
+      return result.populate('communication')
     } catch (er) {
       // In case of error while applying the changes to the order,
       // remove the created message and eventually the created movement
-  
+      
       if (newMessageId) {
         await this.communicationService.removeMessage(newMessageId)
       }
-  
+      
       if (newMovement) {
         await this.movementsService.cancel(newMovement)
       }
-  
+      
       // Restore order status
       if (order.status !== initialState) {
-        order.status = initialState;
-        order.cancelReason = "";
+        order.status = initialState
+        order.cancelReason = ''
         await order.save()
       }
-  
+      
       throw er
     }
   }
   
-  async updateProduct(id: string, productId: string, updateOrderProductDto: UpdateOrderProductDto) {
+  async updateProduct (id: string, productId: string, updateOrderProductDto: UpdateOrderProductDto) {
     const orders: OrderDocument[] = await this.model.where({
       _id: castToObjectId(id),
-      "products.product": castToObjectId(productId)
+      'products.product': castToObjectId(productId)
     }).exec()
     
     if (!orders || orders.length === 0) {
       throw new FindException('The order or product can\'t be found')
     }
     
-    const order = orders[0];
-    const prodIndex = order.products.findIndex(el => el.product.toString() === productId);
-    const originalOrder = order.toJSON();
+    const order = orders[0]
+    const prodIndex = order.products.findIndex(el => el.product.toString() === productId)
+    const originalOrder = order.toJSON()
     const product: Product = await this.productModel.findById(originalOrder.products[prodIndex].product).exec()
     
-    if (updateOrderProductDto.hasOwnProperty("qta")) {
+    if (updateOrderProductDto.hasOwnProperty('qta')) {
       order.products[prodIndex].qta = updateOrderProductDto.qta
     }
-    if (updateOrderProductDto.hasOwnProperty("price")) {
+    if (updateOrderProductDto.hasOwnProperty('price')) {
       order.products[prodIndex].price = updateOrderProductDto.price
     }
-    if (updateOrderProductDto.hasOwnProperty("repayment")) {
+    if (updateOrderProductDto.hasOwnProperty('repayment')) {
       order.products[prodIndex].repayment = updateOrderProductDto.repayment
     }
     
-    order.amount = OrdersService.calcOrderAmount(order);
+    order.amount = OrdersService.calcOrderAmount(order)
     
     const prodDiff = diff(originalOrder.products[prodIndex], updateOrderProductDto)
     
     const newMessage = await this.communicationService.addMessage(order.communication as any, {
-      message: "product updated",
+      message: 'product updated',
       messageData: {
         productUpdate: {
           product: {
@@ -546,7 +644,7 @@ export class OrdersService extends BasicService {
     }, MessageTypeEnum.ORDER_PRODUCT_UPDATE)
     
     try {
-      await order.save();
+      await order.save()
       
       return order.populate(['products.product', 'communication'])
     } catch (er) {
@@ -556,11 +654,11 @@ export class OrdersService extends BasicService {
     }
   }
   
-  remove(id: string) {
+  remove (id: string) {
     return this.orderModel.findByIdAndDelete(id)
   }
   
-  private static calcOrderAmount(order: Order): number {
+  private static calcOrderAmount (order: Order): number {
     return order.products.reduce((acc, curr) => acc + (curr.price * curr.qta), 0)
   }
 }
