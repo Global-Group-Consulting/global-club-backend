@@ -1,4 +1,4 @@
-import { Model } from 'mongoose'
+import { Model, Schema } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { Inject, Injectable } from '@nestjs/common'
 import { CreateOrderDto } from './dto/create-order.dto'
@@ -31,6 +31,8 @@ import { OrderStatusEvent } from './events/OrderStatusEvent'
 import { forEach } from 'lodash'
 import { MessageRead } from '../communications/schemas/messsage.read.schema'
 import { Communication } from '../communications/schemas/communications.schema'
+import { CartProduct } from './entities/cart-product.entity'
+import { Types } from 'mongoose'
 
 @Injectable()
 export class OrdersService extends BasicService {
@@ -178,6 +180,82 @@ export class OrdersService extends BasicService {
       
       throw e
     }
+  }
+  
+  async createMultipleOrders (createOrderDto: CreateOrderDto) {
+    // Get the list of only ids
+    const productIds: string[] = createOrderDto.products.reduce((acc, curr) => {
+      acc.push(curr.id)
+      
+      return acc
+    }, [])
+    
+    // check if all products exists
+    const productsExists: ProductDocument[] = await this.checkProductsExistence(productIds)
+    const createdOrders = []
+    const mainOrderId = new Types.ObjectId()
+    
+    await Promise.all(productIds.map(async (productId: string) => {
+      // get the current product CartProduct
+      const currentProduct = createOrderDto.products.find(p => p.id === productId)
+      
+      // get the current product ProductDocument
+      const realProduct = productsExists.find(p => p._id.toString() === productId)
+      
+      // store the actual price to avoid problems if in the meanwhile the product price gets updated
+      // and the order is not yet completed.
+      currentProduct.price = realProduct.price
+      
+      // Create the order data
+      const newData: any = {
+        products: [currentProduct],
+        notes: currentProduct.notes || createOrderDto.notes,
+        user: this.authUser,
+        amount: currentProduct.price * currentProduct.qta,
+        cartId: mainOrderId
+      }
+      
+      // Temporary generates the order, but don't save it yet
+      const newOrder = new this.orderModel(newData)
+      
+      // Generates the communication associated with this order.
+      const relatedCommunication = await this.communicationService.create({
+        type: CommunicationTypeEnum.ORDER,
+        title: `Ordine #${newOrder.id} del ${new Date().toLocaleString('it')}`,
+        message: 'order created',
+        messageData: {
+          orderStatus: OrderStatusEnum.PENDING,
+          orderProducts: newOrder.products.reduce((acc, el) => {
+            acc.push({
+              qta: el.qta,
+              price: el.price,
+              product: {
+                _id: castToObjectId(el.product),
+                title: productsExists.find(prod => prod._id.toString() === el.product.toString()).title
+              }
+            })
+            
+            return acc
+          }, [])
+        }
+      }, MessageTypeEnum.ORDER_CREATED)
+      
+      // Assign the communication id as a ref to the order
+      newOrder.communication = relatedCommunication.id
+      
+      try {
+        const savedOrder = await newOrder.save()
+        createdOrders.push(savedOrder)
+      } catch (e) {
+        // If there is an error I remove the created communication
+        await this.communicationService.remove(relatedCommunication.id)
+        
+        // TODO:: decide how to handle any error while creating more than one order.
+        // throw e
+      }
+    }))
+    
+    return createdOrders
   }
   
   async createPackChangeOrder (createOrderDto: CreateOrderDto, deposit: number, changeCost: number, contractFile: Attachment) {

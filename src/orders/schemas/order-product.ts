@@ -1,5 +1,6 @@
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
 import {Document, Schema as MongoSchema} from "mongoose";
+import { IsOptional, IsString } from 'class-validator'
 
 @Schema({
   _id: false
@@ -23,6 +24,9 @@ export class OrderProduct extends Document {
   
   @Prop({default: false})
   repayment: boolean;
+  
+  @Prop()
+  notes: string;
 }
 
 export const orderProductSchema = SchemaFactory.createForClass(OrderProduct);
