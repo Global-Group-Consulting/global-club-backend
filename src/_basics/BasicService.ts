@@ -54,6 +54,13 @@ export abstract class BasicService {
       (value) => validRoles.includes(value))
   }
   
+  get userIsAgent (): boolean {
+    const validRoles = [UserAclRolesEnum.AGENT]
+    
+    return this.request.auth.roles.some(
+      (value) => validRoles.includes(value))
+  }
+  
   protected async findOrFail<T> (id: string, projection?: any, options?: any): Promise<T> {
     const item = await this.model.findById(id, projection, options)
     
