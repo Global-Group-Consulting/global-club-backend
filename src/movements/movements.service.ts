@@ -522,7 +522,6 @@ export class MovementsService extends BasicService {
     if (!user) {
       throw new HttpException('Can\'t find the requested user', 400);
     }
-  
     
     const newMovement = new this.movementModel({
       ...data,

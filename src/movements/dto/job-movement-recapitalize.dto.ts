@@ -16,4 +16,8 @@ export class JobMovementRecapitalizeDto {
   @IsNotEmpty()
   @IsMongoId()
   userId: string;
+  
+  @IsNotEmpty()
+  @IsString()
+  fromUUID: string;
 }

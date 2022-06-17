@@ -4,4 +4,5 @@ export class RecapitalizationDto {
   userId: string;
   semesterId: string;
   amountChange: number;
+  fromUUID: string;
 }
