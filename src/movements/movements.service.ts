@@ -217,7 +217,7 @@ export class MovementsService extends BasicService {
    *
    * The semesters are fetched considering the usableFrom and expiresAt fields.
    */
-  async calcTotalBrites (userId: string, semesterId?: string, excludeFutureUsability = true): Promise<CalcTotalsDto[]> {
+  async calcTotalBrites (userId: string, semesterId?: string, excludeFutureUsability = true, excludeFast = true): Promise<CalcTotalsDto[]> {
     const usableFrom = new Date()
     const expiresAt = new Date(new Date().setHours(23, 59, 59))
     
@@ -248,6 +248,12 @@ export class MovementsService extends BasicService {
         'expiresAt': {
           '$gte': expiresAt
         }
+      }
+    }
+    
+    if (excludeFast) {
+      match['$match']['clubPack'] = {
+        '$ne': PackEnum.FAST
       }
     }
     
@@ -443,7 +449,6 @@ export class MovementsService extends BasicService {
     }, {})
     
     return Object.values(reducedData)
-    // .filter(el => el.total > 0)
   }
   
   /**
@@ -570,7 +575,7 @@ export class MovementsService extends BasicService {
   }
   
   async calcTotalFastBrites (userId: string): Promise<ReadDashboardSemestersDto> {
-    const totalBySemesters = await this.calcTotalBrites(userId)
+    const totalBySemesters = await this.calcTotalBrites(userId, undefined, true, false)
     
     const filteredSemesters: CalcTotalsDto[] = totalBySemesters.reduce((acc, curr) => {
       const data: CalcTotalsDto = {
