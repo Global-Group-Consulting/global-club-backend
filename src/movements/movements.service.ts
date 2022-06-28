@@ -1,143 +1,144 @@
-import {Model} from 'mongoose';
-import {HttpException, Inject, Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {Movement, MovementDocument} from './schemas/movement.schema'
-import {AuthRequest} from '../_basics/AuthRequest'
-import {UseMovementDto} from './dto/use-movement.dto'
-import {CreateManualMovementDto} from './dto/create-manual-movement.dto'
-import {RemoveManualMovementDto} from './dto/remove-manual-movement.dto'
-import {MovementTypeEnum, MovementTypeInList, MovementTypeOutList} from './enums/movement.type.enum'
-import {castToFixedDecimal, castToObjectId} from '../utilities/Formatters'
+import { Model } from 'mongoose'
+import { HttpException, Inject, Injectable } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import { Movement, MovementDocument } from './schemas/movement.schema'
+import { AuthRequest } from '../_basics/AuthRequest'
+import { UseMovementDto } from './dto/use-movement.dto'
+import { CreateManualMovementDto } from './dto/create-manual-movement.dto'
+import { RemoveManualMovementDto } from './dto/remove-manual-movement.dto'
+import { MovementTypeEnum, MovementTypeInList, MovementTypeOutList } from './enums/movement.type.enum'
+import { castToFixedDecimal, castToObjectId } from '../utilities/Formatters'
 import {
   CalcTotalPackDetails,
   CalcTotalPackDetailsSupTotals,
   CalcTotalsDto,
   CalcTotalsGroup
 } from './dto/calc-totals.dto'
-import {WithdrawalException} from './exceptions/withdrawal.exception'
-import {UpdateException} from '../_exceptions/update.exception'
-import {BasicService} from '../_basics/BasicService';
-import {ConfigService} from '@nestjs/config';
-import {calcBritesUsage} from './utils/movements.utils';
-import {PackEnum} from '../packs/enums/pack.enum';
-import {FindAllMovementsFilterMap} from './dto/filters/find-all-movements.filter';
-import {PaginatedFilterMovementDto} from './dto/paginated-filter-movement.dto';
-import {PaginatedResultMovementDto} from './dto/paginated-result-movement.dto';
-import {User, UserDocument} from '../users/schemas/user.schema';
-import {RecapitalizationDto} from "./dto/recapitalization.dto";
+import { WithdrawalException } from './exceptions/withdrawal.exception'
+import { UpdateException } from '../_exceptions/update.exception'
+import { BasicService } from '../_basics/BasicService'
+import { ConfigService } from '@nestjs/config'
+import { calcBritesUsage } from './utils/movements.utils'
+import { PackEnum } from '../packs/enums/pack.enum'
+import { FindAllMovementsFilterMap } from './dto/filters/find-all-movements.filter'
+import { PaginatedFilterMovementDto } from './dto/paginated-filter-movement.dto'
+import { PaginatedResultMovementDto } from './dto/paginated-result-movement.dto'
+import { User, UserDocument } from '../users/schemas/user.schema'
+import { RecapitalizationDto } from './dto/recapitalization.dto'
+import { DashboardSemesterExpirations, ReadDashboardSemestersDto } from '../dashboard/dto/read-dashboard-semesters.dto'
 
 @Injectable()
 export class MovementsService extends BasicService {
   model: Model<MovementDocument>
   
-  constructor(@InjectModel(Movement.name) private movementModel: Model<MovementDocument>,
-              @InjectModel(User.name) private userModel: Model<UserDocument>,
-              protected config: ConfigService,
-              @Inject('REQUEST') protected request: AuthRequest) {
+  constructor (@InjectModel(Movement.name) private movementModel: Model<MovementDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    protected config: ConfigService,
+    @Inject('REQUEST') protected request: AuthRequest) {
     super()
     
     this.model = movementModel
   }
   
-  async findAll(userId: string, queryData: PaginatedFilterMovementDto): Promise<PaginatedResultMovementDto> {
+  async findAll (userId: string, queryData: PaginatedFilterMovementDto): Promise<PaginatedResultMovementDto> {
     const query: any = this.prepareQuery({
-      ...queryData.filter,
+      ...queryData.filter
     }, FindAllMovementsFilterMap)
     
-    query.userId = castToObjectId(userId);
+    query.userId = castToObjectId(userId)
     
     return this.findPaginated<Movement>(query, queryData)
   }
   
   async manualAdd (userId: string, createMovementDto: CreateManualMovementDto): Promise<Movement> {
-    const user = await this.userModel.findById(userId).exec();
-  
+    const user = await this.userModel.findById(userId).exec()
+    
     if (!user) {
-      throw new HttpException('Can\'t find the requested user', 400);
+      throw new HttpException('Can\'t find the requested user', 400)
     }
-  
+    
     const newMovement = new this.movementModel({
       ...createMovementDto,
       userId: userId,
       createdBy: this.authUser.id,
       movementType: MovementTypeEnum.DEPOSIT_ADDED
-    });
-  
-    return newMovement.save();
+    })
+    
+    return newMovement.save()
   }
   
-  async manualRemove(userId: string, removeMovementDto: RemoveManualMovementDto): Promise<Movement> {
-    const user = await this.userModel.findById(userId).exec();
-  
+  async manualRemove (userId: string, removeMovementDto: RemoveManualMovementDto): Promise<Movement> {
+    const user = await this.userModel.findById(userId).exec()
+    
     if (!user) {
-      throw new HttpException('Can\'t find the requested user', 400);
+      throw new HttpException('Can\'t find the requested user', 400)
     }
     
     // await this.checkIfEnough(userId, removeMovementDto.amountChange, removeMovementDto.semesterId)
-    const totals = await this.calcTotalBrites(userId, removeMovementDto.semesterId);
+    const totals = await this.calcTotalBrites(userId, removeMovementDto.semesterId)
     
-    if(!totals
+    if (!totals
       || (totals[0] && !totals[0].packs[removeMovementDto.clubPack])
-      || (totals[0][0] && totals[0][0].packs[removeMovementDto.clubPack].totalUsable < removeMovementDto.amountChange)){
-      throw new WithdrawalException("Importo superiore alla disponibilità dell'utente");
+      || (totals[0][0] && totals[0][0].packs[removeMovementDto.clubPack].totalUsable < removeMovementDto.amountChange)) {
+      throw new WithdrawalException('Importo superiore alla disponibilità dell\'utente')
     }
-  
+    
     const newMovement = new this.movementModel({
       ...removeMovementDto,
       userId: userId,
       createdBy: this.authUser.id,
       movementType: MovementTypeEnum.DEPOSIT_REMOVED
     })
-  
+    
     return newMovement.save()
   }
   
-  async destroy(movementId: string) {
-    const movement: MovementDocument = await this.model.findById(movementId);
-    const deletableTypes = [MovementTypeEnum.DEPOSIT_ADDED, MovementTypeEnum.DEPOSIT_REMOVED];
+  async destroy (movementId: string) {
+    const movement: MovementDocument = await this.model.findById(movementId)
+    const deletableTypes = [MovementTypeEnum.DEPOSIT_ADDED, MovementTypeEnum.DEPOSIT_REMOVED]
     
     if (!movement) {
-      throw new HttpException('Can\'t find the requested movement', 404);
+      throw new HttpException('Can\'t find the requested movement', 404)
     }
     
     // Can remove only manual movements, not automatic ones
     if (!deletableTypes.includes(movement.movementType)) {
-      throw new HttpException('Can\'t remove this type of movement', 400);
+      throw new HttpException('Can\'t remove this type of movement', 400)
     }
     
-    return movement.delete();
+    return movement.delete()
   }
   
-  async use(userId: string, useMovementDto: UseMovementDto): Promise<Movement[]> {
+  async use (userId: string, useMovementDto: UseMovementDto): Promise<Movement[]> {
     if (!userId) {
       throw new UpdateException('Missing userId')
     }
     
     if (!useMovementDto.amountChange) {
-      throw new UpdateException("The amount must be higher than 1.")
+      throw new UpdateException('The amount must be higher than 1.')
     }
     
     const totalBySemesters = await this.checkIfEnough(userId, useMovementDto.amountChange)
     const movementsToCreate: Movement[] = []
-  
+    
     let remainingAmount = useMovementDto.amountChange
-  
+    
     // for each semester
     for (const semester of totalBySemesters) {
-      const validPacks = [PackEnum.FAST, PackEnum.PREMIUM];
-    
+      const validPacks = [PackEnum.FAST, PackEnum.PREMIUM]
+      
       // for each available pack
       for (const packKey of Object.keys(semester.packs)) {
-      
+        
         if (!validPacks.includes(packKey as PackEnum)) {
-          continue;
+          continue
         }
-      
+        
         const usable = semester.packs[packKey].totalUsable
-        const toUse = remainingAmount >= usable ? usable : remainingAmount;
-      
-        remainingAmount -= toUse;
-      
+        const toUse = remainingAmount >= usable ? usable : remainingAmount
+        
+        remainingAmount -= toUse
+        
         if (toUse) {
           // Adds a movement for each pack
           const newMovement = new this.movementModel({
@@ -150,13 +151,13 @@ export class MovementsService extends BasicService {
             movementType: MovementTypeEnum.DEPOSIT_USED,
             order: useMovementDto.orderId
           })
-        
+          
           movementsToCreate.push(await newMovement.save())
         }
       }
     }
-  
-    return movementsToCreate;
+    
+    return movementsToCreate
   }
   
   /**
@@ -171,39 +172,39 @@ export class MovementsService extends BasicService {
     const date = new Date()
     const query = {
       createdAt: {
-        "$gte": new Date(date.getFullYear(), date.getMonth(), 1),
-        "$lte": new Date(date.getFullYear(), new Date(new Date().setMonth(date.getMonth() + 1)).getMonth(), 0, 23, 59, 59)
+        '$gte': new Date(date.getFullYear(), date.getMonth(), 1),
+        '$lte': new Date(date.getFullYear(), new Date(new Date().setMonth(date.getMonth() + 1)).getMonth(), 0, 23, 59, 59)
       },
       usableFrom: {
-        "$lte": date,
+        '$lte': date
       },
       expiresAt: {
-        "$gte": date
+        '$gte': date
       },
       movementType: {
-        "$in": MovementTypeOutList
+        '$in': MovementTypeOutList
       },
       userId: castToObjectId(userId),
       clubPack: PackEnum.FAST
     }
-  
+    
     const movements = await this.movementModel.where(query).exec()
-    const maxExpendable = 1000;
-  
+    const maxExpendable = 1000
+    
     if (!movements || movements.length === 0) {
       return maxExpendable
     }
-  
+    
     // Max 2 movements per month
     if (movements.length > 1) {
       return 0
     }
-  
-    return movements.reduce((acc, curr) => {
-      acc -= curr.amountChange;
     
+    return movements.reduce((acc, curr) => {
+      acc -= curr.amountChange
+      
       if (acc < 0) {
-        acc = 0;
+        acc = 0
       }
       
       return acc
@@ -249,29 +250,29 @@ export class MovementsService extends BasicService {
         }
       }
     }
-  
+    
     // for each MovementType create an entry in the result to get the total only for that type
     const subTotals = {}
     for (const movementTypeEnumKey in MovementTypeEnum) {
-      const value = MovementTypeEnum[movementTypeEnumKey];
-    
+      const value = MovementTypeEnum[movementTypeEnumKey]
+      
       subTotals[value] = {
         $sum: {
-          $cond: [{ '$eq': ['$movementType', value] }, "$amountChange", 0]
+          $cond: [{ '$eq': ['$movementType', value] }, '$amountChange', 0]
         }
       }
     }
-  
+    
     // excludeFutureUsability allow to limit the result to only the usableOnes or not
     if (excludeFutureUsability) {
-      match.$match["usableFrom"] = {
+      match.$match['usableFrom'] = {
         '$lte': usableFrom
       }
     }
-  
+    
     // If the semesterId argument is provided, includes it in the match query
     if (semesterId) {
-      match.$match["semesterId"] = semesterId
+      match.$match['semesterId'] = semesterId
     }
     
     // Grouping query
@@ -279,7 +280,7 @@ export class MovementsService extends BasicService {
       '$group': {
         '_id': {
           'semesterId': '$semesterId',
-          'pack': "$clubPack"
+          'pack': '$clubPack'
         },
         'total': {
           '$sum': {
@@ -329,41 +330,41 @@ export class MovementsService extends BasicService {
         ...subTotals,
         // Add movements only for fast pack so i can check different conditions
         'movements': {
-          "$push": {
-            "$cond": [
-              { "$eq": ["$clubPack", "fast"] },
-              "$$ROOT",
-              "$$REMOVE"
+          '$push': {
+            '$cond': [
+              { '$eq': ['$clubPack', 'fast'] },
+              '$$ROOT',
+              '$$REMOVE'
             ]
-      
+            
           }
         }
       }
     }
-  
+    
     const toReturn: CalcTotalsGroup[] = await this.movementModel.aggregate([
         match,
         group,
         {
-          "$sort": {
-            "_id.semesterId": 1,
-            "_id.pack": 1,
+          '$sort': {
+            '_id.semesterId': 1,
+            '_id.pack': 1
           }
-        },
+        }
       ]
     )
-  
+    
     // Function that does a lot of stuff.
     // Touch at your own risk!!
     const reducedData = toReturn.reduce<Record<string, CalcTotalsDto>>((acc, el) => {
-      const { totalUsed, totalEarned } = el;
+      const { totalUsed, totalEarned } = el
       const usageData = calcBritesUsage(el._id.semesterId)
-      const pack = el._id["pack"] || "_none";
-      const semesterId = el._id.semesterId;
+      const pack = el._id['pack'] || '_none'
+      const semesterId = el._id.semesterId
       //convert to fixed decimal to avoid JS bug with decimals
       let totalRemaining = castToFixedDecimal(el.total)
       let forcedZero = false
-    
+      
       // If doesn't exist yet, add it with default values.
       if (!acc[semesterId]) {
         acc[semesterId] = {
@@ -375,53 +376,53 @@ export class MovementsService extends BasicService {
           totalUsable: 0,
           usableFrom: usageData.usableFrom.toUTCString(),
           usableNow: usageData.usableFrom.getTime() <= Date.now(),
-          expiresAt: usageData.expiresAt.toUTCString(),
+          expiresAt: usageData.expiresAt.toUTCString()
         }
       }
-    
+      
       // If totalRemaining is < than 0,
       // force the value to 0 and specify it in "forcedZero" variable
       if (totalRemaining < 0) {
-        totalRemaining = 0;
+        totalRemaining = 0
         forcedZero = true
       }
-    
+      
       const currentPack: CalcTotalPackDetails = {
         totalRemaining,
         totalUsed: /*forcedZero ? 0 : */castToFixedDecimal(totalUsed),
         // Must check the pack type to understand how much is really usable.
         totalUsable: (() => {
           let toReturn = 0
-        
+          
           switch (pack) {
             case PackEnum.PREMIUM:
-            // case "_none":
+              // case "_none":
               // Premium has no limits
               toReturn = totalRemaining
-              break;
-          
+              break
+            
             case PackEnum.FAST:
               // can use max 1000 per month
               // can use them with max 2 orders per month
               // can buy 1 gift card per month
-              const perMonthAmountLimit = 1000;
-              const perMonthExitsLimit = 2;
+              const perMonthAmountLimit = 1000
+              const perMonthExitsLimit = 2
               const currMonthDate = new Date()
-            
-              currMonthDate.setDate(1);
+              
+              currMonthDate.setDate(1)
               currMonthDate.setHours(0, 0, 0, 0)
-  
+              
               // Get current month exits. There can me max 2 (perMonthMovementsLimit)
               const currMonthExits = el.movements.filter(el => MovementTypeOutList.includes(el.movementType) && el.createdAt > currMonthDate)
               const currMonthUsed = currMonthExits.reduce((acc, curr) => acc += curr.amountChange, 0)
-  
+              
               if (currMonthExits.length < perMonthExitsLimit && currMonthUsed < perMonthAmountLimit) {
                 toReturn += totalRemaining
               }
-  
-              break;
+              
+              break
           }
-        
+          
           return toReturn
         })(),
         totalEarned: castToFixedDecimal(totalEarned),
@@ -431,16 +432,16 @@ export class MovementsService extends BasicService {
           return acc
         }, new CalcTotalPackDetailsSupTotals())
       }
-    
-      acc[semesterId].packs[pack] = currentPack;
-      acc[semesterId].totalRemaining += currentPack.totalRemaining;
+      
+      acc[semesterId].packs[pack] = currentPack
+      acc[semesterId].totalRemaining += currentPack.totalRemaining
       acc[semesterId].totalUsable += currentPack.totalUsable
       acc[semesterId].totalUsed += currentPack.totalUsed
       acc[semesterId].totalEarned += currentPack.totalEarned
-    
+      
       return acc
     }, {})
-  
+    
     return Object.values(reducedData)
     // .filter(el => el.total > 0)
   }
@@ -452,33 +453,33 @@ export class MovementsService extends BasicService {
    * If a semesterId is provided asaa argument, use that inside the filter, so will
    * consider only the specified semester total.
    */
-  async checkIfEnough(userId: string, amount: number, semesterId?: string): Promise<CalcTotalsDto[]> {
-    const totalBySemesters = await this.calcTotalBrites(userId, semesterId);
-  
+  async checkIfEnough (userId: string, amount: number, semesterId?: string): Promise<CalcTotalsDto[]> {
+    const totalBySemesters = await this.calcTotalBrites(userId, semesterId)
+    
     const packsMap = {
       [PackEnum.NONE]: null,
       [PackEnum.UNSUBSCRIBED]: null,
       [PackEnum.FAST]: await this.checkRemainingPerMonthFastUsage(userId),
       [PackEnum.PREMIUM]: 0
     }
-  
+    
     const filteredSemesters: CalcTotalsDto[] = totalBySemesters.reduce((acc, curr) => {
       const data: CalcTotalsDto = {
         ...curr
-      };
-    
-      const packs = {}
-    
-      Object.entries(curr.packs).forEach(entry => {
-        const pack = entry[0];
-        const value: CalcTotalPackDetails = entry[1]
+      }
       
+      const packs = {}
+      
+      Object.entries(curr.packs).forEach(entry => {
+        const pack = entry[0]
+        const value: CalcTotalPackDetails = entry[1]
+        
         // use only the valid packs
         if (packsMap[pack] !== null) {
           // if the pack is fast, calc the remaining for this month
           if (pack === PackEnum.FAST) {
-            const remaining = packsMap[pack];
-          
+            const remaining = packsMap[pack]
+            
             if (remaining) {
               packs[pack] = value
               packs[pack].totalUsable = remaining
@@ -488,48 +489,115 @@ export class MovementsService extends BasicService {
           }
         }
       })
-    
+      
       data.packs = packs
-    
+      
       if (Object.keys(packs).length > 0) {
         acc.push(data)
       }
-    
-      return acc;
+      
+      return acc
     }, [])
-  
+    
     // Total that is currently available to the user
     const totals = filteredSemesters.reduce((acc, curr) => {
       Object.entries(curr.packs).forEach(entry => {
         const value: CalcTotalPackDetails = entry[1]
-      
+        
         acc += value.totalUsable
       })
-  
-      return acc;
+      
+      return acc
     }, 0)
-  
+    
     if (totals < amount) {
-      throw new WithdrawalException("The requested amount is higher than the available amount.")
+      throw new WithdrawalException('The requested amount is higher than the available amount.')
     }
-  
+    
     return filteredSemesters
   }
   
-  async recapitalization(data: RecapitalizationDto) {
-    const user = await this.userModel.findById(data.userId).exec();
+  async recapitalization (data: RecapitalizationDto) {
+    const user = await this.userModel.findById(data.userId).exec()
     
     if (!user) {
-      throw new HttpException('Can\'t find the requested user', 400);
+      throw new HttpException('Can\'t find the requested user', 400)
     }
     
     const newMovement = new this.movementModel({
       ...data,
-      notes: "Ricapitalizzazione",
+      notes: 'Ricapitalizzazione',
       clubPack: user.clubPack ?? PackEnum.UNSUBSCRIBED,
       movementType: MovementTypeEnum.INTEREST_RECAPITALIZED
-    });
+    })
     
-    return newMovement.save();
+    return newMovement.save()
+  }
+  
+  addMainReport (data: CalcTotalsDto[]): ReadDashboardSemestersDto {
+    const expirations: Record<string, DashboardSemesterExpirations> = {}
+    let totalUsable = 0
+    let totalRemaining = 0
+    
+    data.forEach(el => {
+      const date = el.expiresAt.toString()
+      
+      if (!el.usableNow) {
+        return
+      }
+      
+      if (!expirations[date]) {
+        expirations[date] = {
+          date: el.expiresAt,
+          remaining: 0,
+          usable: 0
+        }
+      }
+      
+      expirations[date].usable += el.totalUsable
+      expirations[date].remaining += el.totalRemaining
+      
+      totalUsable += el.totalUsable
+      totalRemaining += el.totalRemaining
+    })
+    
+    return {
+      totalUsable,
+      totalRemaining,
+      expirations: Object.values(expirations),
+      semesters: data
+    }
+  }
+  
+  async calcTotalFastBrites (userId: string): Promise<ReadDashboardSemestersDto> {
+    const totalBySemesters = await this.calcTotalBrites(userId)
+    
+    const filteredSemesters: CalcTotalsDto[] = totalBySemesters.reduce((acc, curr) => {
+      const data: CalcTotalsDto = {
+        ...curr
+      }
+      
+      const packs = {}
+      
+      Object.entries(curr.packs).forEach(entry => {
+        const pack = entry[0]
+        const value: CalcTotalPackDetails = entry[1]
+        
+        // use only the valid packs
+        if (pack === PackEnum.FAST) {
+          packs[pack] = value
+        }
+      })
+      
+      data.packs = packs
+      
+      if (Object.keys(packs).length > 0) {
+        acc.push(data)
+      }
+      
+      return acc
+    }, [])
+    
+    return this.addMainReport(filteredSemesters)
   }
 }
