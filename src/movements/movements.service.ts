@@ -74,8 +74,10 @@ export class MovementsService extends BasicService {
       throw new HttpException('Can\'t find the requested user', 400)
     }
     
+    let excludeFast = removeMovementDto.clubPack !== PackEnum.FAST
+    
     // await this.checkIfEnough(userId, removeMovementDto.amountChange, removeMovementDto.semesterId)
-    const totals = await this.calcTotalBrites(userId, removeMovementDto.semesterId)
+    const totals = await this.calcTotalBrites(userId, removeMovementDto.semesterId, true, excludeFast)
     
     if (!totals
       || (totals[0] && !totals[0].packs[removeMovementDto.clubPack])
