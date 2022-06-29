@@ -253,9 +253,15 @@ export class MovementsService extends BasicService {
       }
     }
     
+    // If excludeFast, match only NON fast brites
     if (excludeFast) {
       match['$match']['clubPack'] = {
         '$ne': PackEnum.FAST
+      }
+    } else {
+      // Otherwise, match only fast pack
+      match['$match']['clubPack'] = {
+        '$eq': PackEnum.FAST
       }
     }
     
