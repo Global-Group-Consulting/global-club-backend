@@ -32,12 +32,8 @@ export class DashboardController extends BasicController {
       }
       
       return this.dashboardService.readAdminDashboard()
-    } else if (this.dashboardService.userIsAgent) {
-      if (query.userId) {
-        return this.dashboardService.readUserDashboard(query.userId)
-      }
     } else {
-      return this.dashboardService.readUserDashboard()
+      return this.dashboardService.readUserDashboard(query.userId)
     }
   }
 }
