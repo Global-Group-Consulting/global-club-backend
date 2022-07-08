@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  api:
+    container_name: global-club-api
+    build: .
+    volumes:
+      - ./:/usr/src/app
+      - nodemodules:/usr/src/app/node_modules
+    ports:
+      - "3335:3000"
+      - "9230:9229"
+    networks:
+      - api
+    environment:
+      - SERVER_KEY=srv-NVvy5KgaaNrQu4E-club
+      - DB_CLUB_CONNECTION_STRING=mongodb+srv://ggc_staging:1H%25Xv%246xm4iN@cluster0.t1po0.mongodb.net/ggc_club_staging?retryWrites=true&w=majority
+#      - DB_CLUB_CONNECTION_STRING=mongodb+srv://ggc_production:1H%25Xv%246xm4iN@cluster0.t1po0.mongodb.net/global_club?retryWrites=true&w=majority
+      - DB_LEGACY_CONNECTION_STRING=mongodb+srv://ggc_staging:1H%25Xv%246xm4iN@cluster0.t1po0.mongodb.net/ggc_staging?retryWrites=true&w=majority
+      - SWAGGER_KEY=Y5mKW0ofP6QUl7IO0gz5dIdjOcjoxPEB
+      - MAIL_FROM=noreply@globalgroup.consulting
+      - MAIN_SERVER_URL=http://main-api:3000/api
+      - MAIL_SITE_URL=http://local.private.globalgroup.consulting
+      - FILES_SERVER_URL=https://files.globalgroup.consulting/api
+      - QUEUE_HOST=db-mysql-fra1-85164-do-user-10775830-0.b.db.ondigitalocean.com
+      - QUEUE_USER=stg_admin
+      - QUEUE_PASSWORD=E04fpS2kQxPzI5QK
+      - QUEUE_DATABASE=stg_global
+      - QUEUE_NAME=default
+      - QUEUE_PORT=25060
+      - QUEUE_SSL_CERT=db-ca-certificate.crt
+      - HOST=0.0.0.0
+      - PORT=3000
+volumes:
+  nodemodules: { }
+networks:
+  api:
+#    external: true
+    name: globalNetwork
