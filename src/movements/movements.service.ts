@@ -26,6 +26,7 @@ import { PaginatedResultMovementDto } from './dto/paginated-result-movement.dto'
 import { User, UserDocument } from '../users/schemas/user.schema'
 import { RecapitalizationDto } from './dto/recapitalization.dto'
 import { DashboardSemesterExpirations, ReadDashboardSemestersDto } from '../dashboard/dto/read-dashboard-semesters.dto'
+import { getLast4Semesters } from '../utilities/Semesters'
 
 @Injectable()
 export class MovementsService extends BasicService {
@@ -287,6 +288,7 @@ export class MovementsService extends BasicService {
     // If the semesterId argument is provided, includes it in the match query
     if (semesterId) {
       match.$match['semesterId'] = semesterId
+      delete match.$match.expiresAt
     }
     
     // Grouping query
@@ -389,7 +391,8 @@ export class MovementsService extends BasicService {
           totalUsed: 0,
           totalUsable: 0,
           usableFrom: usageData.usableFrom.toUTCString(),
-          usableNow: usageData.usableFrom.getTime() <= Date.now(),
+          usableNow: usageData.usableFrom.getTime() <= Date.now() && usageData.expiresAt.getTime() > expiresAt.getTime(),
+          expired: usageData.expiresAt.getTime() < expiresAt.getTime(),
           expiresAt: usageData.expiresAt.toUTCString()
         }
       }
@@ -547,10 +550,21 @@ export class MovementsService extends BasicService {
     return newMovement.save()
   }
   
-  addMainReport (data: CalcTotalsDto[]): ReadDashboardSemestersDto {
+  async getPastSemesterTotalBrites (userId): Promise<CalcTotalsDto[]> {
+    const pastSemesterId = getLast4Semesters()
+    
+    return await this.calcTotalBrites(userId, pastSemesterId[pastSemesterId.length - 1], false)
+  }
+  
+  async addMainReport (data: CalcTotalsDto[], includePastSemester = false, userId?: string): Promise<ReadDashboardSemestersDto> {
     const expirations: Record<string, DashboardSemesterExpirations> = {}
     let totalUsable = 0
     let totalRemaining = 0
+    
+    if (includePastSemester) {
+      const pastSemesterData = await this.getPastSemesterTotalBrites(userId)
+      data.push(...pastSemesterData)
+    }
     
     data.forEach(el => {
       const date = el.expiresAt.toString()
@@ -578,7 +592,9 @@ export class MovementsService extends BasicService {
       totalUsable,
       totalRemaining,
       expirations: Object.values(expirations),
-      semesters: data
+      semesters: data.sort((a, b) => {
+        return +a.semesterId.replace('_', '.') - +b.semesterId.replace('_', '.')
+      })
     }
   }
   
