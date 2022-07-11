@@ -627,6 +627,6 @@ export class MovementsService extends BasicService {
       return acc
     }, [])
     
-    return this.addMainReport(filteredSemesters)
+    return this.addMainReport(filteredSemesters, true, userId)
   }
 }
