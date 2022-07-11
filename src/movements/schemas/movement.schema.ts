@@ -24,7 +24,7 @@ export class Movement {
   @Prop({ required: true })
   semesterId: string
   
-  @Prop({ required: true })
+  @Prop({})
   notes: string
   
   @Prop({ required: true })
@@ -38,6 +38,9 @@ export class Movement {
   
   @Prop({ required: true })
   clubPack: PackEnum
+  
+  @Prop({})
+  clubPackChange: any[]
   
   @Prop({
     immutable: true,

@@ -27,6 +27,7 @@ import { User, UserDocument } from '../users/schemas/user.schema'
 import { RecapitalizationDto } from './dto/recapitalization.dto'
 import { DashboardSemesterExpirations, ReadDashboardSemestersDto } from '../dashboard/dto/read-dashboard-semesters.dto'
 import { getLast4Semesters } from '../utilities/Semesters'
+import { ClubPackChangeException } from './exceptions/clubPackChange.exception'
 
 @Injectable()
 export class MovementsService extends BasicService {
@@ -628,5 +629,31 @@ export class MovementsService extends BasicService {
     }, [])
     
     return this.addMainReport(filteredSemesters, true, userId)
+  }
+  
+  /**
+   * Changes the club pack of the specified movement.
+   *
+   * @param {string} movementId
+   * @param {PackEnum} newPack
+   */
+  async changePack (movementId: string, newPack: PackEnum): Promise<Movement> {
+    const movement = await this.findOrFail<MovementDocument>(movementId)
+    
+    if (movement.clubPack === newPack) {
+      throw new ClubPackChangeException('The new pack is the same as the old one.')
+    }
+    
+    movement.clubPackChange.unshift({
+      prevPack: movement.clubPack,
+      newPack,
+      date: new Date(),
+      changedBy: this.authUser.id
+    })
+    
+    movement.clubPack = newPack
+    await movement.save()
+    
+    return movement
   }
 }

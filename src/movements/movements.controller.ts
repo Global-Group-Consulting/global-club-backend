@@ -14,6 +14,7 @@ import { JobGuard } from '../job.guard'
 import { MovementsJob } from './jobs/movements.job'
 import { JobMovementRecapitalizeDto } from './dto/job-movement-recapitalize.dto'
 import { ReadDashboardSemestersDto } from '../dashboard/dto/read-dashboard-semesters.dto'
+import { ChangePackDto } from './dto/change-pack.dto'
 
 @ApiBearerAuth()
 @ApiBasicAuth('client-key')
@@ -87,6 +88,15 @@ export class MovementsController {
   @Delete(':id/delete')
   destroy (@Param() params: ReadDto) {
     return this.movementsService.destroy(params.id)
+  }
+  
+  /**
+   * Change pack for a movement
+   */
+  @ApiOperation({ summary: 'Change pack for a movement' })
+  @Patch(':id/changePack')
+  changePack (@Param() params: ReadDto, @Body() body: ChangePackDto): Promise<Movement> {
+    return this.movementsService.changePack(params.id, body.newPack)
   }
   
   /**
