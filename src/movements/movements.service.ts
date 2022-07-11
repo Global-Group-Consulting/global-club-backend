@@ -551,19 +551,19 @@ export class MovementsService extends BasicService {
     return newMovement.save()
   }
   
-  async getPastSemesterTotalBrites (userId): Promise<CalcTotalsDto[]> {
+  async getPastSemesterTotalBrites (userId, excludeFast: boolean): Promise<CalcTotalsDto[]> {
     const pastSemesterId = getLast4Semesters()
     
-    return await this.calcTotalBrites(userId, pastSemesterId[pastSemesterId.length - 1], false)
+    return await this.calcTotalBrites(userId, pastSemesterId[pastSemesterId.length - 1], false, excludeFast)
   }
   
-  async addMainReport (data: CalcTotalsDto[], includePastSemester = false, userId?: string): Promise<ReadDashboardSemestersDto> {
+  async addMainReport (data: CalcTotalsDto[], includePastSemester = false, userId?: string, excludeFast = true): Promise<ReadDashboardSemestersDto> {
     const expirations: Record<string, DashboardSemesterExpirations> = {}
     let totalUsable = 0
     let totalRemaining = 0
     
     if (includePastSemester) {
-      const pastSemesterData = await this.getPastSemesterTotalBrites(userId)
+      const pastSemesterData = await this.getPastSemesterTotalBrites(userId, excludeFast)
       data.push(...pastSemesterData)
     }
     
@@ -628,7 +628,7 @@ export class MovementsService extends BasicService {
       return acc
     }, [])
     
-    return this.addMainReport(filteredSemesters, true, userId)
+    return this.addMainReport(filteredSemesters, true, userId, false)
   }
   
   /**
