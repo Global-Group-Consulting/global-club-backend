@@ -472,7 +472,10 @@ export class MovementsService extends BasicService {
    */
   async checkIfEnough (userId: string, amount: number, semesterId?: string): Promise<CalcTotalsDto[]> {
     const totalBySemesters = await this.calcTotalBrites(userId, semesterId)
-    
+    const totalBySemestersFast = await this.calcTotalBrites(userId, semesterId, null, false)
+
+    totalBySemesters.unshift(...totalBySemestersFast)
+
     const packsMap = {
       [PackEnum.NONE]: null,
       [PackEnum.UNSUBSCRIBED]: null,
