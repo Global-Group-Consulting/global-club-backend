@@ -28,7 +28,8 @@ export class OrderEventsListeners {
         title: await this.i18n.translate('notifications.orderUpdate.title'),
         content: await this.i18n.translate('notifications.orderUpdate.content', {
           args: {
-            newStatus: newStatusString
+            newStatus: newStatusString,
+            orderId: order._id.toString(),
           }
         }),
         action: {
