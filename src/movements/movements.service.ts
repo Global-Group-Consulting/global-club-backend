@@ -134,7 +134,8 @@ export class MovementsService extends BasicService {
       // for each available pack
       for (const packKey of Object.keys(semester.packs)) {
         
-        if (!validPacks.includes(packKey as PackEnum)) {
+        // check also if totalUsable is higher than 0
+        if (!validPacks.includes(packKey as PackEnum) || semester.totalUsable === 0) {
           continue
         }
         
