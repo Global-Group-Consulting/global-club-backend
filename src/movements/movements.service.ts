@@ -28,6 +28,7 @@ import { RecapitalizationDto } from './dto/recapitalization.dto'
 import { DashboardSemesterExpirations, ReadDashboardSemestersDto } from '../dashboard/dto/read-dashboard-semesters.dto'
 import { getLast4Semesters } from '../utilities/Semesters'
 import { ClubPackChangeException } from './exceptions/clubPackChange.exception'
+import { Order } from '../orders/schemas/order.schema'
 
 @Injectable()
 export class MovementsService extends BasicService {
@@ -99,7 +100,7 @@ export class MovementsService extends BasicService {
   
   async destroy (movementId: string) {
     const movement: MovementDocument = await this.model.findById(movementId)
-    const deletableTypes = [MovementTypeEnum.DEPOSIT_ADDED, MovementTypeEnum.DEPOSIT_REMOVED]
+    const deletableTypes = [MovementTypeEnum.DEPOSIT_ADDED, MovementTypeEnum.DEPOSIT_REMOVED, MovementTypeEnum.DEPOSIT_USED]
     
     if (!movement) {
       throw new HttpException('Can\'t find the requested movement', 404)
@@ -109,6 +110,14 @@ export class MovementsService extends BasicService {
     if (!deletableTypes.includes(movement.movementType)) {
       throw new HttpException('Can\'t remove this type of movement', 400)
     }
+    
+    // @ts-ignore
+    // const order: Order = (await movement.populate('order')).order as Order
+    // const isRepayment = order.products[0].repayment
+    
+    // if (isRepayment) {
+      // can't autoremove the relative movement from main-api because i shoul recalc the totals.
+    // }
     
     return movement.delete()
   }
@@ -474,9 +483,9 @@ export class MovementsService extends BasicService {
   async checkIfEnough (userId: string, amount: number, semesterId?: string): Promise<CalcTotalsDto[]> {
     const totalBySemesters = await this.calcTotalBrites(userId, semesterId)
     const totalBySemestersFast = await this.calcTotalBrites(userId, semesterId, null, false)
-
+    
     totalBySemesters.unshift(...totalBySemestersFast)
-
+    
     const packsMap = {
       [PackEnum.NONE]: null,
       [PackEnum.UNSUBSCRIBED]: null,

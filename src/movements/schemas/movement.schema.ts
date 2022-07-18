@@ -33,7 +33,7 @@ export class Movement {
   @Prop({})
   fromUUID: string
   
-  @Prop({ type: MongoSchema.Types.ObjectId, ref: 'Orders' })
+  @Prop({ type: MongoSchema.Types.ObjectId, ref: 'Order' })
   order: string
   
   @Prop({ required: true })
