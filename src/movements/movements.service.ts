@@ -28,7 +28,6 @@ import { RecapitalizationDto } from './dto/recapitalization.dto'
 import { DashboardSemesterExpirations, ReadDashboardSemestersDto } from '../dashboard/dto/read-dashboard-semesters.dto'
 import { getLast4Semesters } from '../utilities/Semesters'
 import { ClubPackChangeException } from './exceptions/clubPackChange.exception'
-import { Order } from '../orders/schemas/order.schema'
 
 @Injectable()
 export class MovementsService extends BasicService {
@@ -116,13 +115,13 @@ export class MovementsService extends BasicService {
     // const isRepayment = order.products[0].repayment
     
     // if (isRepayment) {
-      // can't autoremove the relative movement from main-api because i shoul recalc the totals.
+    // can't autoremove the relative movement from main-api because i shoul recalc the totals.
     // }
     
     return movement.delete()
   }
   
-  async use (userId: string, useMovementDto: UseMovementDto): Promise<Movement[]> {
+  async use (userId: string, useMovementDto: UseMovementDto, requiredPacks: PackEnum[]): Promise<Movement[]> {
     if (!userId) {
       throw new UpdateException('Missing userId')
     }
@@ -132,13 +131,13 @@ export class MovementsService extends BasicService {
     }
     
     const totalBySemesters = await this.checkIfEnough(userId, useMovementDto.amountChange)
-    const movementsToCreate: Movement[] = []
+    const movementsToCreate: MovementDocument[] = []
     
     let remainingAmount = useMovementDto.amountChange
     
     // for each semester
     for (const semester of totalBySemesters) {
-      const validPacks = [PackEnum.FAST, PackEnum.PREMIUM]
+      const validPacks = requiredPacks && requiredPacks.length > 0 ? requiredPacks : [PackEnum.FAST, PackEnum.PREMIUM]
       
       // for each available pack
       for (const packKey of Object.keys(semester.packs)) {
@@ -150,6 +149,12 @@ export class MovementsService extends BasicService {
         
         const usable = semester.packs[packKey].totalUsable
         const toUse = remainingAmount >= usable ? usable : remainingAmount
+        const fastMovementsAmount = movementsToCreate.reduce((acc, curr) => curr.clubPack === PackEnum.FAST ? acc + curr.amountChange : acc, 0)
+        
+        // Avoid creating too many fast movements
+        if (toUse > 0 && packKey === PackEnum.FAST && fastMovementsAmount >= 1000) {
+          continue
+        }
         
         remainingAmount -= toUse
         
@@ -166,12 +171,26 @@ export class MovementsService extends BasicService {
             order: useMovementDto.orderId
           })
           
-          movementsToCreate.push(await newMovement.save())
+          // movementsToCreate.push(await newMovement.save())
+          movementsToCreate.push(newMovement)
         }
       }
     }
     
-    return movementsToCreate
+    // must check if the sum of generated movements is equal to the amountChange
+    const movementsAmount = movementsToCreate.reduce((acc, cur) => acc + cur.amountChange, 0)
+    
+    if (movementsAmount !== useMovementDto.amountChange) {
+      throw new UpdateException('Disponibilità insufficiente per il pack del prodotto. (' + requiredPacks.join('|') + ')')
+    }
+    
+    const toReturn = []
+    
+    for (const movement of movementsToCreate) {
+      toReturn.push(await movement.save())
+    }
+    
+    return toReturn
   }
   
   /**

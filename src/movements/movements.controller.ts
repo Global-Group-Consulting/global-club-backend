@@ -77,9 +77,9 @@ export class MovementsController {
   
   /* @ApiOperation({summary: "Use brites"})
   @Patch(":id") */
-  use (@Body() useMovementDto: UseMovementDto, @Param() params: ReadDto): Promise<Movement[]> {
+  /*use (@Body() useMovementDto: UseMovementDto, @Param() params: ReadDto): Promise<Movement[]> {
     return this.movementsService.use(params.id, useMovementDto)
-  }
+  }*/
   
   /**
    * Manually delete a movement from db
