@@ -38,7 +38,7 @@ export class UsersOrderEventsListeners {
     await user.save()
   }
   
-  @OnEvent("order.cancelled")
+  @OnEvent("order.packChange.cancelled")
   async handleOrderCancelledEvent(payload: OrderCancelledEvent) {
     if (!payload.order.packChangeOrder) {
       return

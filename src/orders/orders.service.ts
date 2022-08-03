@@ -567,13 +567,19 @@ export class OrdersService extends BasicService {
       
       if (order.status === OrderStatusEnum.CANCELLED) {
         order.cancelReason = updateOrderStatusDto.reason
-        
-        this.eventEmitter.emit('order.status.cancelled', new OrderCancelledEvent({
+        const eventData = {
           order,
           userId: order.user._id,
           newStatus: order.status,
           reason: updateOrderStatusDto.reason
-        }))
+        }
+        
+        // change the user pack eventually
+        if (order.packChangeOrder) {
+          this.eventEmitter.emit('order.packChange.cancelled', new OrderCancelledEvent(eventData))
+        }
+        
+        this.eventEmitter.emit('order.status.cancelled', new OrderCancelledEvent(eventData))
       }
       
       const result = await order.save()
