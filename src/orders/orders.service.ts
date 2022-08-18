@@ -381,6 +381,8 @@ export class OrdersService extends BasicService {
       return order
     })
     
+    console.log(paginatedData)
+    
     return paginatedData
   }
   
