@@ -496,7 +496,7 @@ export class MovementsService extends BasicService {
    * Based on the calcTotalBrites result, checks if the user has enough brites, based on the sum of all
    * available semesters.
    *
-   * If a semesterId is provided asaa argument, use that inside the filter, so will
+   * If a semesterId is provided as an argument, use that inside the filter, so will
    * consider only the specified semester total.
    */
   async checkIfEnough (userId: string, amount: number, semesterId?: string): Promise<CalcTotalsDto[]> {
@@ -531,7 +531,8 @@ export class MovementsService extends BasicService {
             
             if (remaining) {
               packs[pack] = value
-              packs[pack].totalUsable = remaining
+              // even if there is a monthly remaining, this can not be higher than the semesters total remaining
+              packs[pack].totalUsable = remaining > value.totalRemaining ? value.totalRemaining : remaining
             }
           } else {
             packs[pack] = value
