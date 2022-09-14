@@ -209,7 +209,6 @@ export class UsersService extends BasicService {
       // Generate the new order with relative communication
       const newOrder = await this.orderService.createPackChangeOrder({
         notes: `Cambio pack da ${userToUpdate.clubPack} a <strong>Premium</strong>.<br>
-              Costo: 5% del deposito<br>
               Deposito: € ${formatMoney(userDeposit)}<br>
               Costo cambio: € ${formatMoney(changeCost)}`,
         products: [
