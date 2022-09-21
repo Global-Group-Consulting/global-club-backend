@@ -12,6 +12,8 @@ import { ReadUserDto } from './dto/read-user.dto'
 import { User } from './schemas/user.schema'
 import { UpdateUserPackDto } from './dto/update-user-pack.dto'
 import { UpdateUserPreferencesDto } from './dto/update-user-preferences.dto'
+import { FindException } from '../_exceptions/find.exception'
+import { pick } from 'lodash'
 
 @ApiBearerAuth()
 @ApiBasicAuth('client-key')
@@ -36,8 +38,16 @@ export class UsersController {
   }
   
   @Get('/filterOptionsList')
-  filterOptionsList (@Query() { value }: any): Promise<ReadUserGroupsDto[]> {
+  filterOptionsList (@Query() { value }: any): Promise<string[]> {
     return this.usersService.findForOptionsList(value)
+  }
+  
+  @Get('/checkCardNum')
+  async checkCardNum (@Query() query: { cardNum: string }) {
+    const cardNum = query.cardNum
+    const user = await this.usersService.findOneByCardNum(cardNum)
+    
+    return pick(user.toJSON(), ['_id', 'firstName', 'lastName', 'email', 'clubCardNumber'])
   }
   
   @ApiResponse({
