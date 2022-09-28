@@ -8,6 +8,7 @@ import { I18nService } from 'nestjs-i18n'
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter'
 import { NotificationTypeEnum } from '../../users/enums/notification.type.enum'
 import { PlatformEnum } from '../../queue/dto/notification.dto'
+import { OrderStatusEnum } from '../enums/order.status.enum'
 
 @Injectable()
 export class OrderEventsListeners {
@@ -28,7 +29,8 @@ export class OrderEventsListeners {
         title: await this.i18n.translate('notifications.orderUpdate.title'),
         content: await this.i18n.translate('notifications.orderUpdate.content', {
           args: {
-            newStatus: newStatusString
+            newStatus: newStatusString,
+            orderId: order._id.toString()
           }
         }),
         action: {

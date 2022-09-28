@@ -51,7 +51,11 @@ export class CommunicationEventsListeners {
     
     await this.queue.dispatchNotification({
         type: NotificationTypeEnum.NEW_MESSAGE,
-        title: await this.i18n.translate('notifications.newMessage.title'),
+        title: await this.i18n.translate('notifications.newMessage.title', {
+          args: {
+            user: payload.sender.firstName + ' ' + payload.sender.lastName
+          }
+        }),
         content: await this.i18n.translate(`notifications.newMessage.${payload.type ? 'contentWithType' : 'content'}`, {
           args: {
             order: payload.order,

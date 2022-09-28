@@ -13,6 +13,7 @@ export class MovementsJob {
     return this.movementsService.recapitalization({
       amountChange: data.amount,
       userId: data.userId,
+      fromUUID: data.fromUUID,
       semesterId,
     })
   }

@@ -1,19 +1,25 @@
-import {PartialType} from '@nestjs/swagger';
-import {IsMongoId, IsNotEmpty, IsNumber, IsString, Min} from "class-validator";
+import { IsMongoId, IsNotEmpty, IsNumber, IsString, Min } from 'class-validator'
+import { Transform } from 'class-transformer'
 
 export class JobMovementRecapitalizeDto {
   
   @IsNotEmpty()
   @IsNumber()
-  @Min(1)
-  amountEuro: number;
+  @Transform(({ value }) => +(value.toFixed(2)))
+    // @Min(1)
+  amountEuro: number
   
   @IsNotEmpty()
   @IsNumber()
-  @Min(1)
-  amount: number;
+  @Transform(({ value }) => +(value.toFixed(2)))
+    // @Min(1)
+  amount: number
   
   @IsNotEmpty()
   @IsMongoId()
-  userId: string;
+  userId: string
+  
+  @IsNotEmpty()
+  @IsString()
+  fromUUID: string
 }

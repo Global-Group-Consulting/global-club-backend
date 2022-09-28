@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { InjectModel } from '@nestjs/mongoose'
 import { User, UserDocument } from './schemas/user.schema'
-import { Model } from 'mongoose'
+import { FilterQuery, Model } from 'mongoose'
 import { BasicService, PaginatedResult } from '../_basics/BasicService'
 import { ReadUserGroupsDto } from './dto/read-user-groups.dto'
 import { PaginatedFilterUserDto } from './dto/paginated-filter-user.dto'
@@ -23,10 +23,11 @@ import { UpdateException } from '../_exceptions/update.exception'
 import { PackEnum } from '../packs/enums/pack.enum'
 import { UserAclRolesEnum } from './enums/user.acl.roles.enum'
 import { UpdateUserPreferencesDto } from './dto/update-user-preferences.dto'
+import { FindException } from '../_exceptions/find.exception'
 
 @Injectable()
 export class UsersService extends BasicService {
-  model: any
+  model: Model<UserDocument>
   
   constructor (@InjectModel(User.name) private userModel: Model<UserDocument>,
     private httpService: AxiosService,
@@ -63,7 +64,7 @@ export class UsersService extends BasicService {
     )
   }
   
-  async findForOptionsList (value: string) {
+  async findForOptionsList (value: string): Promise<string[]> {
     if (!value || value.trim().length <= 2) {
       return []
     }
@@ -71,7 +72,8 @@ export class UsersService extends BasicService {
     const toSearch = value.split(' ')
     
     const projection = { firstName: 1, lastName: 1 }
-    const filter = {
+    const filter: FilterQuery<UserDocument> = {
+      // @ts-ignore
       roles: {
         $in: [UserAclRolesEnum.AGENT, UserAclRolesEnum.CLIENT]
       },
@@ -113,13 +115,27 @@ export class UsersService extends BasicService {
       password: 0 // avoid returning user password
     } : userBasicProjection
     
-    const user = (await this.userModel.findById(id, projection).exec()).toJSON();
+    const user = (await this.userModel.findById(id, projection).exec()).toJSON()
     
     if (user.referenceAgent) {
-      user["referenceAgentData"] = await this.userModel.findById(user.referenceAgent, userBasicProjection).exec() as any
+      user['referenceAgentData'] = await this.userModel.findById(user.referenceAgent, userBasicProjection).exec() as any
     }
     
     return user
+  }
+  
+  async findOneByCardNum (cardNum: string): Promise<UserDocument> {
+    if (!cardNum) {
+      throw new FindException('Card number not provided', 400)
+    }
+    
+    const user = await this.model.where('clubCardNumber', cardNum).exec()
+    
+    if (!user || !user.length) {
+      throw new FindException('User not found', 404)
+    }
+    
+    return user[0]
   }
   
   async findAdmins () {
@@ -209,7 +225,6 @@ export class UsersService extends BasicService {
       // Generate the new order with relative communication
       const newOrder = await this.orderService.createPackChangeOrder({
         notes: `Cambio pack da ${userToUpdate.clubPack} a <strong>Premium</strong>.<br>
-              Costo: 5% del deposito<br>
               Deposito: € ${formatMoney(userDeposit)}<br>
               Costo cambio: € ${formatMoney(changeCost)}`,
         products: [

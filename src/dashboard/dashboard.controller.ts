@@ -1,14 +1,14 @@
-import { Body, Controller, Get, Query, Req } from '@nestjs/common';
-import { DashboardService } from './dashboard.service';
-import { ApiBasicAuth, ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AuthRequest } from '../_basics/AuthRequest';
-import { BasicController } from '../_basics/BasicController';
-import { ReadDashboardSemestersDto } from './dto/read-dashboard-semesters.dto';
-import { ReadDashboardDto } from './dto/read-dashboard.dto';
+import { Body, Controller, Get, Query, Req } from '@nestjs/common'
+import { DashboardService } from './dashboard.service'
+import { ApiBasicAuth, ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { AuthRequest } from '../_basics/AuthRequest'
+import { BasicController } from '../_basics/BasicController'
+import { ReadDashboardSemestersDto } from './dto/read-dashboard-semesters.dto'
+import { ReadDashboardDto } from './dto/read-dashboard.dto'
 
 @ApiBearerAuth()
-@ApiBasicAuth("client-key")
-@ApiTags("Dashboard")
+@ApiBasicAuth('client-key')
+@ApiTags('Dashboard')
 @Controller('dashboard')
 export class DashboardController extends BasicController {
   constructor (private readonly dashboardService: DashboardService) {
@@ -24,7 +24,7 @@ export class DashboardController extends BasicController {
       <li><strong>totalUsable</strong>: refers to the total amount of money the user has AND TAKES in consideration all the various packs conditions. For this reasons, this amount could equal or less than “totalRemaining”.</li>
     </ul>`
   })
-  @Get("statistics")
+  @Get('statistics')
   async read (@Query() query: ReadDashboardDto): Promise<ReadDashboardSemestersDto> {
     if (this.dashboardService.userIsAdmin) {
       if (query.userId) {
@@ -33,7 +33,7 @@ export class DashboardController extends BasicController {
       
       return this.dashboardService.readAdminDashboard()
     } else {
-      return this.dashboardService.readUserDashboard()
+      return this.dashboardService.readUserDashboard(query.userId)
     }
   }
 }
