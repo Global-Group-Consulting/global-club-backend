@@ -1,6 +1,6 @@
-import { Model, Schema } from 'mongoose'
+import { Model, Types } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
-import { Inject, Injectable } from '@nestjs/common'
+import { ForbiddenException, Inject, Injectable } from '@nestjs/common'
 import { CreateOrderDto } from './dto/create-order.dto'
 import { Order, OrderDocument } from './schemas/order.schema'
 import { Product, ProductDocument } from '../products/schemas/product.schema'
@@ -28,11 +28,7 @@ import { OrderPackChangeCompletedEvent } from './events/OrderPackChangeCompleted
 import { OrderCancelledEvent } from './events/OrderCancelledEvent'
 import { Attachment } from '../_schemas/attachment.schema'
 import { OrderStatusEvent } from './events/OrderStatusEvent'
-import { forEach } from 'lodash'
-import { MessageRead } from '../communications/schemas/messsage.read.schema'
 import { Communication } from '../communications/schemas/communications.schema'
-import { CartProduct } from './entities/cart-product.entity'
-import { Types } from 'mongoose'
 
 @Injectable()
 export class OrdersService extends BasicService {
@@ -510,6 +506,16 @@ export class OrdersService extends BasicService {
       throw new UpdateException('This order is completed so the status can\'t be changed')
     }
     
+    // Allow to change status only for its own orders or for admin users.
+    if (!this.userIsAdmin && order.user._id.toString() !== this.authUser._id.toString()) {
+      throw new ForbiddenException('You can\'t update the status of an order that is not yours')
+    }
+    
+    // Allow to cancel a user for a NON admin user, only if the order is in the "pending" status.
+    if (updateOrderStatusDto.status === OrderStatusEnum.CANCELLED && !this.userIsAdmin && order.status !== OrderStatusEnum.PENDING) {
+      throw new ForbiddenException('You can\'t cancel an order that is not in pending status.')
+    }
+    
     order.status = updateOrderStatusDto.status
     
     try {
@@ -517,7 +523,8 @@ export class OrdersService extends BasicService {
       const communication = await this.communicationService.addMessage(order.communication as any, {
         message: 'status changed',
         messageData: {
-          orderStatus: updateOrderStatusDto.status
+          orderStatus: updateOrderStatusDto.status,
+          cancelledByUser: updateOrderStatusDto.status === OrderStatusEnum.CANCELLED && order.user._id.toString() === this.authUser._id.toString()
         }
       }, MessageTypeEnum.ORDER_STATUS_UPDATE)
       
@@ -567,11 +574,18 @@ export class OrdersService extends BasicService {
       
       if (order.status === OrderStatusEnum.CANCELLED) {
         order.cancelReason = updateOrderStatusDto.reason
+        
         const eventData = {
           order,
           userId: order.user._id,
           newStatus: order.status,
-          reason: updateOrderStatusDto.reason
+          reason: updateOrderStatusDto.reason,
+          // if auth user is the same as the order owner, then the user cancelled the order
+          cancelledByUser: order.user._id.toString() === this.authUser._id.toString()
+        }
+        
+        if (eventData.cancelledByUser) {
+          order.cancelledByUser = true
         }
         
         // change the user pack eventually
