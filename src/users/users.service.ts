@@ -24,6 +24,7 @@ import { PackEnum } from '../packs/enums/pack.enum'
 import { UserAclRolesEnum } from './enums/user.acl.roles.enum'
 import { UpdateUserPreferencesDto } from './dto/update-user-preferences.dto'
 import { FindException } from '../_exceptions/find.exception'
+import { UserClubPackEntity } from './entities/user.clubPack.entity'
 
 @Injectable()
 export class UsersService extends BasicService {
@@ -164,16 +165,53 @@ export class UsersService extends BasicService {
   }
   
   async update (id: string, updateUserDto: UpdateUserDto) {
-    const userToUpdate = await this.findOrFail(id)
+    const userToUpdate: UserDocument = await this.findOrFail(id)
+    let lastChangeHistory: UserClubPackEntity | null = userToUpdate.clubPackHistory && userToUpdate.clubPackHistory[0]
+    
+    // if updateUserDto contains pack dates, must edit the current pack history or
+    // if pack has changed, create a new one
+    
+    // if pack has changed or no lastChangedHistory exist, create a new UserClubPackEntity
+    if (userToUpdate.clubPack !== updateUserDto.clubPack || !lastChangeHistory) {
+      lastChangeHistory = new UserClubPackEntity({
+        pack: updateUserDto.clubPack,
+        startsAt: updateUserDto.clubPackStartAt ? new Date(updateUserDto.clubPackStartAt) : null,
+        endsAt: updateUserDto.clubPackEndAt ? new Date(updateUserDto.clubPackEndAt) : null
+      })
+      
+      if (!userToUpdate.clubPackHistory) {
+        userToUpdate.clubPackHistory = []
+      }
+      
+      userToUpdate.clubPackHistory.unshift(lastChangeHistory)
+    } else if (lastChangeHistory && (updateUserDto.clubPackEndAt || updateUserDto.clubPackStartAt)) {
+      // if pack has not changed, update the current pack history
+      lastChangeHistory.startsAt = updateUserDto.clubPackStartAt ? new Date(updateUserDto.clubPackStartAt) : null
+      lastChangeHistory.endsAt = updateUserDto.clubPackEndAt ? new Date(updateUserDto.clubPackEndAt) : null
+      lastChangeHistory.updatedAt = new Date();
+      
+      userToUpdate.clubPackHistory[0] = lastChangeHistory
+    }
+    
+    // update user data with the one provided
+    for (const field in updateUserDto) {
+      const ignore = ['clubPackStartAt', 'clubPackEndAt']
+      
+      if (!ignore.includes(field)) {
+        userToUpdate[field] = updateUserDto[field]
+      }
+    }
+    
+    await userToUpdate.save()
     
     // return only the changed keys;
-    return this.userModel.findByIdAndUpdate(id, updateUserDto as any, {
-      new: true,
-      projection: Object.keys(updateUserDto).reduce((acc, key) => {
+    return this.userModel.findById(id, Object.keys(updateUserDto).reduce((acc, key) => {
         acc[key] = 1
         return acc
-      }, {})
-    })
+      }, {
+        clubPackHistory: 1
+      })
+    ).exec()
   }
   
   /**
