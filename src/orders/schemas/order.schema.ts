@@ -41,6 +41,9 @@ export class Order extends BasicSchema {
   @Prop()
   public packChangeOrder: boolean
   
+  @Prop({ default: false })
+  public cancelledByUser: boolean
+  
   @Prop({ default: 0 })
   public packChangeCost: number
   
