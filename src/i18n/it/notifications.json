@@ -1,0 +1,13 @@
+{
+  "orderUpdate": {
+    "title": "Stato ordine aggiornato",
+    "content": "L'ordine {order} è stato aggiornato. Il nuovo stato è {newStatus}.",
+    "action": "Vai all'ordine!"
+  },
+  "newMessage": {
+    "title": "Nuovo messaggio da {user}",
+    "content": "Hai ricevuto un nuovo messaggio per l'ordine {order}.",
+    "contentWithType": "Hai ricevuto un nuovo messaggio per l'ordine {order} del tipo {type}.",
+    "action": "Vai ai messaggi!"
+  }
+}

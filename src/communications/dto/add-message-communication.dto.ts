@@ -17,6 +17,7 @@ export class AddMessageCommunicationDto {
   
   messageData?: {
     orderStatus?: OrderStatusEnum
+    cancelledByUser?: boolean
     productUpdate?: {
       product: Pick<Product, "_id" | "title">,
       diff: any,

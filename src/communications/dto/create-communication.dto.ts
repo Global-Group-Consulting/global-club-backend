@@ -32,6 +32,7 @@ export class CreateCommunicationDto {
   title: string
   
   messageData: {
+    packChange?: any,
     orderStatus: OrderStatusEnum,
     orderProducts: MessageOrderProduct[]
   }

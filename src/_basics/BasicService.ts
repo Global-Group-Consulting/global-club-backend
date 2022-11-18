@@ -1,10 +1,10 @@
-import { FindException } from "../_exceptions/find.exception";
-import { Model, QueryOptions } from 'mongoose';
-import { FilterMap, FilterOptions } from './FilterMap.dto';
-import { ConfigService } from '@nestjs/config';
-import { AuthRequest } from './AuthRequest';
-import { User } from '../users/schemas/user.schema';
-import { UserAclRolesEnum } from '../users/enums/user.acl.roles.enum';
+import {FindException} from "../_exceptions/find.exception";
+import {Model, QueryOptions} from 'mongoose';
+import {FilterMap, FilterOptions} from './FilterMap.dto';
+import {ConfigService} from '@nestjs/config';
+import {AuthRequest} from './AuthRequest';
+import {User} from '../users/schemas/user.schema';
+import {UserAclRolesEnum} from '../users/enums/user.acl.roles.enum';
 
 export enum PaginationOrderEnum {
   ASC = "ASC",
@@ -48,7 +48,14 @@ export abstract class BasicService {
   }
   
   get userIsAdmin (): boolean {
-    const validRoles = [UserAclRolesEnum.ADMIN, UserAclRolesEnum.SUPER_ADMIN]
+    const validRoles = [UserAclRolesEnum.ADMIN, UserAclRolesEnum.SUPER_ADMIN, UserAclRolesEnum.CLUB_ADMIN]
+    
+    return this.request.auth.roles.some(
+      (value) => validRoles.includes(value))
+  }
+  
+  get userIsAgent (): boolean {
+    const validRoles = [UserAclRolesEnum.AGENT]
     
     return this.request.auth.roles.some(
       (value) => validRoles.includes(value))
@@ -82,7 +89,7 @@ export abstract class BasicService {
     }
   
     const opts: QueryOptions = {
-      skip: sortOptions.page <= 1 ? 0 : sortOptions.page * sortOptions.perPage,
+      skip: sortOptions.page <= 1 ? 0 : (sortOptions.page - 1) * sortOptions.perPage,
       limit: limit,
       /* sort: sortOptions.sortBy.reduce((acc, curr) => {
          acc[curr] = sortOptions.order === "ASC" ? 1 : -1;
@@ -98,42 +105,17 @@ export abstract class BasicService {
     }
   
     const filters = { ...filter };
-  
-    /*  if (paginationOptions.filter) {
-        paginationOptions.filter.forEach(filter => {
-          const blocks = filter.split(":");
-          const key: string = blocks[0].trim();
-          const originalValue: string = blocks[1].trim();
-          let value: any = originalValue;
-          
-          if (originalValue.startsWith("+")) {
-            value = +originalValue.replace("+", "")
-          }
-          
-          // if prop already exists, ignore it
-          if (!key || !value || filters.hasOwnProperty(key)) {
-            return
-          }
-          
-          filters[key] = value
-        })
-      }
-      */
-    let count: number;
+    
     const data: T[] = await this.model.find(filters, projection, opts).exec()
-  
-    // If the result length is higher or equal to the perPageLimit,
-    // count the total results, otherwise use the data.length as a counter.
-    if (data.length >= sortOptions.perPage) {
-      count = await this.model.find(filters, projection, options).count().exec()
-    } else {
-      count = data.length
-    }
+    const count = await this.model.find(filters, projection, Object.assign({}, opts, {
+      limit: null,
+      skip: null
+    })).count().exec()
   
     const toReturn = {
       ...sortOptions,
       totalItems: count,
-      totalPages: Math.floor(count / paginationOptions.perPage) || 1,
+      totalPages: Math.ceil(count / paginationOptions.perPage) || 1,
       data
     }
   
@@ -154,6 +136,7 @@ export abstract class BasicService {
   
     Object.keys(filtersMap).forEach(key => {
       let value = filters[key]
+      let originalValue = filters[key]
       let filterOptions: FilterOptions = filtersMap[key]
       let filterKey = key
     
@@ -163,6 +146,7 @@ export abstract class BasicService {
   
       if (filterOptions.hasOwnProperty("castValue")) {
         value = filterOptions.castValue(value);
+        originalValue = value;
       }
   
       if (filterOptions.hasOwnProperty("query")) {
@@ -170,7 +154,7 @@ export abstract class BasicService {
       }
   
       if (filterOptions.hasOwnProperty("keyFormat")) {
-        filterKey = filterOptions.keyFormat(key);
+        filterKey = filterOptions.keyFormat(key, originalValue)
       }
   
       toReturn[filterKey] = value

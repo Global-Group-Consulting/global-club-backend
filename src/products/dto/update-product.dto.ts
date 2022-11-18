@@ -7,7 +7,7 @@ import {
   IsEnum,
   IsNotEmpty,
   IsObject,
-  IsOptional,
+  IsOptional, IsString, ValidateIf,
   ValidateNested
 } from "class-validator";
 import { Type } from "class-transformer";
@@ -17,6 +17,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ToBoolean } from '../../_basics/transformers/toBoolean';
 import { PackEnum } from '../../packs/enums/pack.enum';
 import { ToArray } from '../../_basics/transformers/toArray';
+import {LocationEntity} from "../entities/location.entity";
 
 export class UpdateProductDto {
   @IsNotEmpty()
@@ -54,13 +55,26 @@ export class UpdateProductDto {
   @IsBoolean()
   visible?: boolean;
   
+  @ApiProperty({
+    description: "Indicates if the product is used to change the user pack."
+  })
+  @IsOptional()
+  @IsBoolean()
+  @ToBoolean()
+  packChange?: boolean;
+  
+  @ValidateIf(o => o.packChange)
+  @IsNotEmpty()
+  @IsString()
+  packChangeTo?: string;
+  
   @IsNotEmpty()
   @IsMongoIdArray()
   categories: string[];
   
   @IsOptional()
   @ToArray()
-  @IsEnum(PackEnum, { each: true })
+  @IsEnum(PackEnum, {each: true})
   minPacks: PackEnum[]
   
   @IsOptional()
@@ -73,4 +87,9 @@ export class UpdateProductDto {
   @ValidateNested({ each: true })
   @Type(() => Attachment)
   images: Attachment[];
+  
+  @IsOptional()
+  @ValidateNested({each: true})
+  @Type(() => LocationEntity)
+  location: LocationEntity
 }

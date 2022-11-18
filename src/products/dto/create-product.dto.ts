@@ -1,9 +1,20 @@
-import { IsArray, IsBoolean, IsNotEmpty, IsObject, IsOptional, ValidateNested } from "class-validator";
-import { Type } from "class-transformer";
-import { Attachment } from "../../_schemas/attachment.schema";
-import { IsMongoIdArray } from "../../_basics/validators/IsMongoIdArray";
-import { ApiProperty } from '@nestjs/swagger';
-import { ToBoolean } from '../../_basics/transformers/toBoolean';
+import {
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsObject,
+  IsOptional,
+  IsString,
+  ValidateIf,
+  ValidateNested
+} from "class-validator";
+import {Type} from "class-transformer";
+import {Attachment} from "../../_schemas/attachment.schema";
+import {IsMongoIdArray} from "../../_basics/validators/IsMongoIdArray";
+import {ApiProperty} from '@nestjs/swagger';
+import {ToBoolean} from '../../_basics/transformers/toBoolean';
+import {LocationEntity} from "../entities/location.entity";
+
 
 export class CreateProductDto {
   @IsNotEmpty()
@@ -31,6 +42,19 @@ export class CreateProductDto {
   @ToBoolean()
   hasQta?: boolean;
   
+  @ApiProperty({
+    description: "Indicates if the product is used to change the user pack."
+  })
+  @IsOptional()
+  @IsBoolean()
+  @ToBoolean()
+  packChange?: boolean;
+  
+  @ValidateIf(o => o.packChange)
+  @IsNotEmpty()
+  @IsString()
+  packChangeTo?: string;
+  
   @IsNotEmpty()
   @IsMongoIdArray()
   categories: string[];
@@ -46,4 +70,9 @@ export class CreateProductDto {
   @ValidateNested({each: true})
   @Type(() => Attachment)
   images: Attachment[];
+  
+  @IsNotEmpty()
+  @ValidateNested({each: true})
+  @Type(() => LocationEntity)
+  location: LocationEntity
 }

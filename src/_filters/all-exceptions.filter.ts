@@ -1,6 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import { SystemLogsService } from '../system-logs/system-logs.service';
-import { ConfigService } from '@nestjs/config';
+import {ConfigService} from '@nestjs/config';
+import {AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError} from "axios";
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -9,7 +10,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
   async catch (exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
-    const request = ctx.getRequest();
+    let request = ctx.getRequest();
   
     const status =
       exception instanceof HttpException
@@ -21,14 +22,22 @@ export class AllExceptionsFilter implements ExceptionFilter {
   
     if (exception instanceof HttpException) {
       const errResponse = exception.getResponse();
-  
+    
       if (errResponse) {
         message = errResponse["message"] ?? errResponse;
       }
-  
+    
       requestData.params = request.params
       requestData.query = request.query
       requestData.body = request.body
+    } else if (exception["isAxiosError"]) {
+      const axiosError = exception as AxiosError;
+  
+      message = axiosError.message;
+      requestData.params = axiosError.config.params
+      // requestData.query = axiosError.config.
+      requestData.body = axiosError.config.data
+      requestData.rawData = axiosError.response.data
     }
   
     const name = exception["name"]
@@ -46,7 +55,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         stack: exception["stack"]
       })
     
-      if (exception instanceof HttpException) {
+      if (exception instanceof HttpException || exception["isAxiosError"]) {
         newLoggedError.request = requestData
     
         await newLoggedError.save()

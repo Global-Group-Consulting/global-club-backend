@@ -1,15 +1,15 @@
-import { NestFactory } from '@nestjs/core'
-import { ConfigService } from '@nestjs/config'
-import { INestApplication, ValidationPipe } from '@nestjs/common'
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import {NestFactory, Reflector} from '@nestjs/core'
+import {ConfigService} from '@nestjs/config'
+import {INestApplication, RequestMethod, ValidationPipe} from '@nestjs/common'
+import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger'
 
-import { AppModule } from './app.module'
-import { AuthGuard } from './auth.guard'
-import { MongoExceptionFilter } from './_filters/mongo-exception.filter'
-import { AllExceptionsFilter } from './_filters/all-exceptions.filter';
-import { SystemLogsService } from './system-logs/system-logs.service';
+import {AppModule} from './app.module'
+import {AuthGuard} from './auth.guard'
+import {MongoExceptionFilter} from './_filters/mongo-exception.filter'
+import {AllExceptionsFilter} from './_filters/all-exceptions.filter';
+import {SystemLogsService} from './system-logs/system-logs.service';
 
-function initSwagger (app: INestApplication) {
+function initSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
     .setTitle('Global Club')
     .setDescription(`<p>
@@ -45,7 +45,9 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const systemLogsService = app.get(SystemLogsService);
   
-  app.setGlobalPrefix('api')
+  app.setGlobalPrefix('api', {
+    exclude: [{path: "/", method: RequestMethod.GET}]
+  })
   app.useGlobalGuards(new AuthGuard(configService))
   app.useGlobalFilters(new MongoExceptionFilter(), new AllExceptionsFilter(systemLogsService, configService))
   app.useGlobalPipes(new ValidationPipe({

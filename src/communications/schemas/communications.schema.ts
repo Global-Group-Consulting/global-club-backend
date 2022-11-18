@@ -35,6 +35,14 @@ export class Communication extends BasicSchema {
   @Prop({ type: [UserSchema] })
   watchers: UserBasic[]
   
+  // var set dynamically before returning data to the user.
+  // This will be based on the auth user and indicates if there are any unread messages
+  @Prop({ default: false })
+  hasUnreadMessages: boolean
+  
+  @Prop({ default: 0 })
+  unreadCount: number
+  
   _id: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;

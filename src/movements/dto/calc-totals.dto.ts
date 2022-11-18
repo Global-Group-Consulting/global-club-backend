@@ -90,6 +90,9 @@ export class CalcTotalsDto {
   usableNow: boolean
   
   @ApiProperty({})
+  expired: boolean
+  
+  @ApiProperty({})
   packs: CalcTotalPacks
 }
 

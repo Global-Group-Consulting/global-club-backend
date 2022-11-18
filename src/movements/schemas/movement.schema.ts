@@ -1,9 +1,9 @@
-import { Document, Schema as MongoSchema, Types } from "mongoose";
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { MovementTypeEnum } from "../enums/movement.type.enum";
-import { calcBritesUsage } from "../utils/movements.utils";
-import { castToFixedDecimal } from "../../utilities/Formatters";
-import { PackEnum } from '../../packs/enums/pack.enum';
+import { Document, Schema as MongoSchema, Types } from 'mongoose'
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { MovementTypeEnum } from '../enums/movement.type.enum'
+import { calcBritesUsage } from '../utils/movements.utils'
+import { castToFixedDecimal } from '../../utilities/Formatters'
+import { PackEnum } from '../../packs/enums/pack.enum'
 
 export type MovementDocument = Movement & Document;
 
@@ -13,69 +13,75 @@ export type MovementDocument = Movement & Document;
 export class Movement {
   
   @Prop({ required: true, set: (val: number) => castToFixedDecimal(val) })
-  amountChange: number;
+  amountChange: number
   
-  @Prop({type: MongoSchema.Types.ObjectId, required: true})
-  userId: string;
+  @Prop({ type: MongoSchema.Types.ObjectId, required: true })
+  userId: string
   
-  @Prop({required: false, type: MongoSchema.Types.ObjectId, alias: "created_by"})
+  @Prop({ required: false, type: MongoSchema.Types.ObjectId, alias: 'created_by' })
   createdBy?: string
   
-  @Prop({required: true})
-  semesterId: string;
+  @Prop({ required: true })
+  semesterId: string
+  
+  @Prop({})
+  notes: string
   
   @Prop({ required: true })
-  notes: string;
+  movementType: MovementTypeEnum
   
-  @Prop({ required: true })
-  movementType: MovementTypeEnum;
+  @Prop({})
+  fromUUID: string
   
-  @Prop({ type: MongoSchema.Types.ObjectId, ref: "Orders" })
-  order: string;
+  @Prop({ type: MongoSchema.Types.ObjectId, ref: 'Order' })
+  order: string
   
   @Prop({ required: true })
   clubPack: PackEnum
   
-  @Prop({
-    immutable: true,
-    default: (data: MovementDocument) => {
-      return +data.semesterId.split("_")[1]
-    }
-  })
-  referenceSemester: number;
+  @Prop({})
+  clubPackChange: any[]
   
   @Prop({
     immutable: true,
     default: (data: MovementDocument) => {
-      return +data.semesterId.split("_")[0]
+      return +data.semesterId.split('_')[1]
     }
   })
-  referenceYear: number;
+  referenceSemester: number
+  
+  @Prop({
+    immutable: true,
+    default: (data: MovementDocument) => {
+      return +data.semesterId.split('_')[0]
+    }
+  })
+  referenceYear: number
   
   @Prop({
     immutable: true,
     default: (data: MovementDocument) => calcBritesUsage(data.semesterId).usableFrom
   })
-  usableFrom: Date;
+  usableFrom: Date
   
   @Prop({
     immutable: true,
     default: (data: MovementDocument) => calcBritesUsage(data.semesterId).expiresAt
   })
-  expiresAt: Date;
+  expiresAt: Date
   
   /* ReadOnly props */
   
-  _id: Types.ObjectId;
-  createdAt: Date;
-  created_at?: Date;
-  updated_at?: Date;
-  updatedAt: Date;
+  _id: Types.ObjectId
+  createdAt: Date
+  created_at?: Date
+  updated_at?: Date
+  updatedAt: Date
   
   /**
    * @deprecated
    */
-  deposit?: number;
+  deposit?: number
 }
 
 export const MovementSchema = SchemaFactory.createForClass(Movement)

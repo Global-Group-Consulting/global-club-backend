@@ -1,17 +1,21 @@
-import {IsArray, IsNotEmpty, IsObject, IsOptional, ValidateNested} from "class-validator";
-import {Type} from "class-transformer";
-import {Attachment} from "../../_schemas/attachment.schema";
+import { IsArray, IsNotEmpty, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator'
+import { Type } from 'class-transformer'
+import { Attachment } from '../../_schemas/attachment.schema'
 
 export class CreateProductCategoryDto {
   @IsNotEmpty()
-  title: string;
+  title: string
   
   @IsNotEmpty()
-  description: string;
+  description: string
   
   @IsNotEmpty()
   @IsObject()
-  @ValidateNested({each: true})
+  @ValidateNested({ each: true })
   @Type(() => Attachment)
-  thumbnail: Attachment;
+  thumbnail: Attachment
+  
+  @IsOptional()
+  @IsString()
+  parent: string
 }

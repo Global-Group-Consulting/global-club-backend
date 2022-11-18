@@ -1,0 +1,14 @@
+{
+  "OrderStatusEnum": {
+    "pending": "In attesa",
+    "inProgress": "In lavorazione",
+    "completed": "Completato",
+    "cancelled": "Annullato"
+  },
+  "MessageTypeEnum": {
+    "message": "Messaggio",
+    "order_created": "Ordine Creato",
+    "order_status_update": "Stato ordine aggiornato",
+    "order_product_update": "Prodotto ordine aggiornato"
+  }
+}
