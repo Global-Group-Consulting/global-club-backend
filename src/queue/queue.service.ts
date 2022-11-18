@@ -19,7 +19,9 @@ export class QueueService {
   }
   
   dispatchRepayment (payload: RepaymentDto) {
-    return this.queue.pushTo('TriggerRepayment', payload)
+    return this.queue.pushTo('TriggerRepayment', Object.assign({}, payload, {
+      app: 'club'
+    }))
   }
   
   dispatchNotification (payload: NotificationDto) {
