@@ -13,6 +13,8 @@ export class UserBasic extends BasicEntity {
   firstName: string
   lastName: string
   referenceAgent: string
+  
+  clubCardNumber: string
   preferences?: {
     'club': any
   }
@@ -36,4 +38,5 @@ export const userBasicProjection: Record<keyof UserBasic, number> = {
   roles: 1,
   superAdmin: 1,
   preferences: 1,
+  clubCardNumber: 1
 }
