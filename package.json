@@ -44,6 +44,7 @@
     "mongodb": "^4.7.0",
     "mongoose": "^6.0.4",
     "mysql": "^2.18.1",
+    "mysql2": "^3.1.2",
     "nestjs-i18n": "^8.2.2",
     "php-serialization": "^0.0.4",
     "redis": "^4.0.3",
