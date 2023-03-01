@@ -1,4 +1,4 @@
-import { createPool, Pool, escape as mySqlEscape, ConnectionConfig } from 'mysql'
+import { createPool, Pool, escape as mySqlEscape, ConnectionOptions } from 'mysql2'
 import { now, random } from 'lodash'
 import { serialize, Class } from 'php-serialization'
 
@@ -49,7 +49,7 @@ export class JobOptions {
 }
 
 export interface LaravelQueueConfig {
-  db: ConnectionConfig,
+  db: ConnectionOptions,
   queueName: string;
 }
 
@@ -93,7 +93,7 @@ export class LaravelQueue {
           return reject(err)
         }
         
-        resolve(result)
+        resolve(result as any)
       })
     })
   }
