@@ -3,17 +3,16 @@ import { Document, Types, Mixed } from 'mongoose'
 import { PackEnum } from '../../packs/enums/pack.enum'
 import { UserAclRolesEnum } from '../enums/user.acl.roles.enum'
 import { UserClubPackEntity } from '../entities/user.clubPack.entity'
+import { castToObjectId } from '../../utilities/Formatters'
 
 export type UserDocument = User & Document
 
 @Schema({
-  collection: 'users'
+  collection: 'users',
+  toObject: { virtuals: true },
+  toJSON: { virtuals: true }
 })
 export class User {
-  @Prop({
-    alias: '_id'
-  })
-  id: string
   
   @Prop()
   account_status: string
@@ -186,7 +185,7 @@ export class User {
   @Prop()
   apps: string[]
   
-  @Prop({type: Object})
+  @Prop({ type: Object })
   preferences: Mixed
   
   _id: Types.ObjectId
@@ -196,6 +195,14 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)
+
+UserSchema.virtual('id')
+  /* .set(function (value) {
+     this.set({id: value ? castToObjectId(value) : this._id})
+   })*/
+  .get(function (value: any) {
+    return value ? castToObjectId(value) : this._id
+  })
 
 export const userProjection = Object.keys(UserSchema.obj).reduce((acc, key) => {
   acc[key] = 1
