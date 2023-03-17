@@ -1,3 +1,4 @@
+// @ts-ignore
 import { createPool, Pool, escape as mySqlEscape, ConnectionOptions } from 'mysql2'
 import { now, random } from 'lodash'
 import { serialize, Class } from 'php-serialization'

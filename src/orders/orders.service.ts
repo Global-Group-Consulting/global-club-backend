@@ -357,7 +357,7 @@ export class OrdersService extends BasicService {
     }
     
     if (!this.userIsAdmin) {
-      query['user.id'] = this.authUser.id.toString()
+      query['user.id'] = this.authUser._id.toString()
     }
     
     const paginatedData = await this.findPaginated<Order>(query, paginationDto, {

@@ -19,7 +19,7 @@ export class DashboardService extends BasicService {
   }
   
   async readUserDashboard (userId?: string): Promise<ReadDashboardSemestersDto> {
-    const userIdToUse = userId || this.authUser.id.toString()
+    const userIdToUse = userId || this.authUser._id.toString()
     const data: CalcTotalsDto[] = await this.movementsService.calcTotalBrites(userIdToUse, null, false)
     
     return this.movementsService.addMainReport(data, true, userIdToUse)

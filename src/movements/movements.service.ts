@@ -62,7 +62,7 @@ export class MovementsService extends BasicService {
     const newMovement = new this.movementModel({
       ...createMovementDto,
       userId: userId,
-      createdBy: this.authUser.id,
+      createdBy: this.authUser._id,
       movementType: MovementTypeEnum.DEPOSIT_ADDED
     })
     
@@ -90,7 +90,7 @@ export class MovementsService extends BasicService {
     const newMovement = new this.movementModel({
       ...removeMovementDto,
       userId: userId,
-      createdBy: this.authUser.id,
+      createdBy: this.authUser._id,
       movementType: MovementTypeEnum.DEPOSIT_REMOVED
     })
     
@@ -166,7 +166,7 @@ export class MovementsService extends BasicService {
             semesterId: semester.semesterId,
             clubPack: packKey,
             userId: userId,
-            createdBy: this.authUser.id,
+            createdBy: this.authUser._id,
             movementType: MovementTypeEnum.DEPOSIT_USED,
             order: useMovementDto.orderId
           })
@@ -681,7 +681,7 @@ export class MovementsService extends BasicService {
       prevPack: movement.clubPack,
       newPack,
       date: new Date(),
-      changedBy: this.authUser.id
+      changedBy: this.authUser._id
     })
     
     movement.clubPack = newPack
