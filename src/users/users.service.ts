@@ -25,6 +25,7 @@ import { UserAclRolesEnum } from './enums/user.acl.roles.enum'
 import { UpdateUserPreferencesDto } from './dto/update-user-preferences.dto'
 import { FindException } from '../_exceptions/find.exception'
 import { UserClubPackEntity } from './entities/user.clubPack.entity'
+import { I18nService } from 'nestjs-i18n'
 
 @Injectable()
 export class UsersService extends BasicService {
@@ -34,6 +35,7 @@ export class UsersService extends BasicService {
     private httpService: AxiosService,
     protected config: ConfigService,
     protected orderService: OrdersService,
+    private readonly i18n: I18nService,
     @Inject('REQUEST') protected request: AuthRequest) {
     super()
     this.model = userModel
@@ -250,6 +252,11 @@ export class UsersService extends BasicService {
     const changeCost = userDeposit * 5 / 100
     let contractFile: Attachment | null = null
     
+    // if deposit is less than 1€, throw an error because can't change pack
+    if (userDeposit < 1) {
+      throw new UpdateException('Non è possibile cambiare pack con un deposito inferiore a 1€')
+    }
+    
     try {
       // Generate the contract file
       contractFile = await this.generateClubContractPdf({
@@ -260,10 +267,11 @@ export class UsersService extends BasicService {
         'currentDate': new Date()
       })
       
+      const oldPackString = await this.i18n.translate('enums.ClubPacks.' + userToUpdate.clubPack)
+      
       // Generate the new order with relative communication
       const newOrder = await this.orderService.createPackChangeOrder({
-        notes: `Cambio pack da ${userToUpdate.clubPack} a <strong>Premium</strong>.<br>
-              Deposito: € ${formatMoney(userDeposit)}<br>
+        notes: `Cambio pack da ${oldPackString} a <strong>Premium</strong>.<br>
               Costo cambio: € ${formatMoney(changeCost)}`,
         products: [
           {
