@@ -9,6 +9,8 @@ services:
     ports:
       - "3335:3000"
       - "9230:9229"
+    extra_hosts:
+      - 'local.api.globalgroup.consulting:host-gateway'
     networks:
       - api
     environment:
@@ -19,7 +21,7 @@ services:
 #      - DB_LEGACY_CONNECTION_STRING=mongodb://admin:root@localhost:27017/ggc_local?authMechanism=DEFAULT&authSource=admin
       - SWAGGER_KEY=Y5mKW0ofP6QUl7IO0gz5dIdjOcjoxPEB
       - MAIL_FROM=noreply@globalgroup.consulting
-      - MAIN_SERVER_URL=http://main-api:3000/api
+      - MAIN_SERVER_URL=http://local.api.globalgroup.consulting/api
       - MAIL_SITE_URL=http://local.private.globalgroup.consulting
       - FILES_SERVER_URL=https://files.globalgroup.consulting/api
       - QUEUE_HOST=db-mysql-fra1-85164-do-user-10775830-0.b.db.ondigitalocean.com
