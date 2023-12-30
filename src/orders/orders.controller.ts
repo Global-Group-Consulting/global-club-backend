@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  UseInterceptors,
+  ForbiddenException
+} from '@nestjs/common'
 import { OrdersService } from './orders.service'
 import { CreateOrderDto } from './dto/create-order.dto'
 import { ApiBasicAuth, ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger'
@@ -21,6 +32,8 @@ export class OrdersController {
   
   @Post()
   create (@Body() createOrderDto: CreateOrderDto) {
+    throw  new ForbiddenException("Applicazione momentaneamente in modalità manutenzione, pertanto è possibile usarla solo per consultazione.")
+    
     return this.ordersService.createMultipleOrders(createOrderDto)
   }
   
